@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  nginx:  # Nginx Container
+    image: nginx
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./etc/nginx:/etc/nginx/conf.d # nginx default conf.d directory 에 nginx.conf mounting  
+    #  - /etc/letsencrypt:/etc/letsencrypt # ssl 적용 후
+    restart: unless-stopped
+    # depends_on: #ssl 적용하면 dependency 추가
+    #   - certbot
+
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: certbot
+  #   volumes:
+  #     - /etc/letsencrypt:/etc/letsencrypt
+  #     - /var/lib/letsencrypt:/var/lib/letsencrypt
+  #   command: certonly -d '우리 도메인' --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
+  #   tty: true
+  #   stdin_open: true
