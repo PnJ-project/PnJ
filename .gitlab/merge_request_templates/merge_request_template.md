@@ -8,6 +8,7 @@
 
 - [ ]  FE
 - [ ]  BE
+- [ ]  INFRA
 - [ ]  TEAM
 
 ## :bulb: 어떤 이유로 MR를 하셨나요?
