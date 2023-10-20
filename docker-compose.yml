@@ -1,0 +1,109 @@
+version: '3.8'
+services:
+  frontend:
+    image: frontend
+    container_name: frontend_main
+    ports:
+      - 3000:3000 # 이후 nginx certbot 셋업되면 포트 닫고 nginx container를 통해서만 접속
+    networks:
+      - nginx_network
+
+  backend:
+    image: backend
+    container_name: backend_main
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PW}
+    ports:
+      - 8080:8080 # CI/CD 환경 구축 이후 컨테이너 외부로 노출된 포트 제거 예정
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    networks:
+      - mariadb_network
+      - nginx_network
+    depends_on:
+      - mariadb
+      - redis
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PW}
+      MARIADB_USER : ${MARIADB_USER}
+      MARIADB_PASSWORD : ${MARIADB_PW}
+      TZ: Asial/Seoul
+      # MARIADB_DATABASE : #추후에 db 이름 추가
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./infra/mariadb/conf.d:/etc/mysql/conf.d
+      - ./infra/mariadb/init:/docker-entrypoint-initdb.d
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -u root --password=$$MARIADB_ROOT_PASSWORD']
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 30s
+    restart: unless-stopped
+
+  redis: # container name
+    image: redis:7.2.2-alpine3.18
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes: # 마운트할 볼륨 설정
+      - redis_data:/data
+      - ./infra/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - redis_network
+    restart: always
+
+  jenkins:  # Jenkins Container
+		image: jenkins/jenkins:lts
+		container_name: jenkins
+		volumes:
+			- /usr/bin/docker:/usr/bin/docker
+			- /var/run/docker.sock:/var/run/docker.sock 
+			- /var/jenkins_home:/var/jenkins_home
+		ports:
+			- ${JENKINS_PORT}:8080
+		privileged: true
+		user: ${JENKINS_USER}
+		restart: unless-stopped
+
+  nginx:  # Nginx Container
+    image: nginx
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./etc/nginx:/etc/nginx/conf.d # nginx default conf.d directory 에 nginx.conf mounting  
+    #  - /etc/letsencrypt:/etc/letsencrypt # ssl 적용 후
+    networks:
+      - nginx_network
+    restart: unless-stopped
+    # depends_on: #ssl 적용하면 dependency 추가
+    #   - certbot
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot_key:/etc/letsencrypt
+      - certbot_var:/var/lib/letsencrypt
+    command: certonly -d ${DOMAIN} --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
+    tty: true
+    stdin_open: true
+
+volumes:
+  mariadb_data:
+  redis_data:
+  certbot_key:
+  certbot_var:
+
+networks:
+  nginx_network:
+    driver: bridge
+  mariadb_network:
+    driver: bridge
+  redis_network:
+    driver: bridge
