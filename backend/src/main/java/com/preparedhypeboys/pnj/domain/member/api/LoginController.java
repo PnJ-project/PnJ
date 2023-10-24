@@ -1,8 +1,11 @@
-package com.preparedhypeboys.pnj.domain.user.api;
+package com.preparedhypeboys.pnj.domain.member.api;
 
-import static com.preparedhypeboys.pnj.domain.user.constant.UserResponseMessage.LOGIN_START;
 
-import com.preparedhypeboys.pnj.domain.user.service.OAuth2UserService;
+import static com.preparedhypeboys.pnj.domain.member.constant.MemberResponseMessage.LOGIN_START;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.LoginReponseDto;
+import com.preparedhypeboys.pnj.domain.member.service.OAuth2UserService;
 import com.preparedhypeboys.pnj.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +25,9 @@ public class LoginController {
     private final OAuth2UserService oAuth2UserService;
 
     @GetMapping("")
-    public ResponseEntity<ResponseDto<String>> login(@RequestParam(name = "code") String code) {
+    public ResponseEntity<ResponseDto<LoginReponseDto>> login(
+        @RequestParam(name = "code") String code)
+        throws JsonProcessingException {
         return ResponseEntity.status(HttpStatus.OK
         ).body(ResponseDto.create(LOGIN_START.getMessage(),
             oAuth2UserService.loginRedirectProcess(code))
