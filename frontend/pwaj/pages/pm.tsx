@@ -13,6 +13,7 @@ const routes = [
   { path: "/service/about", name: "서비스 소개" },
   { path: "/service/team", name: "팀 소개" },
   { path: "/service/contact", name: "문의하기" },
+  { path: "/test", name: "테스트 페이지" },
 ];
 
 const PMPage = () => {
