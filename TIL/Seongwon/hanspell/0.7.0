@@ -1,0 +1,2 @@
+Requirement already satisfied: JPype1 in c:\users\ssafy\appdata\local\programs\python\python311\lib\site-packages (1.4.1)
+Requirement already satisfied: packaging in c:\users\ssafy\appdata\roaming\python\python311\site-packages (from JPype1) (23.2)
