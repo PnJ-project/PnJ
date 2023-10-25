@@ -32,6 +32,10 @@ const nextAuthOptions = (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 const authHandler = (req: NextApiRequest, res: NextApiResponse) => {
+  const { query } = req;
+  const code = query.code;
+  // 아래에 code에 대한 내용
+
   return NextAuth(req, res, nextAuthOptions(req, res));
 };
 
