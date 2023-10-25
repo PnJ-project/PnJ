@@ -1,6 +1,5 @@
 // 개발자용 모든 페이지 링크 생성
 import Link from "next/link";
-import styled from "styled-components";
 
 const routes = [
   { path: "/", name: "홈페이지" },
@@ -19,23 +18,18 @@ const routes = [
 
 const PMPage = () => {
   return (
-    <Container>
+    <>
       <h1>pm</h1>
       <div>
         {routes.map((route, index) => (
           <Link key={index} href={route.path}>
-            <RouterName>{route.name}</RouterName>
+            <div>{route.name}</div>
           </Link>
         ))}
       </div>
-    </Container>
+    </>
   );
 };
 
 export default PMPage;
 
-const Container = styled.div``
-const RouterName = styled.div`
-font-size:18px;
-margin-bottom: 10px;
-`

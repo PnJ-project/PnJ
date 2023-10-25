@@ -1,3 +1,3 @@
 // import React from 'react';
 
-export function funttion1() {}
+export function function1() {}

@@ -4,7 +4,6 @@ import { increment, decrement } from '../store/slice/counterSlice';
 import { updateString } from '../store/slice/stringSlice';
 import { addItem, removeItem } from '../store/slice/listSlice';
 import { RootState } from './store';
-import styled from 'styled-components';
 
 const Home = () => {
     const count = useSelector((state: RootState) => state.counter.value);
@@ -24,40 +23,31 @@ const Home = () => {
         }
     };
     return (
-        <Container>
+        <>
             <h1>Counter: {count}</h1>
-            <IncBtn onClick={() => dispatch(increment())}>Increase</IncBtn>
-            <DecBtn onClick={() => dispatch(decrement())}>Decrease</DecBtn>
+            <button onClick={() => dispatch(increment())}>Increase</button>
+            <button onClick={() => dispatch(decrement())}>Decrease</button>
 
             <h1>String: {stringValue}</h1>
-            <TextInput
+            <input
                 type="text"
                 value={stringValue}
                 onChange={(e) => dispatch(updateString(e.target.value))}
             />
 
         <h1>List:</h1>
-        <ListInput type="text" value={inputValue} onChange={handleInputChange} />
-        <AddBtn onClick={handleAddItem}>아이템 추가</AddBtn>
-        <Ul>
+        <input type="text" value={inputValue} onChange={handleInputChange} />
+        <button onClick={handleAddItem}>아이템 추가</button>
+        <ul>
             {listItems.map((item, index) => (
-            <Li key={index}>
-                {item} <RemoveBtn onClick={() => dispatch(removeItem(index))}>삭제</RemoveBtn>
-            </Li>
+            <li key={index}>
+                {item} <button onClick={() => dispatch(removeItem(index))}>삭제</button>
+            </li>
             ))}
-        </Ul>
-        </Container>
+        </ul>
+        </>
     );
 };
 
 export default Home;
 
-const Container = styled.div``
-const IncBtn = styled.button``
-const DecBtn = styled.button``
-const TextInput = styled.input``
-const ListInput = styled.input``
-const AddBtn = styled.button``
-const Ul = styled.ul``
-const Li = styled.li``
-const RemoveBtn = styled.button``
