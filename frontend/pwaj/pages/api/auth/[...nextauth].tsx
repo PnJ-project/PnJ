@@ -14,8 +14,20 @@ const nextAuthOptions = (req: NextApiRequest, res: NextApiResponse) => {
       GoogleProvider({
         clientId: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
+        // authorization: {
+        //   params: {
+        //     response_type: "code",
+        //   },
+        // },
       }),
     ],
+    // callbacks: {
+    //   async signIn({ account }) {
+    //     console.log(account);
+    //     // const code = account.params.code;
+    //     return true;
+    //   },
+    // },
   };
 };
 

@@ -6,8 +6,8 @@ import { getToken } from "next-auth/jwt";
 
 // import React from 'react';
 export default function Login() {
-  const { data: session } = useSession();
-  console.log(session);
+  const { data: session, status } = useSession();
+  console.log(session, status);
   useEffect(() => {}, []);
   return (
     <>
