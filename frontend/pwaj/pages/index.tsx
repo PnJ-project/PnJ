@@ -2,6 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
+import "./index.css";
 
 export default function index() {
   return (
@@ -11,8 +12,7 @@ export default function index() {
   );
 }
 
-const Container = styled.div`
-`
+const Container = styled.div``;
 // SSR - 초기 데이터 불러오기
 export async function getServerSideProps() {
   try {
