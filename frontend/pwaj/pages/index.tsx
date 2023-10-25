@@ -1,18 +1,16 @@
 // 홈페이지
 import React from "react";
-import styled from "styled-components";
 import axios from "axios";
 import "./index.css";
 
 export default function index() {
   return (
-    <Container>
+    <>
       <h1>홈페이지</h1>
-    </Container>
+    </>
   );
 }
 
-const Container = styled.div``;
 // SSR - 초기 데이터 불러오기
 export async function getServerSideProps() {
   try {
