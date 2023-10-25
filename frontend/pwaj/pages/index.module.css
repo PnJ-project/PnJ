@@ -1,0 +1,27 @@
+.textdiv{
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap: 16px;
+}
+
+.title {
+font-family: TheJamsil5;
+font-size: 50px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+
+.span{
+color: #00900E;
+}
+
+.content {
+color: #000;
+font-family: SUITE-Regular;
+font-size: 18px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+}

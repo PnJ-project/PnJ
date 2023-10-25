@@ -1,12 +1,23 @@
 // 홈페이지
 import React from "react";
 import axios from "axios";
-import "./index.css";
+import plogo from '../src/assets/main.svg'
+import Image from "next/image";
+import styles from "./index.module.css"
+import UseDemo from "@/components/atoms/useDemo";
 
 export default function index() {
   return (
     <>
-      <h1>홈페이지</h1>
+      <div className={styles.textdiv}>
+        <div className={styles.title}>
+          <div><span className={styles.span}>음성과 텍스트</span>로</div>
+          혁신적인 일정관리를 경험해보세요
+        </div>
+          <div className={styles.content}>innovatory Experience schedule management</div>
+      </div>
+      <Image src={plogo} alt="PnJ LOGO" />
+      <UseDemo/>
     </>
   );
 }
