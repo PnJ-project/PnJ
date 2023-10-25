@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +41,7 @@ public class OAuth2UserServiceImpl implements
     private String googleClientSecret;
 
     @Override
+    @Transactional
     public LoginReponseDto loginRedirectProcess(String code) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> params = new HashMap<>();
@@ -56,10 +56,6 @@ public class OAuth2UserServiceImpl implements
             GOOGLE_TOKEN_REQUEST_URL, params, String.class
         );
 
-//        if (response.getStatusCode() != HttpStatus.OK) {
-//            return null;
-//        }
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false);
         OAuthTokenResponse oAuthTokenResponse = mapper.readValue(response.getBody(),
@@ -73,13 +69,11 @@ public class OAuth2UserServiceImpl implements
         Optional<Member> member = memberRepository.findByNameAndEmail(oAuthMemberInfoDto.getName(),
             oAuthMemberInfoDto.getEmail());
 
-        if(!member.isPresent()) {
+        if (!member.isPresent()) {
             Member newMember = Member.builder()
                 .name(oAuthMemberInfoDto.getName())
                 .email(oAuthMemberInfoDto.getEmail())
                 .uuid(oAuthMemberInfoDto.getSub())
-                .accessToken(oAuthTokenResponse.getAccessToken())
-                .refreshToken(oAuthTokenResponse.getRefreshToken())
                 .build();
 
             memberRepository.save(newMember);
@@ -87,11 +81,15 @@ public class OAuth2UserServiceImpl implements
             member = Optional.of(newMember);
         }
 
+        member.get().setToken(oAuthTokenResponse.getAccessToken(),
+            oAuthTokenResponse.getRefreshToken());
+
+        // TODO JWT TOKEN 암호화 + ResponseDto 변경
+
         LoginReponseDto dto = LoginReponseDto.builder()
             .memberEmail(member.get().getEmail())
             .memeberId(member.get().getId())
             .build();
-
 
         return dto;
     }

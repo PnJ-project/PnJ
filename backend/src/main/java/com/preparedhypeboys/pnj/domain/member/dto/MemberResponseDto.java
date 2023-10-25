@@ -1,13 +1,12 @@
 package com.preparedhypeboys.pnj.domain.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.preparedhypeboys.pnj.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class MemberResponseDto {
-    
+
     @Getter
     @NoArgsConstructor
     public static class OAuthTokenResponse {
