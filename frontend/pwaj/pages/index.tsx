@@ -5,19 +5,25 @@ import plogo from '../src/assets/main.svg'
 import Image from "next/image";
 import styles from "./index.module.css"
 import UseDemo from "@/components/atoms/useDemo";
+import GoogleLogin from "@/components/atoms/googleLogin";
 
 export default function index() {
   return (
     <>
-      <div className={styles.textdiv}>
-        <div className={styles.title}>
-          <div><span className={styles.span}>음성과 텍스트</span>로</div>
-          혁신적인 일정관리를 경험해보세요
-        </div>
+      <div className={styles.container}>
+        <div className={styles.textdiv}>
+          <div className={styles.title}>
+            <div><span className={styles.span}>음성과 텍스트</span>로</div>
+            혁신적인 일정관리를 경험해보세요
+          </div>
           <div className={styles.content}>innovatory Experience schedule management</div>
+          <div className={styles.btns}>
+            <UseDemo />
+            <GoogleLogin />
+          </div>
+        </div>
+        <Image src={plogo} alt="PnJ LOGO" className={styles.LogoImg} />
       </div>
-      <Image src={plogo} alt="PnJ LOGO" />
-      <UseDemo/>
     </>
   );
 }
