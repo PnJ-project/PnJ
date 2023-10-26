@@ -3,6 +3,8 @@ import { Provider } from "react-redux";
 import { AppProps } from "next/app"; // Next.js의 AppProps 타입 import
 import { SessionProvider } from "next-auth/react";
 import store from "../src/store/store";
+import "./index.css";
+import "../src/font/font.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

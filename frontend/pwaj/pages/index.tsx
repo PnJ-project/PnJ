@@ -1,6 +1,7 @@
 // 홈페이지
 import React from "react";
 import axios from "axios";
+import "./index.css";
 
 export default function index() {
   return (
@@ -9,7 +10,6 @@ export default function index() {
     </>
   );
 }
-
 
 // SSR - 초기 데이터 불러오기
 export async function getServerSideProps() {
