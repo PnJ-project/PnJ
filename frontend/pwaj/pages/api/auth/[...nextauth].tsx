@@ -14,12 +14,28 @@ const nextAuthOptions = (req: NextApiRequest, res: NextApiResponse) => {
       GoogleProvider({
         clientId: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
+        // authorization: {
+        //   params: {
+        //     response_type: "code",
+        //   },
+        // },
       }),
     ],
+    // callbacks: {
+    //   async signIn({ account }) {
+    //     console.log(account);
+    //     // const code = account.params.code;
+    //     return true;
+    //   },
+    // },
   };
 };
 
 const authHandler = (req: NextApiRequest, res: NextApiResponse) => {
+  const { query } = req;
+  const code = query.code;
+  // 아래에 code에 대한 내용
+
   return NextAuth(req, res, nextAuthOptions(req, res));
 };
 
