@@ -2,9 +2,13 @@
 // import React from "react";
 import plogo from "../assets/main.svg";
 import UseDemo from "../components/atoms/UseDemo";
-import GoogleLogin from "../components/atoms/GoogleLogin";
+// import GoogleLogin from "../components/atoms/GoogleLogin";
+// import { GoogleOAuthProvider } from "@react-oauth/google";
 import styled from "styled-components";
 export default function Main() {
+
+  // const clientId: string = process.env.GOOGLE_CLIENT_ID!;
+
   return (
     <>
       <Container>
@@ -16,7 +20,9 @@ export default function Main() {
           <Content>innovatory Experience schedule management</Content>
           <Btns>
             <UseDemo />
-            <GoogleLogin />
+            {/* <GoogleOAuthProvider clientId={clientId}>
+              <GoogleLogin />
+            </GoogleOAuthProvider> */}
           </Btns>
         </TextDiv>
         <LogoImg src={plogo} alt="PnJ LOGO" />

@@ -1,5 +1,5 @@
 // import React from 'react';
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
 export default function GoogleLogin() {
@@ -19,11 +19,8 @@ export default function GoogleLogin() {
         flow: "auth-code",
       });
   return (
-      <>
-          {/* TODO : 환경 변수 설정 */}
-        <GoogleOAuthProvider clientId="303398331485-bi8j2vvltn2lk7ah62dhuo2qpgbqmp1j.apps.googleusercontent.com">
-            <div onClick={googleSocialLogin}>Google Button</div>
-        </GoogleOAuthProvider>      
-    </>
+  <>
+    <div onClick={googleSocialLogin}>Google Button</div>
+  </>
   );
 }
