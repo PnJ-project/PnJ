@@ -26,6 +26,7 @@ public class GoogleCalendarDao {
 
     private final HttpHeadersUtil httpHeadersUtil;
 
+    private final RestTemplate restTemplate = new RestTemplate();
     private final Gson gson = buildGson();
     private final ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(
         Include.NON_NULL).setSerializationInclusion(Include.NON_EMPTY);
@@ -42,14 +43,11 @@ public class GoogleCalendarDao {
             .queryParam("timeMax", timeMax)
             .queryParam("timeMin", timeMin);
 
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(uriBuilder.toUriString(),
             HttpMethod.GET, requestEntity, String.class);
 
-        GoogleEventListResponseDto dto = gson.fromJson(response.getBody(),
-            GoogleEventListResponseDto.class);
-
-        return dto.getItems();
+        return gson.fromJson(response.getBody(),
+            GoogleEventListResponseDto.class).getItems();
 
     }
 
@@ -59,15 +57,20 @@ public class GoogleCalendarDao {
 
         HttpEntity<String> requestEntity = new HttpEntity<>(gson.toJson(eventDto), headers);
 
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(host, HttpMethod.POST,
             requestEntity, String.class);
 
-        EventDto dto = gson.fromJson(response.getBody(), EventDto.class);
+        return gson.fromJson(response.getBody(), EventDto.class);
+    }
 
-        log.debug(requestEntity.toString());
+    public void deleteEvent(String eventId, String accessToken) {
 
-        return dto;
+        HttpHeaders headers = httpHeadersUtil.getOAuthHeader(accessToken);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(headers);
+
+        restTemplate.exchange(host + "/" + eventId, HttpMethod.DELETE,
+            requestEntity, String.class);
     }
 
     private Gson buildGson() {

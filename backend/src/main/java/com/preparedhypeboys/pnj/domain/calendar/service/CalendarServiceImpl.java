@@ -42,8 +42,10 @@ public class CalendarServiceImpl implements
 
     @Override
     @Transactional
-    public void deleteEvent(String eventId) {
+    public void deleteEvent(Long memberId, String eventId) {
+        Optional<Member> member = memberRepository.findById(memberId);
 
+        member.ifPresent(value -> googleCalendarDao.deleteEvent(eventId, value.getAccessToken()));
     }
 
     @Override
