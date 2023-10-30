@@ -6,9 +6,9 @@ import "./PageManager.css";
 function PageManager() {
   const PM: Record<string, string> = {
     // Add more components and their URLs as needed...
-    Main: "/",
+    Demo: "/demo",
     // 메인서비스
-    Calendar: "/calendar",
+    Calendar: "/",
     Community: "/community",
     Solution: "/solution",
     SolutionList: "/solutionlist",
@@ -27,7 +27,7 @@ function PageManager() {
   };
 
   const sections = {
-    Entrance: ["Main"],
+    Entrance: ["Demo"],
     Auth: ["SignUp", "Login", "MyPage"],
     Calendar: ["Calendar", "Community"],
     Solution: ["Solution", "SolutionList"],
