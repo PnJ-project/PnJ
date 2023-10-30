@@ -50,8 +50,12 @@ public class CalendarServiceImpl implements
 
     @Override
     @Transactional
-    public EventDto updateEvent(EventDto event) {
-        return null;
+    public EventDto updateEvent(Long memberId, EventDto event) {
+        Optional<Member> member = memberRepository.findById(memberId);
+
+        // TODO 예외처리
+        return member.map(value -> googleCalendarDao.updateEvent(event, value.getAccessToken()))
+            .orElse(null);
     }
 
     @Override
