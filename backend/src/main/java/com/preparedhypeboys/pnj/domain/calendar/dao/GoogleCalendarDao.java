@@ -73,6 +73,19 @@ public class GoogleCalendarDao {
             requestEntity, String.class);
     }
 
+    public EventDto updateEvent(EventDto eventDto, String accessToken) {
+
+        HttpHeaders headers = httpHeadersUtil.getOAuthHeader(accessToken);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(gson.toJson(eventDto), headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(host + "/" + eventDto.getId(),
+            HttpMethod.PUT,
+            requestEntity, String.class);
+
+        return gson.fromJson(response.getBody(), EventDto.class);
+    }
+
     private Gson buildGson() {
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
