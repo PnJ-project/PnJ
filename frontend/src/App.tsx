@@ -1,5 +1,10 @@
-// import React from 'react';
+// 라우터
 import { Route, Routes } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+// 리덕스
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
+// 페이지
 import Main from "./pages/Main";
 import Calendar from "./pages/Calendar";
 import Community from "./pages/Community";
@@ -14,14 +19,21 @@ import Contact from "./pages/service/Contact";
 import Team from "./pages/service/Team";
 import PageManager from "./pages/PageManager";
 import TestManager from "./pages/test/TestManager";
+
 export default function App() {
+  // 로그인 여부
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   return (
     <>
       <Routes>
         {/* 홈 */}
-        <Route path="/" element={<Main />} />
+        {/* <Route path="/demo" element={<Main />} /> */}
+        <Route
+          path="/demo"
+          element={!isLoggedIn ? <Main /> : <Navigate to="/" />}
+        />
         {/* 메인 서비스 */}
-        <Route path="/calendar" element={<Calendar />} />
+        <Route path="/" element={<Calendar />} />
         <Route path="/community" element={<Community />} />
         <Route path="/solution" element={<Solution />} />
         <Route path="/solutionlist" element={<SolutionList />} />

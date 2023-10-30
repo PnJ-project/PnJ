@@ -3,12 +3,13 @@
 import plogo from "../assets/main.svg";
 import UseDemo from "../components/atoms/UseDemo";
 import GoogleLogin from "../components/atoms/GoogleLogin";
+import DemoCalendar from "../components/organisms/demoCalendar";
 import styled from "styled-components";
-export default function Main() {
-  // const clientId: string = process.env.GOOGLE_CLIENT_ID!;
 
+export default function Main() {
   return (
     <>
+      {/* 메인 페이지 부 */}
       <Container>
         <TextDiv>
           <Title>
@@ -25,6 +26,8 @@ export default function Main() {
         </TextDiv>
         <LogoImg src={plogo} alt="PnJ LOGO" />
       </Container>
+      {/* 캘린더 부 */}
+      <DemoCalendar />
     </>
   );
 }
@@ -40,7 +43,7 @@ const TextDiv = styled.div`
   align-items: flex-start;
   gap: 16px;
   margin-top: auto;
-  padding-left: 40px;
+  padding-left: 60px;
 `;
 const Title = styled.div`
   font-family: TheJamsil5;
