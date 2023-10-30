@@ -5,13 +5,13 @@ import stringReducer from './slice/StringSlice';
 import listReducer from './slice/ListSlice';
 
 const rootReducer = combineReducers({
-    counter: counterReducer,
-    string: stringReducer,
-    list: listReducer,
+  counter: counterReducer,
+  string: stringReducer,
+  list: listReducer,
 });
 
 const store = configureStore({
-    reducer: rootReducer,
+  reducer: rootReducer,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

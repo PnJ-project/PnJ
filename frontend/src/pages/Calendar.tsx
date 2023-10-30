@@ -1,178 +1,167 @@
-import React, { ChangeEvent } from "react";
-import BigCalendar from "react-big-calendar";
+import React, {useState } from "react";
+import  BigCalendar from "react-big-calendar";
 import moment from "moment";
 import { Dialog, TextField, Button } from "@mui/material";
-import { Moment } from "moment";
-
+import { TimePicker } from "@mui/lab";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-// import "./Calendar.css"; // 적절한 CSS 파일을 import하여 스타일을 적용할 수 있습니다.
 
 BigCalendar.momentLocalizer(moment);
 
-interface MyEvent {
+interface Event {
   title: string;
   start: Date;
   end: Date;
-  desc: string;
-  color?: string;
-  className?: string;
+  desc?: string;
 }
 
-interface State {
-  events: MyEvent[];
-  title: string;
-  start: Date;
-  end: Date;
-  desc: string;
-  openSlot: boolean;
-  openEvent: boolean;
-  clickedEvent: MyEvent;
-}
+const Calendar: React.FC = () => {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [title, setTitle] = useState<string>("");
+  const [start, setStart] = useState<Date>(new Date());
+  const [end, setEnd] = useState<Date>(new Date());
+  const [desc, setDesc] = useState<string>("");
+  const [openSlot, setOpenSlot] = useState<boolean>(false);
+  const [openEvent, setOpenEvent] = useState<boolean>(false);
+  const [clickedEvent, setClickedEvent] = useState<Event | undefined>(undefined);
 
-class Calendar extends React.Component<{}, State> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      events: [],
-      title: "",
-      start: new Date(),
-      end: new Date(),
-      desc: "",
-      openSlot: false,
-      openEvent: false,
-      clickedEvent: {} as MyEvent,
-    };
-  }
-
-  handleClose = () => {
-    this.setState({ openEvent: false, openSlot: false });
+  const handleClose = () => {
+    setOpenEvent(false);
+    setOpenSlot(false);
   };
 
-  handleSlotSelected = (slotInfo: { start: Date; end: Date }) => {
-    this.setState({
-      title: "",
-      desc: "",
-      start: slotInfo.start,
-      end: slotInfo.end,
-      openSlot: true,
-    });
+  const handleSlotSelected = (slotInfo: { start: Date, end: Date }) => {
+    setStart(slotInfo.start);
+    setEnd(slotInfo.end);
+    setTitle("");
+    setDesc("");
+    setOpenSlot(true);
   };
 
-  handleEventSelected = (event: MyEvent) => {
-    this.setState({
-      openEvent: true,
-      clickedEvent: event,
-      start: event.start,
-      end: event.end,
-      title: event.title,
-      desc: event.desc,
-    });
+  const handleEventSelected = (event: Event) => {
+    setStart(event.start);
+    setEnd(event.end);
+    setTitle(event.title);
+    setDesc(event.desc || "");
+    setClickedEvent(event);
+    setOpenEvent(true);
   };
 
-  setTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ title: e.target.value });
+  const setNewAppointment = () => {
+    const appointment: Event = { title, start, end, desc };
+    setEvents([...events, appointment]);
+    handleClose();
   };
 
-  setDescription = (e: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ desc: e.target.value });
-  };
-
-  handleStartTime = (date: Moment | null) => {
-    if (date) {
-      this.setState({ start: date.toDate() });
+  const updateEvent = () => {
+    if (clickedEvent) {
+      const updatedEvents: Event[] = events.map((event) =>
+        event === clickedEvent ? { ...event, title, desc, start, end } : event
+      );
+      setEvents(updatedEvents);
     }
+    handleClose();
   };
 
-  handleEndTime = (date: Moment | null) => {
-    if (date) {
-      this.setState({ end: date.toDate() });
+  const deleteEvent = () => {
+    if (start && events) {
+      const updatedEvents: Event[] = events.filter((event) => event.start !== start);
+      setEvents(updatedEvents);
     }
+    handleClose();
   };
 
-  setNewAppointment = () => {
-    const { start, end, title, desc } = this.state;
-    const appointment: MyEvent = { title, start, end, desc } as MyEvent;
-    const events: MyEvent[] = [...this.state.events, appointment];
-    this.setState({ events });
-  };
+  const appointmentActions = [
+    <Button key="cancel" color="secondary" onClick={handleClose}>
+      Cancel
+    </Button>,
+    <Button
+      key="submit"
+      color="primary"
+      variant="contained"
+      onClick={() => {
+        setNewAppointment();
+      }}
+    >
+      Submit
+    </Button>
+  ];
 
-  updateEvent = () => {
-    const { title, desc, start, end, events, clickedEvent } = this.state;
-    const updatedEvents = events.map((event) =>
-      event === clickedEvent ? { ...event, title, desc, start, end } : event
-    );
-    this.setState({ events: updatedEvents });
-  };
+  const eventActions = [
+    <Button key="cancel" color="secondary" onClick={handleClose}>
+      Cancel
+    </Button>,
+    <Button
+      key="delete"
+      color="secondary"
+      onClick={() => {
+        deleteEvent();
+      }}
+    >
+      Delete
+    </Button>,
+    <Button
+      key="confirm"
+      color="primary"
+      onClick={() => {
+        updateEvent();
+      }}
+    >
+      Confirm Edit
+    </Button>
+  ];
 
-  deleteEvent = () => {
-    const { start, events } = this.state;
-    const updatedEvents = events.filter((event) => event.start !== start);
-    this.setState({ events: updatedEvents });
-  };
+  return (
+    <div>
+      <BigCalendar
+        events={events}
+        views={["month", "week", "day", "agenda"]}
+        timeslots={2}
+        defaultView="month"
+        defaultDate={new Date()}
+        selectable={true}
+        // onSelectEvent={(event: Event) => handleEventSelected(event)}
+        // onSelectSlot={(slotInfo: { start: Date, end: Date }) => handleSlotSelected(slotInfo)}
+      />
 
-  render() {
-    const { events, openSlot, openEvent } = this.state;
-
-    return (
-      <div id="Calendar">
-        <BigCalendar
-          events={events}
-          views={["month", "week", "day", "agenda"]}
-          timeslots={2}
-          defaultView="month"
-          defaultDate={new Date()}
-          selectable={true}
-          onSelectEvent={this.handleEventSelected}
-          onSelectSlot={this.handleSlotSelected}
+      {/* <Dialog
+        title={`Book an appointment on ${moment(start).format("MMMM Do YYYY")}`}
+        actions={appointmentActions}
+        modal={false}
+        open={openSlot}
+        onRequestClose={handleClose}
+      >
+        <TextField
+          floatingLabelText="Title"
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <br />
+        <TextField
+          floatingLabelText="Description"
+          onChange={(e) => setDesc(e.target.value)}
         />
 
-        <Dialog
-          title={`Book an appointment on ${moment(this.state.start).format(
-            "MMMM Do YYYY"
-          )}`}
-          open={openSlot}
-          onClose={this.handleClose}
-        >
-          <TextField
-            label="Title"
-            onChange={this.setTitle}
-          />
-          <br />
-          <TextField
-            label="Description"
-            onChange={this.setDescription}
-          />
-          <Button onClick={this.setNewAppointment}>Submit</Button>
-        </Dialog>
+      </Dialog>
 
-        <Dialog
-          title={`View/Edit Appointment of ${moment(this.state.start).format(
-            "MMMM Do YYYY"
-          )}`}
-          open={openEvent}
-          onClose={this.handleClose}
-        >
-          <TextField
-            label="Title"
-            defaultValue={this.state.title}
-            onChange={this.setTitle}
-          />
-          <br />
-          <TextField
-            label="Description"
-            defaultValue={this.state.desc}
-            onChange={this.setDescription}
-          />
-          <Button onClick={this.deleteEvent} color="secondary">
-            Delete
-          </Button>
-          <Button onClick={this.updateEvent} color="primary">
-            Confirm Edit
-          </Button>
-        </Dialog>
-      </div>
-    );
-  }
-}
+      <Dialog
+        title={`View/Edit Appointment of ${moment(start).format("MMMM Do YYYY")}`}
+        actions={eventActions}
+        modal={false}
+        open={openEvent}
+        onRequestClose={handleClose}
+      >
+        <TextField
+          defaultValue={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <br />
+        <TextField
+          defaultValue={desc}
+          onChange={(e) => setDesc(e.target.value)}
+        />
+
+      </Dialog> */}
+    </div>
+  );
+};
 
 export default Calendar;
