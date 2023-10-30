@@ -11,7 +11,7 @@ public interface CalendarService {
 
     public EventDto createEvent(InsertEventRequestDto event);
 
-    public void deleteEvent(String eventId);
+    public void deleteEvent(Long memberId, String eventId);
 
     public EventDto updateEvent(EventDto event);
 
