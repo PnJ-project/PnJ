@@ -3,7 +3,7 @@
 import plogo from "../assets/main.svg";
 import UseDemo from "../components/atoms/UseDemo";
 import GoogleLogin from "../components/atoms/GoogleLogin";
-import DemoCalendar from "../components/organisms/demoCalendar";
+import DemoCalendar from "../components/organisms/DemoCalendar";
 import styled from "styled-components";
 
 export default function Main() {
