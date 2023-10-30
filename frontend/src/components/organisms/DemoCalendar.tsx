@@ -5,12 +5,12 @@ import TextareaAutosize from "react-textarea-autosize";
 export default function DemoCalendar() {
   // 기본 세팅
   const [textSave, setTextSave] = useState("");
+
   // 붙여넣기
   const handlePaste = () => {
     navigator.clipboard.readText().then((text) => {
-      if (textSave) {
-        setTextSave(textSave + text);
-      }
+      console.log(text);
+      setTextSave(text);
     });
   };
   // 인풋필드 변경시 저장
@@ -30,6 +30,7 @@ export default function DemoCalendar() {
             className="ExhibitionInput"
             onChange={handleInputChange}
             placeholder="일정을 입력해보세요"
+            value={textSave}
           />
           <button>음성인식</button>
           <button onClick={handlePaste}>붙여넣기</button>

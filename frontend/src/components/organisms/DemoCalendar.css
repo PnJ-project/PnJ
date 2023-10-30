@@ -19,6 +19,9 @@
 .InputContaier {
   width: 100%;
   border: 2px solid rgb(32, 127, 28);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .CalendarContainer {
