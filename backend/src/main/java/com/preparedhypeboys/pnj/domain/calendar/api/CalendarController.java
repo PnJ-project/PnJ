@@ -5,7 +5,7 @@ import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponse
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.INSERT_EVENT_SUCCESS;
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.UPDATE_EVENT_SUCCESS;
 
-import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.InsertEventRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.EventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
 import com.preparedhypeboys.pnj.domain.calendar.service.CalendarService;
 import com.preparedhypeboys.pnj.global.dto.ResponseDto;
@@ -43,7 +43,7 @@ public class CalendarController {
 
     @PostMapping(value = "")
     public ResponseEntity<ResponseDto<EventDto>> insertEvent(
-        @RequestBody InsertEventRequestDto requestDto
+        @RequestBody EventRequestDto requestDto
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(INSERT_EVENT_SUCCESS.getMessage(),
@@ -63,14 +63,13 @@ public class CalendarController {
         );
     }
 
-    @PutMapping(value = "/{memberId}")
+    @PutMapping(value = "")
     public ResponseEntity<ResponseDto<EventDto>> updateEvent(
-        @PathVariable(value = "memberId") Long memberId,
-        @RequestBody EventDto eventDto
+        @RequestBody EventRequestDto requestDto
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(UPDATE_EVENT_SUCCESS.getMessage(),
-                calendarService.updateEvent(memberId, eventDto))
+                calendarService.updateEvent(requestDto))
         );
     }
 
