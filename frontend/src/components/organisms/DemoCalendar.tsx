@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import "./DemoCalendar.css";
 import TextareaAutosize from "react-textarea-autosize";
+import TodoList from "../molecules/TodoList";
 export default function DemoCalendar() {
   // 기본 세팅
   const [textSave, setTextSave] = useState("");
@@ -16,6 +17,13 @@ export default function DemoCalendar() {
   // 인풋필드 변경시 저장
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextSave(event.target.value);
+  };
+  // 제출하기
+  const handleSubmit = () => {
+    // API 요청
+
+    // 리셋
+    setTextSave("");
   };
 
   useEffect(() => {}, []);
@@ -34,14 +42,14 @@ export default function DemoCalendar() {
           />
           <button>음성인식</button>
           <button onClick={handlePaste}>붙여넣기</button>
-          <button>제출하기</button>
+          <button onClick={handleSubmit}>제출하기</button>
         </div>
         <div className="CalendarContainer">
           {/* 투두부 */}
-          <div className="TodoContainer">
-            <div>1</div>
-            <div>2</div>
+          <div className="Todo-Container">
+            <TodoList />
           </div>
+
           {/* 캘린더부 */}
           <div className="Calendar"></div>
         </div>

@@ -4,6 +4,7 @@ import Csrapi from "./CsrApi";
 import Login from "./GoogleLogin";
 import Logout from "./Logout";
 import Sound from "./Sound";
+import TodoSample from "./TodoSample";
 
 type ComponentType = React.FC<unknown>;
 
@@ -18,6 +19,7 @@ const TestManager: React.FC = () => {
     Login: Login,
     Logout: Logout,
     Sound: Sound,
+    TodoSample: TodoSample,
     // 다른 컴포넌트들을 원하는 만큼 추가할 수 있습니다.
   };
 
