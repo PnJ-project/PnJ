@@ -1,8 +1,8 @@
 import React, {useState } from "react";
 import  BigCalendar from "react-big-calendar";
 import moment from "moment";
-import { Dialog, TextField, Button } from "@mui/material";
-import { TimePicker } from "@mui/lab";
+// import { Dialog, TextField, Button } from "@mui/material";
+// import { TimePicker } from "@mui/lab";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 BigCalendar.momentLocalizer(moment);
@@ -71,26 +71,25 @@ const Calendar: React.FC = () => {
   };
 
   const appointmentActions = [
-    <Button key="cancel" color="secondary" onClick={handleClose}>
+    <button key="cancel" onClick={handleClose}>
       Cancel
-    </Button>,
-    <Button
+    </button>,
+    <button
       key="submit"
       color="primary"
-      variant="contained"
       onClick={() => {
         setNewAppointment();
       }}
     >
       Submit
-    </Button>
+    </button>
   ];
 
   const eventActions = [
-    <Button key="cancel" color="secondary" onClick={handleClose}>
+    <button key="cancel" color="secondary" onClick={handleClose}>
       Cancel
-    </Button>,
-    <Button
+    </button>,
+    <button
       key="delete"
       color="secondary"
       onClick={() => {
@@ -98,8 +97,8 @@ const Calendar: React.FC = () => {
       }}
     >
       Delete
-    </Button>,
-    <Button
+    </button>,
+    <button
       key="confirm"
       color="primary"
       onClick={() => {
@@ -107,7 +106,7 @@ const Calendar: React.FC = () => {
       }}
     >
       Confirm Edit
-    </Button>
+    </button>
   ];
 
   return (
