@@ -1,10 +1,13 @@
 package com.preparedhypeboys.pnj.domain.calendar.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 public class EventDto {
 
