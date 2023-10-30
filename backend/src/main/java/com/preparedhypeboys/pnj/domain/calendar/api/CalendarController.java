@@ -1,6 +1,9 @@
 package com.preparedhypeboys.pnj.domain.calendar.api;
 
-import com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage;
+import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.GET_EVENT_SUCCESS;
+import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.INSERT_EVENT_SUCCESS;
+
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.InsertEventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
 import com.preparedhypeboys.pnj.domain.calendar.service.CalendarService;
 import com.preparedhypeboys.pnj.global.dto.ResponseDto;
@@ -10,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +32,18 @@ public class CalendarController {
         @PathVariable(value = "timeMin") String timeMin
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
-            ResponseDto.create(CalendarResponseMessage.GET_EVENT_SUCCESS.getMessage(),
+            ResponseDto.create(GET_EVENT_SUCCESS.getMessage(),
                 calendarService.readEventList(memberId, timeMax, timeMin))
+        );
+    }
+
+    @PostMapping(value = "")
+    public ResponseEntity<ResponseDto<EventDto>> insertEvent(
+        @RequestBody InsertEventRequestDto requestDto
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseDto.create(INSERT_EVENT_SUCCESS.getMessage(),
+                calendarService.createEvent(requestDto))
         );
     }
 
