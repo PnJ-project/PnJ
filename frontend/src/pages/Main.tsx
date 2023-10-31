@@ -5,29 +5,46 @@ import UseDemo from "../components/atoms/UseDemo";
 import GoogleLogin from "../components/atoms/GoogleLogin";
 import DemoCalendar from "../components/organisms/DemoCalendar";
 import styled from "styled-components";
+import { useState } from "react";
 
 export default function Main() {
+  const [demoVisible, setdemoVisible] = useState(false);
+  // 기본세팅
+  // 데모버튼 클릭시
+  const handleDemo = () => {
+    setdemoVisible(true);
+  };
   return (
     <>
       {/* 메인 페이지 부 */}
-      <Container>
-        <TextDiv>
-          <Title>
-            <div>
-              <Span>음성과 텍스트</Span>로
-            </div>
-            혁신적인 일정관리를 경험해보세요
-          </Title>
-          <Content>innovatory Experience schedule management</Content>
-          <Btns>
-            <UseDemo />
-            <GoogleLogin />
-          </Btns>
-        </TextDiv>
-        <LogoImg src={plogo} alt="PnJ LOGO" />
-      </Container>
+      {!demoVisible && (
+        <>
+          <Container>
+            <TextDiv>
+              <Title>
+                <div>
+                  <Span>음성과 텍스트</Span>로
+                </div>
+                혁신적인 일정관리를 경험해보세요
+              </Title>
+              <Content>innovatory Experience schedule management</Content>
+              <Btns>
+                <div onClick={handleDemo}>
+                  <UseDemo />
+                </div>
+                <GoogleLogin />
+              </Btns>
+            </TextDiv>
+            <LogoImg src={plogo} alt="PnJ LOGO" />
+          </Container>
+        </>
+      )}
       {/* 캘린더 부 */}
-      <DemoCalendar />
+      {demoVisible && (
+        <>
+          <DemoCalendar />
+        </>
+      )}
     </>
   );
 }
