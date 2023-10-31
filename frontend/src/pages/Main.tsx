@@ -5,19 +5,24 @@ import UseDemo from "../components/atoms/UseDemo";
 import GoogleLogin from "../components/atoms/GoogleLogin";
 import DemoCalendar from "../components/organisms/DemoCalendar";
 import styled from "styled-components";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setDemoTrue } from "../store/slice/ToggleSlice";
+import { RootState } from "../store/store";
 
 export default function Main() {
-  const [demoVisible, setdemoVisible] = useState(false);
   // 기본세팅
+  const dispatch = useDispatch();
+  const useDemoVisible = useSelector(
+    (state: RootState) => state.toggle.isUseDemo
+  );
   // 데모버튼 클릭시
   const handleDemo = () => {
-    setdemoVisible(true);
+    dispatch(setDemoTrue());
   };
   return (
     <>
       {/* 메인 페이지 부 */}
-      {!demoVisible && (
+      {!useDemoVisible && (
         <>
           <Container>
             <TextDiv>
@@ -40,7 +45,7 @@ export default function Main() {
         </>
       )}
       {/* 캘린더 부 */}
-      {demoVisible && (
+      {useDemoVisible && (
         <>
           <DemoCalendar />
         </>

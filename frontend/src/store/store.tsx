@@ -5,6 +5,7 @@ import stringReducer from "./slice/StringSlice";
 import listReducer from "./slice/ListSlice";
 import authReducer from "./slice/AuthSlice";
 import vitoReducer from "./slice/SoundSlice";
+import toggleReducer from "./slice/ToggleSlice";
 
 const rootReducer = combineReducers({
   counter: counterReducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   list: listReducer,
   auth: authReducer,
   vito: vitoReducer,
+  toggle: toggleReducer,
 });
 
 const store = configureStore({

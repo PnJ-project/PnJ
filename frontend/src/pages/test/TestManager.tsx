@@ -5,6 +5,7 @@ import Login from "./GoogleLogin";
 import Logout from "./Logout";
 import Sound from "./Sound";
 import TodoSample from "./TodoSample";
+import Navbar from "./NavbarTest";
 
 type ComponentType = React.FC<unknown>;
 
@@ -20,6 +21,7 @@ const TestManager: React.FC = () => {
     Logout: Logout,
     Sound: Sound,
     TodoSample: TodoSample,
+    Navbar: Navbar,
     // 다른 컴포넌트들을 원하는 만큼 추가할 수 있습니다.
   };
 

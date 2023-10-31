@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-// 캘린더 정보 불러오기
+// 구글 캘린더 정보 불러오기
 export interface ResReadCalendar {
   Sample: string;
 }
@@ -16,7 +16,7 @@ export const ReadCalendar = async () => {
   }
 };
 
-// 캘린더 정보 생성하기
+// 구글 캘린더 정보 생성하기
 export interface ResAddCalendar {
   Sample: string;
 }
@@ -36,7 +36,7 @@ export const AddCalendar = async (dataToSend: ReqAddCalendar) => {
   }
 };
 
-// 캘린더 정보 수정하기
+// 구글 캘린더 정보 수정하기
 export interface ResUpdateCalendar {
   Sample: string;
 }
@@ -56,7 +56,7 @@ export const UpdateCalendar = async (dataToSend: ReqUpdateCalendar) => {
   }
 };
 
-// 캘린더 정보 삭제하기
+// 구글 캘린더 정보 삭제하기
 export const DeleteCalendar = async () => {
   try {
     axios.delete(`${process.env.API_URL}/Sample`);
@@ -66,3 +66,5 @@ export const DeleteCalendar = async () => {
     throw error;
   }
 };
+
+//

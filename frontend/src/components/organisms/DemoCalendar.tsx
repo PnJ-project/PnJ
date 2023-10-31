@@ -5,8 +5,8 @@ import TodoList from "../molecules/TodoList";
 import PnjLogo from "../atoms/PnjLogo";
 import Mike from "/image/mike.svg";
 import Paste from "/image/paste.svg";
-import "./DemoCalendar.css";
 import GoogleLogin from "../atoms/GoogleLogin";
+import "./DemoCalendar.css";
 
 export default function DemoCalendar() {
   // 기본 세팅
@@ -15,7 +15,6 @@ export default function DemoCalendar() {
   // 붙여넣기
   const handlePaste = () => {
     navigator.clipboard.readText().then((text) => {
-      console.log(text);
       setTextSave(text);
     });
   };
@@ -24,15 +23,25 @@ export default function DemoCalendar() {
     setTextSave(event.target.value);
   };
   // 음성녹음
-  const handleRecord = () => {};
+  const handleRecord = () => {
+    // API 요청
+  };
   // 제출하기
   const handleSubmit = () => {
-    // API 요청
+    // 등록 API 요청
 
-    // 리셋
+    // 투두 갱신
+
+    // 캘린더 갱신
+
+    // 인풋 필드 리셋
     setTextSave("");
   };
 
+  // 초기 캘린더 정보 불러오기
+  useEffect(() => {}, []);
+
+  // 초기 투두 정보 불러오기
   useEffect(() => {}, []);
 
   return (

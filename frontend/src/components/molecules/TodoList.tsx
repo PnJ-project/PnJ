@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TodoForm from "./TodoForm";
 import Todo from "./Todo";
 import "./Todo.css";
@@ -9,7 +9,7 @@ interface TodoItem {
   isComplete: boolean;
 }
 
-const TodoList: React.FC = () => {
+export default function TodoList() {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   // 추가
   const addTodo = (todo: { id: number; text: string }) => {
@@ -45,22 +45,13 @@ const TodoList: React.FC = () => {
 
   return (
     <>
-      <div className="todoTitle"> 할일목록</div>
-      <TodoForm onSubmit={addTodo} />
-      <div>
-        {todos.length != 0 ? (
-          <>
-            <hr />
-          </>
-        ) : (
-          <>
-            <div style={{ margin: "10px" }}></div>
-          </>
-        )}
+      <div className="TodoHeader">
+        <div className="todoTitle"> 할일목록</div>
+        <TodoForm onSubmit={addTodo} />
       </div>
-      <Todo todos={todos} removeTodo={removeTodo} updateTodo={updateTodo} />
+      <div className="TodoBody">
+        <Todo todos={todos} removeTodo={removeTodo} updateTodo={updateTodo} />
+      </div>
     </>
   );
-};
-
-export default TodoList;
+}

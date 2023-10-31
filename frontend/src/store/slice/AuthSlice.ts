@@ -1,15 +1,21 @@
 // 회원관리 관련입니다
 import { createSlice } from "@reduxjs/toolkit";
 
-interface infoState {}
+interface infoState {
+  memberId: number | null;
+  memberEmail: string;
+}
 interface LogState {
   isLoggedIn: boolean;
-  info: infoState;
+  data: infoState;
 }
 
 const initialState: LogState = {
   isLoggedIn: false,
-  info: {},
+  data: {
+    memberId: null,
+    memberEmail: "",
+  },
 };
 
 const authSlice = createSlice({
@@ -22,8 +28,11 @@ const authSlice = createSlice({
     logout: (state) => {
       state.isLoggedIn = false;
     },
+    setUserData: (state, actions) => {
+      state.data = actions.payload;
+    },
   },
 });
 
-export const { loginsuccess, logout } = authSlice.actions;
+export const { loginsuccess, logout, setUserData } = authSlice.actions;
 export default authSlice.reducer;
