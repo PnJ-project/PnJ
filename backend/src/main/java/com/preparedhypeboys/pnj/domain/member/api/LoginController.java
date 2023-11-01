@@ -4,7 +4,7 @@ package com.preparedhypeboys.pnj.domain.member.api;
 import static com.preparedhypeboys.pnj.domain.member.constant.MemberResponseMessage.LOGIN_START;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.LoginReponseDto;
+import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.LoginResponseDto;
 import com.preparedhypeboys.pnj.domain.member.service.OAuth2UserService;
 import com.preparedhypeboys.pnj.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class LoginController {
     private final OAuth2UserService oAuth2UserService;
 
     @GetMapping("")
-    public ResponseEntity<ResponseDto<LoginReponseDto>> login(
+    public ResponseEntity<ResponseDto<LoginResponseDto>> login(
         @RequestParam(name = "code") String code)
         throws JsonProcessingException {
         return ResponseEntity.status(HttpStatus.OK

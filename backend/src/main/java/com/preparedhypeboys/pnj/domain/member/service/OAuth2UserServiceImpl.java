@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.preparedhypeboys.pnj.domain.member.dao.MemberRepository;
-import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.LoginReponseDto;
+import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.LoginResponseDto;
 import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.OAuthMemberInfoDto;
 import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.OAuthTokenResponse;
 import com.preparedhypeboys.pnj.domain.member.entity.Member;
@@ -42,7 +42,7 @@ public class OAuth2UserServiceImpl implements
 
     @Override
     @Transactional
-    public LoginReponseDto loginRedirectProcess(String code) throws JsonProcessingException {
+    public LoginResponseDto loginRedirectProcess(String code) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> params = new HashMap<>();
 
@@ -86,11 +86,9 @@ public class OAuth2UserServiceImpl implements
 
         // TODO JWT TOKEN 암호화 + ResponseDto 변경
 
-        LoginReponseDto dto = LoginReponseDto.builder()
+        return LoginResponseDto.builder()
             .memberEmail(member.get().getEmail())
-            .memeberId(member.get().getId())
+            .memberId(member.get().getId())
             .build();
-
-        return dto;
     }
 }
