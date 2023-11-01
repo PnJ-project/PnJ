@@ -41,4 +41,7 @@ public class Todo extends BaseEntity {
         this.summary = summary;
     }
 
+    public void modifySummary(String summary) {
+        this.summary = summary;
+    }
 }
