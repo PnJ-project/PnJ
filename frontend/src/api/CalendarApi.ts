@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const local_back_url = process.env.BACKEND_SERVER;
-// const service_back_url = process.env.BACKEND_SERVER_LIVE;
+const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
+// const service_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 // 구글 캘린더 정보 불러오기
 export const readCalendar = async () => {

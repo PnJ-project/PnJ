@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const local_back_url = process.env.BACKEND_SERVER;
-// const service_back_url = process.env.BACKEND_SERVER_LIVE;
+const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
+// const service_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 // 로그인
 export const logInPnJ = async (code: string) => {
