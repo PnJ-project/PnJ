@@ -1,32 +1,36 @@
-// import axios, { AxiosResponse } from "axios";
+import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 
 // 로그인
-export interface LoginResponse {
-  message: string;
-  data: {
-    memberId: number;
-    memberEmail: string;
-  };
-}
-export const LogInPnJ = async (code: string | string[]) => {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    const response: LoginResponse = await axios.get(
-      `http://70.12.247.132:8080/api/login?code=${code}`
+export const useLogInPnJ = () => {
+  return useMutation(async (code) => {
+    const response = await axios.get(
+      `${process.env.API_URL}/api/login?code=${code}`
     );
     return response.data;
-  } catch (error) {
-    throw error;
-  }
+  });
 };
 
 // 로그아웃
+export const useLogOut = () => {
+  return useQuery("logout", async () => {
+    const { data } = await axios.get(`${process.env.API_URL}/Sample`);
+    return data;
+  });
+};
 
 // 토큰 리프레시
-
-// 회원가입
-
-// 회원탈퇴
+export const useTokenRefresh = () => {
+  return useQuery("refresh", async () => {
+    const { data } = await axios.get(`${process.env.API_URL}/Sample`);
+    return data;
+  });
+};
 
 // 내정보 불러오기
+export const useFetchMyInfo = () => {
+  return useQuery("myinfo", async () => {
+    const { data } = await axios.get(`${process.env.API_URL}/Sample`);
+    return data;
+  });
+};
