@@ -35,8 +35,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
+                sh 'echo $FRONTEND_PORT'
                 sh 'docker rm -f frontend'
-                sh 'docker run -d --name frontend -p {env.FRONTEND_PORT}:5173 frontend:latest'
+                sh 'docker run -d --name frontend -p ${FRONTEND_PORT}:5173 frontend:latest'
             }
         }
 

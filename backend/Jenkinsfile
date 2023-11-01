@@ -30,8 +30,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
+                sh 'echo $BACKEND_PORT'
                 sh 'docker rm -f backend'
-                sh 'docker run -d --name backend -p {env.BACKEND_PORT}:8080 backend:latest'
+                sh 'docker run -d --name backend -p ${BACKEND_PORT}:8080 backend:latest'
                 sh 'docker network connect mariadb_network backend'
                 sh 'docker network connect redis_network backend'
             }
