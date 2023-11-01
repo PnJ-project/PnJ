@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    stages {
+        stage('Check Changes') {
+            script {
+                def changes = checkout scm
+                def changedFiles = changes?.changedFiles?.collect { it.path }
+                def backendChanges = changedFiles?.findAll { it.startsWith('backend/') }
+                
+                if (backendChanges?.isEmpty()) {
+                    currentBuild.result = 'NOT_BUILT'
+                    echo 'No changes in backend/ directory. Skipping build.'
+                    currentBuild.displayName = '#${BUILD_NUMBER} (Skipped)'
+                    return
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('backend') {
+                    script {
+                        sh "docker build -t backend:latest ."
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker rm -f backend'
+                sh 'docker run -d --name backend -p {env.BACK_PORT}:8080 backend:latest'
+                sh 'docker network connect mariadb_network backend'
+                sh 'docker network connect redis_network backend'
+            }
+        }
+
+        stage('Finish') {
+            steps {
+                sh 'docker images -qf dangling=true | xargs -I{} docker rmi {}'
+            }
+        }
+    }
+}
