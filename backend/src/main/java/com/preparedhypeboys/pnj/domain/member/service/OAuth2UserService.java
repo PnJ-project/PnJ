@@ -1,10 +1,10 @@
 package com.preparedhypeboys.pnj.domain.member.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.LoginReponseDto;
+import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.LoginResponseDto;
 
 public interface OAuth2UserService {
 
-    LoginReponseDto loginRedirectProcess(String code) throws JsonProcessingException;
+    LoginResponseDto loginRedirectProcess(String code) throws JsonProcessingException;
 
 }

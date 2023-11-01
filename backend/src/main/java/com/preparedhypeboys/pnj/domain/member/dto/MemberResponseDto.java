@@ -59,14 +59,14 @@ public class MemberResponseDto {
     }
 
     @Getter
-    public static class LoginReponseDto {
+    public static class LoginResponseDto {
 
-        private Long memeberId;
+        private Long memberId;
         private String memberEmail;
 
         @Builder
-        public LoginReponseDto(Long memeberId, String memberEmail) {
-            this.memeberId = memeberId;
+        public LoginResponseDto(Long memberId, String memberEmail) {
+            this.memberId = memberId;
             this.memberEmail = memberEmail;
         }
     }
