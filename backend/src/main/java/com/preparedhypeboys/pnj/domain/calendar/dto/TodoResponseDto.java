@@ -1,52 +1,21 @@
 package com.preparedhypeboys.pnj.domain.calendar.dto;
 
 import com.preparedhypeboys.pnj.domain.calendar.entity.Todo;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TodoResponseDto {
 
-    @Getter
-    public static class ReadTodoResponseDto {
+    private Long id;
 
-        private List<TodoDto> items;
+    private String summary;
 
-        @Builder
-        public ReadTodoResponseDto(List<TodoDto> list) {
-            this.items = list;
-        }
-
+    public TodoResponseDto(Todo todo) {
+        this.id = todo.getId();
+        this.summary = todo.getSummary();
     }
 
-    @Getter
-    public static class CreateTodoResponseDto {
-
-        private TodoDto todoDto;
-
-        @Builder
-        public CreateTodoResponseDto(Todo todo) {
-            this.todoDto = new TodoDto(todo);
-        }
-
-    }
-
-    @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class TodoDto {
-
-        private Long id;
-
-        private String summary;
-
-        public TodoDto(Todo todo) {
-            this.id = todo.getId();
-            this.summary = todo.getSummary();
-        }
-
-    }
 }

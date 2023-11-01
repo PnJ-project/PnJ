@@ -21,4 +21,14 @@ public class TodoRequestDto {
         }
     }
 
+    @Data
+    public static class UpdateTodoRequestDto {
+
+        private Long memberId;
+
+        private Long todoId;
+
+        private String summary;
+    }
+
 }
