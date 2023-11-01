@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:18-alpine'
+            args '-e DOCKER_BUILDKIT=1'
+        }
+    }
     stages {
         stage('Check Changes') {
             steps{
