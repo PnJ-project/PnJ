@@ -2,16 +2,18 @@ pipeline {
     agent any
     stages {
         stage('Check Changes') {
-            script {
-                def changes = checkout scm
-                def changedFiles = changes?.changedFiles?.collect { it.path }
-                def frontendChanges = changedFiles?.findAll { it.startsWith('frontend/') }
-                
-                if (frontendChanges?.isEmpty()) {
-                    currentBuild.result = 'NOT_BUILT'
-                    echo 'No changes in frontend/ directory. Skipping build.'
-                    currentBuild.displayName = '#${BUILD_NUMBER} (Skipped)'
-                    return
+            steps{
+                script {
+                    def changes = checkout scm
+                    def changedFiles = changes?.changedFiles?.collect { it.path }
+                    def frontendChanges = changedFiles?.findAll { it.startsWith('frontend/') }
+                    
+                    if (frontendChanges?.isEmpty()) {
+                        currentBuild.result = 'NOT_BUILT'
+                        echo 'No changes in frontend/ directory. Skipping build.'
+                        currentBuild.displayName = '#${BUILD_NUMBER} (Skipped)'
+                        return
+                    }
                 }
             }
         }
