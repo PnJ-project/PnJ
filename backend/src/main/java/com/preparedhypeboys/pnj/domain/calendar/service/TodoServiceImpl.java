@@ -2,11 +2,12 @@ package com.preparedhypeboys.pnj.domain.calendar.service;
 
 import com.preparedhypeboys.pnj.domain.calendar.dao.TodoRepository;
 import com.preparedhypeboys.pnj.domain.calendar.dto.TodoRequestDto.CreateTodoRequestDto;
-import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto.CreateTodoResponseDto;
-import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto.ReadTodoResponseDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.TodoRequestDto.UpdateTodoRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto;
 import com.preparedhypeboys.pnj.domain.calendar.entity.Todo;
 import com.preparedhypeboys.pnj.domain.member.dao.MemberRepository;
 import com.preparedhypeboys.pnj.domain.member.entity.Member;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,14 @@ public class TodoServiceImpl implements
     private final MemberRepository memberRepository;
 
     @Override
-    public ReadTodoResponseDto readTodo(Long memberId) {
+    public List<TodoResponseDto> readTodo(Long memberId) {
 
-        return ReadTodoResponseDto.builder().list(todoRepository.findTodosByMemberId(memberId))
-            .build();
+        return todoRepository.findTodosByMemberId(memberId);
     }
 
     @Override
     @Transactional
-    public CreateTodoResponseDto createTodo(CreateTodoRequestDto requestDto) {
+    public TodoResponseDto createTodo(CreateTodoRequestDto requestDto) {
         Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
 
         if (member.isPresent()) {
@@ -37,9 +37,27 @@ public class TodoServiceImpl implements
 
             todoRepository.save(todo);
 
-            return CreateTodoResponseDto.builder().todo(todo).build();
+            return new TodoResponseDto(todo);
 
         }
         return null;
+    }
+
+    @Override
+    @Transactional
+    public TodoResponseDto updateTodo(UpdateTodoRequestDto requestDto) {
+        Optional<Todo> todo = todoRepository.findById(requestDto.getTodoId());
+
+        if (todo.isPresent()) {
+            todo.get().modifySummary(requestDto.getSummary());
+
+            return new TodoResponseDto(todo.get());
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteTodo(Long memberId, Long todoId) {
+
     }
 }

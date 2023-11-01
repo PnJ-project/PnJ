@@ -1,13 +1,18 @@
 package com.preparedhypeboys.pnj.domain.calendar.service;
 
 import com.preparedhypeboys.pnj.domain.calendar.dto.TodoRequestDto.CreateTodoRequestDto;
-import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto.CreateTodoResponseDto;
-import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto.ReadTodoResponseDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.TodoRequestDto.UpdateTodoRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto;
+import java.util.List;
 
 public interface TodoService {
 
-    ReadTodoResponseDto readTodo(Long memberId);
+    List<TodoResponseDto> readTodo(Long memberId);
 
-    CreateTodoResponseDto createTodo(CreateTodoRequestDto requestDto);
+    TodoResponseDto createTodo(CreateTodoRequestDto requestDto);
+
+    TodoResponseDto updateTodo(UpdateTodoRequestDto requestDto);
+
+    void deleteTodo(Long memberId, Long todoId);
 
 }
