@@ -1,19 +1,12 @@
 import { useQuery } from "react-query";
-import axios from "axios";
+import { fetchQuerySample } from "./SampleApi";
 
 const ReactQuery = () => {
-  const { data, isLoading, error } = useQuery("calendarData", async () => {
-    const response = await axios.get(
-      "https://jsonplaceholder.typicode.com/todos/1"
-    );
-    console.log(response, response.data);
-    return response.data;
-  });
+  const { data, isLoading, error } = useQuery("calendarData", fetchQuerySample);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
   if (error) {
     return <div>Error fetching data</div>;
   }
