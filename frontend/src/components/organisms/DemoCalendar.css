@@ -1,0 +1,42 @@
+.MainContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 3px solid pink;
+}
+
+.ExhibitionInput {
+  /* border: none !important; */
+  border-radius: 10px;
+  padding: 4px 10px 4px 10px;
+  /* margin-top: 10px; */
+  width: 70% !important;
+  font-family: SUITE-Regular;
+  overflow: hidden;
+}
+
+.InputContaier {
+  width: 100%;
+  border: 2px solid rgb(32, 127, 28);
+}
+
+.CalendarContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  width: 100%;
+}
+.TodoContainer {
+  display: flex;
+  height: 100%;
+  width: 30%;
+  border: 2px solid red;
+}
+
+.Calendar {
+  width: 70%;
+  border: 2px solid rgb(21, 100, 152);
+  height: 100%;
+}

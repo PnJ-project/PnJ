@@ -1,69 +1,63 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+#root {
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: GmarketSansMedium, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* 색상 저장 */
+:root {
+  --primary-color: #a1c7a5;
+  --blue-color: #41a8f5;
+  --blue2-color: #7ea0c3;
+  --purple-color: #ba7fd1;
+  --orange-color: #fe4d00;
+  --turquoise-color: #01b391;
+  --green-color: #67c9ba;
+  --pink-color: #fa92a3;
+  --red-color: #f6323e;
+  --lime-color: #72d348;
+  --yellow-color: #d6d755;
+  --gold-color: #fed136;
+  --amber-color: #fe9e14;
 }
 
+/* 버튼 기본 */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  position: relative;
+  height: 35px;
+  background: var(--turquoise-color);
+  border: 0px solid #d5d5d5;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  box-sizing: border-box;
+  font-family: SUITE-Regular;
+  margin: 1px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+button:hover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.07);
+  border-radius: 10px;
 }
+button:active {
+  /* transform: translateY(2px); */
+  /* transition: transform 0.2s ease; */
+}
+
+/* 링크 기본 */

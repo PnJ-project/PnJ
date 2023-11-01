@@ -1,6 +1,11 @@
 package com.preparedhypeboys.pnj.domain.calendar.api;
 
-import com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage;
+import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.DELETE_EVENT_SUCCESS;
+import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.GET_EVENT_SUCCESS;
+import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.INSERT_EVENT_SUCCESS;
+import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.UPDATE_EVENT_SUCCESS;
+
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.EventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
 import com.preparedhypeboys.pnj.domain.calendar.service.CalendarService;
 import com.preparedhypeboys.pnj.global.dto.ResponseDto;
@@ -8,8 +13,12 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +36,40 @@ public class CalendarController {
         @PathVariable(value = "timeMin") String timeMin
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
-            ResponseDto.create(CalendarResponseMessage.GET_EVENT_SUCCESS.getMessage(),
+            ResponseDto.create(GET_EVENT_SUCCESS.getMessage(),
                 calendarService.readEventList(memberId, timeMax, timeMin))
+        );
+    }
+
+    @PostMapping(value = "")
+    public ResponseEntity<ResponseDto<EventDto>> insertEvent(
+        @RequestBody EventRequestDto requestDto
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseDto.create(INSERT_EVENT_SUCCESS.getMessage(),
+                calendarService.createEvent(requestDto))
+        );
+    }
+
+    @DeleteMapping(value = "/{memberId}/{eventId}")
+    public ResponseEntity<ResponseDto<?>> deleteEvent(
+        @PathVariable(value = "memberId") Long memberId,
+        @PathVariable(value = "eventId") String eventId
+    ) {
+        calendarService.deleteEvent(memberId, eventId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseDto.create(DELETE_EVENT_SUCCESS.getMessage())
+        );
+    }
+
+    @PutMapping(value = "")
+    public ResponseEntity<ResponseDto<EventDto>> updateEvent(
+        @RequestBody EventRequestDto requestDto
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseDto.create(UPDATE_EVENT_SUCCESS.getMessage(),
+                calendarService.updateEvent(requestDto))
         );
     }
 

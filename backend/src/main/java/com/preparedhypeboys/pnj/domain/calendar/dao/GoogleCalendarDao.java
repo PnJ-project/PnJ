@@ -1,12 +1,14 @@
 package com.preparedhypeboys.pnj.domain.calendar.dao;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.GoogleCalendarResponseDto.GoogleEventListResponseDto;
 import com.preparedhypeboys.pnj.global.util.HttpHeadersUtil;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,18 +19,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class GoogleCalendarDao {
 
     private final HttpHeadersUtil httpHeadersUtil;
 
-    private final Gson gson = new Gson();
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final Gson gson = buildGson();
 
     private final String host = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
-    private final String contentType = "application/json";
 
     public List<EventDto> getEventList(String timeMax, String timeMin, String accessToken) {
 
-        HttpHeaders headers = httpHeadersUtil.getOAuthHeader(accessToken, contentType);
+        HttpHeaders headers = httpHeadersUtil.getOAuthHeader(accessToken);
 
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(headers);
 
@@ -36,15 +39,53 @@ public class GoogleCalendarDao {
             .queryParam("timeMax", timeMax)
             .queryParam("timeMin", timeMin);
 
-        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(uriBuilder.toUriString(),
             HttpMethod.GET, requestEntity, String.class);
 
-        GoogleEventListResponseDto dto = gson.fromJson(response.getBody(),
-            GoogleEventListResponseDto.class);
-
-        return dto.getItems();
+        return gson.fromJson(response.getBody(),
+            GoogleEventListResponseDto.class).getItems();
 
     }
 
+    public EventDto insertEvent(EventDto eventDto, String accessToken) {
+
+        HttpHeaders headers = httpHeadersUtil.getOAuthHeader(accessToken);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(gson.toJson(eventDto), headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(host, HttpMethod.POST,
+            requestEntity, String.class);
+
+        return gson.fromJson(response.getBody(), EventDto.class);
+    }
+
+    public void deleteEvent(String eventId, String accessToken) {
+
+        HttpHeaders headers = httpHeadersUtil.getOAuthHeader(accessToken);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(headers);
+
+        restTemplate.exchange(host + "/" + eventId, HttpMethod.DELETE,
+            requestEntity, String.class);
+    }
+
+    public EventDto updateEvent(EventDto eventDto, String accessToken) {
+
+        HttpHeaders headers = httpHeadersUtil.getOAuthHeader(accessToken);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(gson.toJson(eventDto), headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(host + "/" + eventDto.getId(),
+            HttpMethod.PUT,
+            requestEntity, String.class);
+
+        return gson.fromJson(response.getBody(), EventDto.class);
+    }
+
+    private Gson buildGson() {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+
+        return builder.create();
+    }
 }

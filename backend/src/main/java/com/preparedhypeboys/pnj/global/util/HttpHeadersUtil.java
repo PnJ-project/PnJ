@@ -7,11 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class HttpHeadersUtil {
 
-    public HttpHeaders getOAuthHeader(String token, String contentType) {
+    public HttpHeaders getOAuthHeader(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.add("Authorization", "Bearer " + token);
-        headers.add("content-Type", contentType);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
         return headers;
     }
