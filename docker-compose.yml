@@ -43,6 +43,7 @@ services:
       - /usr/bin/docker:/usr/bin/docker
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/jenkins_home:/var/jenkins_home
+      - /usr/libexec/docker/cli-plugins/docker-buildx:/usr/libexec/docker/cli-plugins/docker-buildx
     ports:
       - ${JENKINS_PORT}:8080
     privileged: true
