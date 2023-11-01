@@ -8,7 +8,7 @@ import { loginsuccess, setUserData } from "../../store/slice/AuthSlice";
 export default function GoogleLogin() {
   // 기본 세팅
   const dispatch = useDispatch();
-  const backend = import.meta.env.VITE_APP_BACKEND_SERVER2;
+  const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
   const googleSocialLogin = useGoogleLogin({
     // scope : 환경 변수 파일로 받아오는게 좋을 것 같습니다
     scope: "email profile https://www.googleapis.com/auth/calendar",

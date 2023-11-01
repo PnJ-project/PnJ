@@ -1,28 +1,55 @@
 import axios from "axios";
 
-const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
-// const service_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
+// const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
+const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 // 구글 캘린더 정보 불러오기
-export const readCalendar = async () => {
-  const response = await axios.get(`${local_back_url}/Sample`);
+export const readCalendar = async (
+  timeMax: string,
+  timeMin: string,
+  memberId: number | null
+) => {
+  const response = await axios.get(
+    `${local_back_url}/api/calendar/${memberId}/${timeMax}/${timeMin}`
+  );
+  console.log(response);
   return response.data;
 };
 
 // 구글 캘린더 정보 생성하기
-export const addCalendar = async (formdata: string) => {
-  const response = await axios.post(`${local_back_url}/Sample`, formdata);
+export interface EventStartEnd {
+  dateTime: string;
+  timeZone: string;
+  date: null | string;
+}
+export interface EventData {
+  memberId: number;
+  event: {
+    id: null | string;
+    summary: string;
+    colorId: number;
+    start: EventStartEnd;
+    end: EventStartEnd;
+  };
+}
+export const addCalendar = async (formdata: EventData) => {
+  const response = await axios.post(`${local_back_url}/api/calendar`, formdata);
   return response.data;
 };
 
 // 구글 캘린더 정보 수정하기
-export const updateCalendar = async (formdata: string) => {
-  const response = await axios.post(`${local_back_url}/Sample`, formdata);
+export const updateCalendar = async (formdata: EventData) => {
+  const response = await axios.put(`${local_back_url}/api/calendar`, formdata);
   return response.data;
 };
 
 // 구글 캘린더 정보 삭제하기
-export const useDeleteCalendar = async () => {
-  const response = await axios.delete(`${local_back_url}/Sample`);
+export const deleteCalendar = async (
+  eventId: number,
+  memberId: number | null
+) => {
+  const response = await axios.delete(
+    `${local_back_url}/api/calendar/${memberId}/${eventId}`
+  );
   return response.data;
 };

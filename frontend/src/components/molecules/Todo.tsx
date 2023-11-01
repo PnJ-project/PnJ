@@ -3,26 +3,30 @@ import { RiCloseCircleLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 
 interface TodoProps {
-  todos: { id: number; text: string; isComplete: boolean }[];
+  todos: { id: number; summary: string }[];
   removeTodo: (id: number) => void;
   updateTodo: (id: number, newValue: string) => void;
 }
 
 const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
+  // 기본세팅
   const [edit, setEdit] = useState<{ id: number | null; value: string }>({
     id: null,
     value: "",
   });
+
   // 업데이트 등록
-  const submitUpdate = (updatedTodo: { id: number; text: string }) => {
+  const submitUpdate = (updatedTodo: { id: number; summary: string }) => {
     if (edit.id) {
-      updateTodo(edit.id, updatedTodo.text);
+      updateTodo(edit.id, updatedTodo.summary);
+      console.log("바꿀녀석은", edit, updatedTodo);
       setEdit({
         id: null,
         value: "",
       });
     }
   };
+
   // 아이템 값 변경
   const handleUpdateValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEdit({ ...edit, value: e.target.value });
@@ -35,7 +39,7 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
           <div className={"todo-row"} key={index}>
             {!edit.id || edit.id != todo.id ? (
               <div className="todoItem" key={todo.id}>
-                {todo.text}
+                {todo.summary}
               </div>
             ) : (
               <input
@@ -47,15 +51,18 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
             )}
 
             <div className="icons">
+              {/* 수정버튼 */}
               <TiEdit
                 onClick={() => {
+                  // 수정 시도
                   if (!edit.id || edit.id != todo.id) {
-                    setEdit({ id: todo.id, value: todo.text });
+                    setEdit({ id: todo.id, value: todo.summary });
                   } else {
+                    // 수정 완료
                     if (edit.id) {
-                      submitUpdate({ id: edit.id, text: edit.value });
+                      submitUpdate({ id: edit.id, summary: edit.value });
                     }
-                    setEdit({ id: null, value: todo.text });
+                    setEdit({ id: null, value: todo.summary });
                   }
                 }}
                 className="edit-icon"

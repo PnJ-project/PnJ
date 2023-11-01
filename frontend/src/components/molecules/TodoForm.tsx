@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 interface TodoFormProps {
   edit?: { id: number | null; value: string };
-  onSubmit: (todo: { id: number; text: string }) => void; // 수정된 부분
+  onSubmit: (todo: { id: number; summary: string }) => void; // 수정된 부분
 }
 
 const TodoForm: React.FC<TodoFormProps> = (props) => {
@@ -26,7 +26,7 @@ const TodoForm: React.FC<TodoFormProps> = (props) => {
     if (input) {
       props.onSubmit({
         id: Math.floor(Math.random() * 10000),
-        text: input,
+        summary: input,
       });
       setInput("");
     }

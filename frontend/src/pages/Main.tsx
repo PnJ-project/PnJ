@@ -1,4 +1,5 @@
 // 홈페이지
+// 데모버튼을 누를시 컴포넌트가 체인지됩니다. 홈버튼 누르면 다시 원래대로 돌아갑니다
 // import React from "react";
 import plogo from "../assets/main.svg";
 import UseDemo from "../components/atoms/UseDemo";
@@ -94,21 +95,3 @@ const Btns = styled.div`
 const LogoImg = styled.img`
   padding-right: 40px;
 `;
-// SSR - 초기 데이터 불러오기
-/*
-export async function getServerSideProps() {
-  try {
-    const response = await axios.get(""); // 요청할 엔드포인트에 맞게 수정하세요.
-    const results = response.data; // 받아온 데이터를 results에 할당합니다.
-
-    return {
-      props: { results }, // props를 통해 페이지에 데이터를 전달합니다.
-    };
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return {
-      props: { results: null }, // 에러가 발생한 경우에도 props를 전달합니다.
-    };
-  }
-}
-*/
