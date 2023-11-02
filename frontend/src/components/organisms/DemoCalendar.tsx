@@ -85,18 +85,22 @@ export default function DemoCalendar() {
       console.error("Error flask data:", error);
     }
 
-    // api 연결
-    const getSampleData = async () => {
-      try {
-        console.log("플라스크 가자")
-        const data = await axios.post(`https://${import.meta.env.VITE_APP_FLASK_SERVER}:5000/trans/date`, {input:textSave})
-        console.log(data)
-        return data
-      } catch (error) {
-        console.error("Error flask data:", error);
-      }
-    };
-    getSampleData()
+    // 플라스크 api 연결
+    try {
+      console.log("플라스크 가자");
+      const data = await axios.post(
+        `${import.meta.env.VITE_APP_FLASK_SERVER}/trans/date`,
+        { input: textSave }
+      );
+      console.log(data);
+      return data;
+      // 임시 데이터에 넣어주기
+      // 1. 투두
+
+      // 2. 캘린더
+    } catch (error) {
+      console.error("Error flask data:", error);
+    }
 
     // 등록 API 요청
     for (let i = 0; i < changes.length; i++) {
@@ -148,11 +152,10 @@ export default function DemoCalendar() {
         </div>
         {/* Body */}
         <div className="CalendarContainer">
-
           {/* 왼쪽 사이드 - 작은캘린더 / 투두리스트 */}
           <div className="LeftSideContainer">
             <div className="SmallCalendar">
-              <SmallCal/>
+              <SmallCal />
             </div>
             <div className="Todo-Container">
               <TodoList />
@@ -161,7 +164,7 @@ export default function DemoCalendar() {
           {/* 오른쪽 사이드 - 큰 캘린더 */}
           <div className="RightSideContainer">
             <div className="Calendar">
-              <BigCalendar/>
+              <BigCalendar />
             </div>
           </div>
         </div>

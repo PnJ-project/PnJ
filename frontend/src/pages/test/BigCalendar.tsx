@@ -1,59 +1,90 @@
-import { useState, useCallback } from "react";
-import { Event as BigCalendarEvent } from 'react-big-calendar';
+import { useState, useCallback, useEffect } from "react";
+import { Event as BigCalendarEvent } from "react-big-calendar";
 import { Calendar, View, momentLocalizer } from "react-big-calendar";
-import { useSelector, useDispatch } from 'react-redux';
-import { openModal,selectIsModalOpen } from '../../store/slice/calendar/ModalSlice'; // modalSlice.ts의 경로로 수정
-import { selectEvents, updateEvent } from "../../store/slice/calendar/CalendarSlice";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  openModal,
+  selectIsModalOpen,
+} from "../../store/slice/calendar/ModalSlice"; // modalSlice.ts의 경로로 수정
+import {
+  selectEvents,
+  updateEvent,
+  setEvents,
+} from "../../store/slice/calendar/CalendarSlice";
 import { change, handleDate } from "../../store/slice/calendar/HandleSlice";
-import Modal from '../../components/organisms/EventForm'; 
+import Modal from "../../components/organisms/EventForm";
 import moment from "moment";
 // import { Event } from '../../store/slice/calendar/CalendarSlice'
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import withDragAndDrop, { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
+import withDragAndDrop, {
+  EventInteractionArgs,
+} from "react-big-calendar/lib/addons/dragAndDrop";
 import styled from "styled-components";
+import { useQuery } from "react-query";
+import { readCalendar } from "../../api/CalendarApi";
 
+interface FormatEvent {
+  id: number;
+  title: string;
+  allDay?: boolean;
+  start: Date;
+  end: Date;
+  memo?: string;
+}
 
 const BigCalendarInfo = () => {
+  // 기본 세팅
+  const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
+  const [timeMin] = useState(
+    moment().endOf("month").endOf("week").toDate().toISOString()
+  );
+  const { data: calData, refetch: refetchCal } = useQuery(
+    "calendarData",
+    () => readCalendar(timeMax, timeMin),
+    { retry: false }
+  ); // calendar API
   const localizer = momentLocalizer(moment);
   moment.locale("ko-KR");
   //캘린더를 DragAndDrop으로 바꿉니다.
   const DragAndDropCalendar = withDragAndDrop(Calendar);
   const dispatch = useDispatch();
-
-  const myEvents = useSelector((selectEvents));
+  const [myEventsJunha] = useState(useSelector(selectEvents));
+  const [, setFormattedEventsJunha] = useState<FormatEvent[]>([]);
+  const myEvents = useSelector(selectEvents);
   const formattedEvents = myEvents.map((event) => ({
     ...event,
     start: new Date(event.start),
     end: new Date(event.end),
   }));
-  
-  const isOpen = useSelector(selectIsModalOpen);
-  const date: string  = useSelector(handleDate);
-  const handledate: Date = new Date(date);
 
+  const isOpen = useSelector(selectIsModalOpen);
+  const date: string = useSelector(handleDate);
+  const handledate: Date = new Date(date);
 
   //모달창을 띄울 useState
   //모달을 닫을 함수
 
-
   //이벤트 이동 기능
   const moveEvent = useCallback(
-    ({ event,start,end }:EventInteractionArgs<BigCalendarEvent>) => {
+    ({ event, start, end }: EventInteractionArgs<BigCalendarEvent>) => {
       // 이벤트 업데이트를 Redux 상태로 전달합니다.
       // const refactorEvent = {
       //   id: event.id,
-        
+
       // }
-    // event 객체에서 start와 end를 제외한 속성들을 추리기
-    const restEvent = Object.assign({}, event, { start: undefined, end: undefined });
+      // event 객체에서 start와 end를 제외한 속성들을 추리기
+      const restEvent = Object.assign({}, event, {
+        start: undefined,
+        end: undefined,
+      });
       dispatch(
         updateEvent({
           title: event.title?.toString(),
           allDay: event.allDay,
           start: start.toString(),
           end: end.toString(),
-          resource: { event: restEvent }
+          resource: { event: restEvent },
         })
       );
     },
@@ -62,18 +93,23 @@ const BigCalendarInfo = () => {
 
   //새로운 값을 입력
 
-  const [selectedRange, setSelectedRange] = useState<{ start: Date, end: Date } | null>(null);
-  const handleSelectSlot = ({ start, end }: { start: Date, end: Date }) => {
+  const [selectedRange, setSelectedRange] = useState<{
+    start: Date;
+    end: Date;
+  } | null>(null);
+  const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
     setSelectedRange({ start, end });
     dispatch(openModal());
   };
-
 
   //일정 리사이즈 할 때 나오는 콜백함수 인자로 event start end가 있다.
   const resizeEvent = useCallback(
     ({ event, start, end }: EventInteractionArgs<BigCalendarEvent>) => {
       // event 객체에서 start와 end를 제외한 속성들을 추리기
-      const restEvent = Object.assign({}, event, { start: undefined, end: undefined });
+      const restEvent = Object.assign({}, event, {
+        start: undefined,
+        end: undefined,
+      });
       // 이벤트 리사이즈를 Redux 상태로 전달합니다.
       dispatch(
         updateEvent({
@@ -81,7 +117,7 @@ const BigCalendarInfo = () => {
           allDay: event.allDay,
           start: start.toString(),
           end: end.toString(),
-          resource: { event: restEvent }
+          resource: { event: restEvent },
         })
       );
     },
@@ -99,18 +135,38 @@ const BigCalendarInfo = () => {
   // };
 
   //클릭한 날짜의 정보를 받아옴
-  const handleDateChange = (date:Date) => {
+  const handleDateChange = (date: Date) => {
     console.log(date);
-    const formDate = date.toISOString()
-    dispatch(change(formDate))
+    const formDate = date.toISOString();
+    dispatch(change(formDate));
   };
 
   //클릭한 view의 정보를 받아옴
   const [currentView, setCurrentView] = useState<View | undefined>();
-  const handleViewChange = (newView:View | undefined) => {
+  const handleViewChange = (newView: View | undefined) => {
     setCurrentView(newView);
   };
 
+  // 캘린더 데이터 리덕스에 업데이트 (준하 작업)
+  useEffect(() => {
+    if (calData && calData.message == "이벤트 리스트 조회 완료") {
+      // 리덕스에 업데이트
+      console.log(calData.data);
+      dispatch(setEvents(calData.data));
+    }
+  }, [calData]);
+
+  // 리덕스 데이터 -> useState 데이터 받아오기
+  useEffect(() => {
+    if (myEventsJunha.length > 1 && myEventsJunha[0].start) {
+      const formattedEvents = myEventsJunha.map((event) => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end),
+      }));
+      setFormattedEventsJunha(formattedEvents);
+    }
+  }, [myEventsJunha]);
 
   return (
     <Container>
@@ -137,15 +193,14 @@ const BigCalendarInfo = () => {
           //보여질 화면
           view={currentView}
           //이벤트 발생할 때마다
-        //   eventPropGetter={eventPropGetter}
+          //   eventPropGetter={eventPropGetter}
           resizable
           selectable
           style={{ height: "100%", width: "100%" }}
-        //   components={{ toolbar: Toolbar }}
+          //   components={{ toolbar: Toolbar }}
         />
       </div>
       {isOpen && selectedRange && <Modal selectedRange={selectedRange} />}
-
     </Container>
   );
 };
@@ -154,24 +209,24 @@ export default BigCalendarInfo;
 const Container = styled.div`
   display: flex;
   overflow: hidden;
-  height:100%;
+  height: 100%;
   // 일(일주일) 전체
   .rbc-date-cell {
     text-align: center;
     .rbc-button-link {
       //오늘날짜말고 다른 거 다 포함 일자 높이
-      height:25px; 
+      height: 25px;
     }
   }
   // BigCalendar
   .middleArticle {
     width: 100%;
     height: 100%;
-    .rbc-month-view{
-      height:90%;
-      flex:unset;
+    .rbc-month-view {
+      height: 90%;
+      flex: unset;
     }
-    .rbc-toolbar{
+    .rbc-toolbar {
       height: 10%;
       margin-bottom: 0;
     }
@@ -185,7 +240,6 @@ const Container = styled.div`
     }
     .rbc-day-bg.rbc-today {
       background-color: white;
-      
     }
     .rbc-date-cell {
       height: 10%;
@@ -206,9 +260,9 @@ const Container = styled.div`
         background-color: rgba(49, 116, 173);
         color: white;
         display: flex;
-        align-items:center;
-        justify-content:center;
-        margin:auto;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
       }
     }
   }
