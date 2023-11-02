@@ -3,6 +3,7 @@ spring:
     group:
       develop:
         - oauth-dev
+        - flask-dev
       release:
         - oauth-release
     active: develop

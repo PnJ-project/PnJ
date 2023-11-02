@@ -4,12 +4,15 @@ import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponse
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.EXCHANGE_TO_EVENT_SUCCESS;
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.EXCHANGE_TO_TODO_SUCCESS;
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.GET_EVENT_SUCCESS;
+import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.INPUT_EASY_SUCCESS;
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.INSERT_EVENT_SUCCESS;
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.UPDATE_EVENT_SUCCESS;
 
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.EventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToEventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToTodoRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.InputRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarResponseDto.InputResponseDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto;
 import com.preparedhypeboys.pnj.domain.calendar.service.CalendarService;
@@ -98,4 +101,14 @@ public class CalendarController {
         );
     }
 
+    @PostMapping(value = "/input")
+    public ResponseEntity<ResponseDto<InputResponseDto>> inputProcess(
+        @RequestBody InputRequestDto requestDto
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseDto.create(INPUT_EASY_SUCCESS.getMessage(),
+            calendarService.inputProcess(requestDto)
+            )
+        );
+    }
 }

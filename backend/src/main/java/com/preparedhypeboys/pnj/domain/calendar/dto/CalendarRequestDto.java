@@ -36,4 +36,12 @@ public class CalendarRequestDto {
         private DateTimeDto end;
 
     }
+
+    @Data
+    public static class InputRequestDto {
+
+        private Long memberId;
+
+        private String input;
+    }
 }
