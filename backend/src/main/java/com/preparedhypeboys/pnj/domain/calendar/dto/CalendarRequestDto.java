@@ -5,7 +5,7 @@ import lombok.Data;
 public class CalendarRequestDto {
 
     @Data
-    public static class InsertEventRequestDto {
+    public static class EventRequestDto {
 
         private Long memberId;
 

@@ -1,24 +1,17 @@
-FROM node:18-alpine AS base
+FROM node:18-alpine AS build
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
+COPY . /app
 WORKDIR /app
-COPY . .
-
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
-COPY package.json package-lock.json* pnpm-lock.yaml* ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-
-FROM base AS builder
-COPY --from=deps /app/node_modules ./node_modules
-# RUN pnpm i -g typescript
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
 FROM nginx:stable-alpine
 WORKDIR /app
 RUN mkdir ./dist
-COPY --from=builder /app/dist /app/dist
+COPY --from=build /app/dist /app/dist
+RUN rm /etc/nginx/conf.d/default.conf
 COPY ./nginx/default.conf /etc/nginx/conf.d
 EXPOSE 5173
 CMD ["nginx", "-g", "daemon off;"]

@@ -10,7 +10,7 @@ public class DateTimeDto {
 
     private String dateTime;
     
-    private String timeZone;
+    private String timeZone = "Asia/Seoul";
 
     private String date;
 

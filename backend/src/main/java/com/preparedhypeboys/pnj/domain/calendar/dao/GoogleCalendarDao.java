@@ -1,7 +1,5 @@
 package com.preparedhypeboys.pnj.domain.calendar.dao;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
@@ -28,8 +26,6 @@ public class GoogleCalendarDao {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final Gson gson = buildGson();
-    private final ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(
-        Include.NON_NULL).setSerializationInclusion(Include.NON_EMPTY);
 
     private final String host = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
 
@@ -71,6 +67,19 @@ public class GoogleCalendarDao {
 
         restTemplate.exchange(host + "/" + eventId, HttpMethod.DELETE,
             requestEntity, String.class);
+    }
+
+    public EventDto updateEvent(EventDto eventDto, String accessToken) {
+
+        HttpHeaders headers = httpHeadersUtil.getOAuthHeader(accessToken);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(gson.toJson(eventDto), headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(host + "/" + eventDto.getId(),
+            HttpMethod.PUT,
+            requestEntity, String.class);
+
+        return gson.fromJson(response.getBody(), EventDto.class);
     }
 
     private Gson buildGson() {

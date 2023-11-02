@@ -1,5 +1,5 @@
 // 회원관리 관련입니다
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface infoState {
   memberId: number | null;
@@ -28,8 +28,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.isLoggedIn = false;
     },
-    setUserData: (state, actions) => {
-      state.data = actions.payload;
+    setUserData: (state, action: PayloadAction<infoState>) => {
+      state.data = action.payload;
     },
   },
 });
