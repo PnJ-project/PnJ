@@ -20,6 +20,7 @@ import axios from "axios";
 export default function DemoCalendar() {
   // 기본 세팅
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
+  const [freetime, setFreeTime] = useState(3); // 무료이용 가능횟수
   const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
   const [timeMin] = useState(
     moment().endOf("month").endOf("week").toDate().toISOString()
@@ -68,13 +69,18 @@ export default function DemoCalendar() {
   // 제출하기
   const flask = import.meta.env.VITE_APP_FLASK_SERVER;
   const handleSubmit = async () => {
+    // 무료이용 가능횟수 제한
+    if (!freetime) {
+      setTextSave("로그인후 자유롭게 이용해보세요!!! ");
+      return;
+    }
     // 빈값일시 반환
     if (textSave.trim() === "") {
       console.log("빈값 반환");
       return;
     }
     console.log("플라스크 가자");
-
+    setFreeTime(freetime - 1);
     try {
       const data = await axios.post(`${flask}/trans/date`, {
         input: textSave,
@@ -145,6 +151,12 @@ export default function DemoCalendar() {
             <button className="submitBtn" onClick={handleSubmit}>
               등록
             </button>
+            <div className="FreeTxt">
+              <div>횟수제한 : </div>
+              <div className={`${freetime === 0 ? "NotFree" : ""}`}>
+                {freetime}
+              </div>
+            </div>
           </div>
           <div className="NavGoogleBtn">
             <GoogleLogin />
