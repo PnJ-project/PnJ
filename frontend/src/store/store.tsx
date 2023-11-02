@@ -6,6 +6,7 @@ import listReducer from "./slice/sample/ListSlice";
 import authReducer from "./slice/AuthSlice";
 import calendarReducer from './slice/calendar/CalendarSlice';
 import modalReducer from "./slice/calendar/ModalSlice";
+import handleReducer from "./slice/calendar/HandleSlice";
 
 import vitoReducer from "./slice/SoundSlice";
 import toggleReducer from "./slice/ToggleSlice";
@@ -21,7 +22,7 @@ const rootReducer = combineReducers({
   toggle: toggleReducer,
   calendar: calendarReducer,
   modal: modalReducer,
-
+  handledate: handleReducer,
 });
 
 const store = configureStore({
