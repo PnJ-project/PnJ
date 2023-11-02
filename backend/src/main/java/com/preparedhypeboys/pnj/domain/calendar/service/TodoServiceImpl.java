@@ -57,7 +57,11 @@ public class TodoServiceImpl implements
     }
 
     @Override
+    @Transactional
     public void deleteTodo(Long memberId, Long todoId) {
+        Optional<Todo> todo = todoRepository.findById(todoId);
 
+        todo.ifPresent(todoRepository::delete);
+        // TODO 예외처리
     }
 }
