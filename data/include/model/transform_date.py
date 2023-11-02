@@ -1,7 +1,51 @@
-
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 import re
+
+# 오늘, 내일, 모레 날짜 변환
+def parse_weekday(text):
+    weekdays = {
+        '월요일': 0,
+        '화요일': 1,
+        '수요일': 2,
+        '목요일': 3,
+        '금요일': 4,
+        '토요일': 5,
+        '일요일': 6
+    }
+    for weekday, value in weekdays.items():
+        if weekday in text:
+            return value
+    return None
+
+
+def get_korean_date(text):
+    today = datetime.now()
+    weekday = parse_weekday(text) # 요일
+    if '다다음주' in text:
+        week_offset = 2
+    elif '다음주' in text:
+        week_offset = 1
+    elif '이번주' in text:
+        week_offset = 0
+
+    if weekday is not None and week_offset is not None:
+        days_until_target = weekday - today.weekday()
+        days_until_target += 7 * (week_offset )  # 주간 오프셋 수정
+        korean_date = today + timedelta(days=days_until_target)
+        return korean_date
+    elif '오늘' in text:
+        return datetime.now()
+    elif '내일' in text:
+        return datetime.now() + timedelta(days=1)
+    elif '모레' in text:
+        return datetime.now() + timedelta(days=2)
+    elif '글피' in text:
+        return datetime.now() + timedelta(days=3)
+    else:
+        return None
+
+
 
 
 
@@ -124,9 +168,27 @@ def check_dateutil(sentence):
     for pattern in date_patterns:
         matches = re.findall(pattern, sentence)
         if matches:
-            parsed_date = matches
             return matches
     return 0
+
+
+
+def is_koreandate(sentence):
+    korean_date_list = ['다다음주', '다음주', '이번주', '오늘', '내일', '모레', '글피']
+    for date in korean_date_list:
+        if date in sentence:
+            # 연속인지 확인
+            if is_serial(sentence.checked):
+
+            # 별개의 일정
+
+            # 하나의 일정
+            start_time = get_korean_date(sentence)
+            end_time = start_time + timedelta(hours=1)
+            return start_time, end_time
+
+        else:
+            return 0
 
 
 def use_dateutil(sentence, dateutil_list):
