@@ -1,12 +1,17 @@
 package com.preparedhypeboys.pnj.domain.calendar.api;
 
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.DELETE_EVENT_SUCCESS;
+import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.EXCHANGE_TO_EVENT_SUCCESS;
+import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.EXCHANGE_TO_TODO_SUCCESS;
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.GET_EVENT_SUCCESS;
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.INSERT_EVENT_SUCCESS;
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.UPDATE_EVENT_SUCCESS;
 
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.EventRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToEventRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToTodoRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto;
 import com.preparedhypeboys.pnj.domain.calendar.service.CalendarService;
 import com.preparedhypeboys.pnj.global.dto.ResponseDto;
 import java.util.List;
@@ -70,6 +75,26 @@ public class CalendarController {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(UPDATE_EVENT_SUCCESS.getMessage(),
                 calendarService.updateEvent(requestDto))
+        );
+    }
+
+    @PostMapping(value = "/to/todo")
+    public ResponseEntity<ResponseDto<TodoResponseDto>> exchangeToTodo(
+        @RequestBody ExchangeToTodoRequestDto requestDto
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseDto.create(EXCHANGE_TO_TODO_SUCCESS.getMessage(),
+                calendarService.exchangeToTodo(requestDto))
+        );
+    }
+
+    @PostMapping(value = "/to/event")
+    public ResponseEntity<ResponseDto<EventDto>> exchangeToEvent(
+        @RequestBody ExchangeToEventRequestDto requestDto
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ResponseDto.create(EXCHANGE_TO_EVENT_SUCCESS.getMessage(),
+                calendarService.exchangeToEvent(requestDto))
         );
     }
 

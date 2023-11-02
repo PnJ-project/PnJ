@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { increment, decrement } from '../store/slice/CounterSlice';
-import { updateString } from '../store/slice/StringSlice';
-import { addItem, removeItem } from '../store/slice/ListSlice';
+import { increment, decrement } from './slice/sample/CounterSlice';
+import { updateString } from './slice/sample/StringSlice';
+import { addItem, removeItem } from './slice/sample/ListSlice';
 import { RootState } from './store';
 
 const Home = () => {

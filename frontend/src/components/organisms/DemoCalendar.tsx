@@ -10,6 +10,8 @@ import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
 import GoogleLogin from "../atoms/GoogleLogin";
 import TodoList from "../molecules/TodoList";
+import SmallCal from "../../pages/test/SmallCal";
+import BigCalendar from "../../pages/test/BigCalendar";
 import Mike from "/image/mike.svg";
 import Paste from "/image/paste.svg";
 import "./DemoCalendar.css";
@@ -83,6 +85,19 @@ export default function DemoCalendar() {
       console.error("Error flask data:", error);
     }
 
+    // api 연결
+    const getSampleData = async () => {
+      try {
+        console.log("플라스크 가자")
+        const data = await axios.post(`https://${import.meta.env.VITE_APP_FLASK_SERVER}:5000/trans/date`, {input:textSave})
+        console.log(data)
+        return data
+      } catch (error) {
+        console.error("Error flask data:", error);
+      }
+    };
+    getSampleData()
+
     // 등록 API 요청
     for (let i = 0; i < changes.length; i++) {
       const formdata = changes[i];
@@ -133,16 +148,21 @@ export default function DemoCalendar() {
         </div>
         {/* Body */}
         <div className="CalendarContainer">
+
           {/* 왼쪽 사이드 - 작은캘린더 / 투두리스트 */}
           <div className="LeftSideContainer">
-            <div className="SmallCalendar"></div>
+            <div className="SmallCalendar">
+              <SmallCal/>
+            </div>
             <div className="Todo-Container">
               <TodoList />
             </div>
           </div>
           {/* 오른쪽 사이드 - 큰 캘린더 */}
           <div className="RightSideContainer">
-            <div className="Calendar"></div>
+            <div className="Calendar">
+              <BigCalendar/>
+            </div>
           </div>
         </div>
       </div>
