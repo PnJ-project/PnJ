@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from include.model.hanspell import check
-from include.model.transform_date import use_dateutil, not_dateutil
+from include.model.transform_date import use_dateutil, not_dateutil, is_koreandate, get_korean_date
 from konlpy.tag import Okt
 from dateutil.parser import parse
 from flask_cors import CORS
@@ -10,8 +10,6 @@ import re
 app = Flask(__name__)
 
 CORS(app, resources={r"/*": {"origins": "*"}})
-app.config["CORS_SUPPORTS_CREDENTIALS"] = True
-
 
 PREFIX = "/trans"
 
@@ -84,20 +82,37 @@ def transform_date():
 
         #dateutil 형식 외
         else:
-            start_time, end_time = not_dateutil(sentence, pos_result)
-            result.append({
-                "start": {
-                    "dateTime": start_time,
-                    "timeZone": "Asia/Seoul"
-                },
-                "end": {
-                    "dateTime": end_time,
-                    "timeZone": "Asia/Seoul"
-                },
-                "summary": noun
-            })
+            # 한글 날짜 데이터가 있는지 확인
+            if is_koreandate(sentence):
+                get_korean_date
+            # 한글 날짜 데이터가 없다면
+            else:
+                start_time, end_time = not_dateutil(sentence, pos_result)
+                result.append({
+                    "start": {
+                        "dateTime": start_time,
+                        "timeZone": "Asia/Seoul"
+                    },
+                    "end": {
+                        "dateTime": end_time,
+                        "timeZone": "Asia/Seoul"
+                    },
+                    "summary": noun
+                })
 
     return jsonify(result)
+
+
+# @app.route('/test/koreandate', methods=['POST'])
+# def dateutil_koreandate():
+#     text = request.form['input']
+#     korean_date = get_korean_date(text)
+#     if korean_date:
+#         result_date = korean_date.strftime('%Y-%m-%dT%H:%M:%S')
+#     else:
+#         result_date = "지원하지 않는 명령입니다."
+#
+#     return result_date
 
 
 @app.route('/test')
