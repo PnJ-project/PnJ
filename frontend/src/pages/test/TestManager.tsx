@@ -3,6 +3,10 @@ import Components from "./Components";
 import Csrapi from "./CsrApi";
 import Login from "./GoogleLogin";
 import Logout from "./Logout";
+import Sound from "./Sound";
+import TodoSample from "./TodoSample";
+import Navbar from "./NavbarTest";
+import ReactQuery from "./ReactQuery";
 
 type ComponentType = React.FC<unknown>;
 
@@ -16,6 +20,10 @@ const TestManager: React.FC = () => {
     Csrapi: Csrapi,
     Login: Login,
     Logout: Logout,
+    Sound: Sound,
+    TodoSample: TodoSample,
+    Navbar: Navbar,
+    ReactQuery: ReactQuery,
     // 다른 컴포넌트들을 원하는 만큼 추가할 수 있습니다.
   };
 
