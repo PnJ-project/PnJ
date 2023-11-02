@@ -7,6 +7,8 @@ import authReducer from "./slice/AuthSlice";
 import calendarReducer from './slice/calendar/CalendarSlice';
 import modalReducer from "./slice/calendar/ModalSlice";
 
+import vitoReducer from "./slice/SoundSlice";
+import toggleReducer from "./slice/ToggleSlice";
 
 const rootReducer = combineReducers({
   //sample용
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
   list: listReducer,
   //실제 사용하는 slice
   auth: authReducer,
+  vito: vitoReducer,
+  toggle: toggleReducer,
   calendar: calendarReducer,
   modal: modalReducer,
 

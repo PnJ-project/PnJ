@@ -1,68 +1,55 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
-// 캘린더 정보 불러오기
-export interface ResReadCalendar {
-  Sample: string;
-}
-export const ReadCalendar = async () => {
-  try {
-    const response: AxiosResponse<ResReadCalendar> = await axios.get(
-      `${process.env.API_URL}/Sample`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching Calendar:", error);
-    throw error;
-  }
+// const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
+const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
+
+// 구글 캘린더 정보 불러오기
+export const readCalendar = async (
+  timeMax: string,
+  timeMin: string,
+  memberId: number | null
+) => {
+  const response = await axios.get(
+    `${local_back_url}/api/calendar/${memberId}/${timeMax}/${timeMin}`
+  );
+  console.log(response);
+  return response.data;
 };
 
-// 캘린더 정보 생성하기
-export interface ResAddCalendar {
-  Sample: string;
+// 구글 캘린더 정보 생성하기
+export interface EventStartEnd {
+  dateTime: string;
+  timeZone: string;
+  date: null | string;
 }
-export interface ReqAddCalendar {
-  Sample: string;
+export interface EventData {
+  memberId: number;
+  event: {
+    id: null | string;
+    summary: string;
+    colorId: number;
+    start: EventStartEnd;
+    end: EventStartEnd;
+  };
 }
-export const AddCalendar = async (dataToSend: ReqAddCalendar) => {
-  try {
-    const response: AxiosResponse<ResAddCalendar> = await axios.post(
-      `${process.env.API_URL}/Sample`,
-      dataToSend
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error add Calendar item:", error);
-    throw error;
-  }
+export const addCalendar = async (formdata: EventData) => {
+  const response = await axios.post(`${local_back_url}/api/calendar`, formdata);
+  return response.data;
 };
 
-// 캘린더 정보 수정하기
-export interface ResUpdateCalendar {
-  Sample: string;
-}
-export interface ReqUpdateCalendar {
-  Sample: string;
-}
-export const UpdateCalendar = async (dataToSend: ReqUpdateCalendar) => {
-  try {
-    const response: AxiosResponse<ResUpdateCalendar> = await axios.put(
-      `${process.env.API_URL}/Sample`,
-      dataToSend
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error update Calendar item:", error);
-    throw error;
-  }
+// 구글 캘린더 정보 수정하기
+export const updateCalendar = async (formdata: EventData) => {
+  const response = await axios.put(`${local_back_url}/api/calendar`, formdata);
+  return response.data;
 };
 
-// 캘린더 정보 삭제하기
-export const DeleteCalendar = async () => {
-  try {
-    axios.delete(`${process.env.API_URL}/Sample`);
-    return;
-  } catch (error) {
-    console.error("Error delete Calendar item:", error);
-    throw error;
-  }
+// 구글 캘린더 정보 삭제하기
+export const deleteCalendar = async (
+  eventId: number,
+  memberId: number | null
+) => {
+  const response = await axios.delete(
+    `${local_back_url}/api/calendar/${memberId}/${eventId}`
+  );
+  return response.data;
 };

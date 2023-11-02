@@ -1,32 +1,28 @@
-// import axios, { AxiosResponse } from "axios";
 import axios from "axios";
 
+const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
+// const service_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
+
 // 로그인
-export interface LoginResponse {
-  message: string;
-  data: {
-    memberId: number;
-    memberEmail: string;
-  };
-}
-export const LogInPnJ = async (code: string | string[]) => {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    const response: LoginResponse = await axios.get(
-      `http://70.12.247.132:8080/api/login?code=${code}`
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export const logInPnJ = async (code: string) => {
+  const response = await axios.get(`${local_back_url}/api/login?code=${code}`);
+  return response.data;
 };
 
 // 로그아웃
+export const logOut = async () => {
+  const response = await axios.get(`${local_back_url}/Sample`);
+  return response.data;
+};
 
 // 토큰 리프레시
-
-// 회원가입
-
-// 회원탈퇴
+export const tokenRefresh = async () => {
+  const response = await axios.get(`${local_back_url}/Sample`);
+  return response.data;
+};
 
 // 내정보 불러오기
+export const useFetchMyInfo = async () => {
+  const response = await axios.get(`${local_back_url}/Sample`);
+  return response.data;
+};
