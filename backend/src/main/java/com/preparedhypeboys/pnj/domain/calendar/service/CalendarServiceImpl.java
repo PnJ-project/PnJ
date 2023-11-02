@@ -1,8 +1,13 @@
 package com.preparedhypeboys.pnj.domain.calendar.service;
 
 import com.preparedhypeboys.pnj.domain.calendar.dao.GoogleCalendarDao;
+import com.preparedhypeboys.pnj.domain.calendar.dao.TodoRepository;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.EventRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToEventRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToTodoRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto;
+import com.preparedhypeboys.pnj.domain.calendar.entity.Todo;
 import com.preparedhypeboys.pnj.domain.member.dao.MemberRepository;
 import com.preparedhypeboys.pnj.domain.member.entity.Member;
 import java.util.List;
@@ -17,6 +22,8 @@ public class CalendarServiceImpl implements
     CalendarService {
 
     private final MemberRepository memberRepository;
+
+    private final TodoRepository todoRepository;
 
     private final GoogleCalendarDao googleCalendarDao;
 
@@ -61,6 +68,52 @@ public class CalendarServiceImpl implements
 
     @Override
     public List<EventDto> updateEventList(EventDto event) {
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public TodoResponseDto exchangeToTodo(ExchangeToTodoRequestDto requestDto) {
+        Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
+
+        if (member.isPresent()) {
+            googleCalendarDao.deleteEvent(requestDto.getEventId(), member.get().getAccessToken());
+
+            Todo todo = Todo.builder()
+                .member(member.get())
+                .summary(requestDto.getSummary())
+                .build();
+
+            todoRepository.save(todo);
+
+            return new TodoResponseDto(todo);
+        }
+        // Todo 예외처리
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public EventDto exchangeToEvent(ExchangeToEventRequestDto requestDto) {
+        Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
+
+        Optional<Todo> todo = todoRepository.findById(requestDto.getTodoId());
+
+        if (member.isPresent() && todo.isPresent()) {
+            EventDto eventDto = EventDto.builder()
+                .summary(todo.get().getSummary())
+                .start(requestDto.getStart())
+                .end(requestDto.getEnd())
+                .build();
+
+            EventDto response = googleCalendarDao.insertEvent(eventDto,
+                member.get().getAccessToken());
+
+            todoRepository.delete(todo.get());
+
+            return response;
+        }
+        // Todo 예외처리
         return null;
     }
 }

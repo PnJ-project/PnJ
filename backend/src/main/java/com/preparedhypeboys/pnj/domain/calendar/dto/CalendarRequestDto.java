@@ -12,4 +12,28 @@ public class CalendarRequestDto {
         private EventDto eventDto;
 
     }
+
+    @Data
+    public static class ExchangeToTodoRequestDto {
+
+        private Long memberId;
+
+        private String eventId;
+
+        private String summary;
+
+    }
+
+    @Data
+    public static class ExchangeToEventRequestDto {
+
+        private Long memberId;
+
+        private Long todoId;
+
+        private DateTimeDto start;
+
+        private DateTimeDto end;
+
+    }
 }
