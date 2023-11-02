@@ -27,6 +27,7 @@ export default function DemoCalendar() {
     moment().endOf("month").endOf("week").toDate().toISOString()
   );
   const memberID = useSelector((state: RootState) => state.auth.data.memberId);
+  const todos = useSelector((state: RootState) => state.todo.todos);
   const changes: EventData[] = [];
   const { error: sttError, refetch: refetchStt } = useQuery(
     "sttData",

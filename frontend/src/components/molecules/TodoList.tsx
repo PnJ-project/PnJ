@@ -4,7 +4,9 @@ import TodoForm from "./TodoForm";
 import Todo from "./Todo";
 import "./Todo.css";
 import { readTodo } from "../../api/TodoApi";
+import { addTodo, updateTodo, removeTodo, setTodos } from "../../store/slice/TodoSlice";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
 interface TodoItem {
   id: number;
@@ -15,6 +17,7 @@ const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
 
 export default function TodoList() {
   // 기본세팅
+  const dispatch = useDispatch();
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const { data: todoData, refetch: refetchTodo } = useQuery(
     "todoData",
@@ -39,6 +42,7 @@ export default function TodoList() {
     // 새로운 일정 적용 (개발자용)
     const newTodos = [newTodo, ...todos];
     setTodos(newTodos);
+    dispatch(addTodo(newTodo));
     // 투두 생성 API 호출
     try {
       await axios.post(`${local_back_url}/api/todo`, newTodo);
