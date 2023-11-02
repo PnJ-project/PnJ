@@ -21,6 +21,8 @@ export default function GoogleLogin() {
       console.log(response.data);
       dispatch(loginsuccess());
       dispatch(setUserData(response.data.data));
+      // Save memberId to local storage
+      localStorage.setItem("memberId", response.data.data.memberId);
     },
     onError: (errorResponse) => {
       console.error(errorResponse);

@@ -12,13 +12,18 @@ interface TodoItem {
   id: number;
   summary: string;
 }
-const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
-// const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
+interface ReqTodoCreate {
+  memberId: number | null;
+  summary: string;
+}
+// const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
+const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 export default function TodoList() {
   // 기본세팅
   const dispatch = useDispatch();
   const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const { data: todoData, refetch: refetchTodo } = useQuery(
     "todoData",
     readTodo,
@@ -39,14 +44,19 @@ export default function TodoList() {
       id: todo.id,
       summary: todo.summary,
     };
+    const reqNewTodo: ReqTodoCreate = {
+      memberId: memberId,
+      summary: todo.summary,
+    };
     // 새로운 일정 적용 (개발자용)
     const newTodos = [newTodo, ...todos];
     setTodos(newTodos);
     dispatch(addTodo(newTodo));
     // 투두 생성 API 호출
     try {
-      await axios.post(`${local_back_url}/api/todo`, newTodo);
+      await axios.post(`${local_back_url}/api/todo`, reqNewTodo);
       // 투두 다시 불러오기
+      console.log("생성 완료");
       await refetchTodo();
     } catch (error) {
       console.error("투두 생성 에러:", error);
@@ -68,10 +78,12 @@ export default function TodoList() {
     // 업데이트 요청
     try {
       await axios.put(`${local_back_url}/api/todo`, {
-        id: todoId,
+        memberId: memberId,
+        todoId: todoId,
         summary: newValue,
       });
       // 투두 다시 불러오기
+      console.log("수정 완료");
       await refetchTodo();
     } catch (error) {
       console.error("투두 업데이트 에러:", error);
@@ -79,9 +91,25 @@ export default function TodoList() {
   };
 
   // 제거
-  const removeTodo = (id: number) => {
+  const removeTodo = async (id: number) => {
+    // 삭제 적용(개발자용)
     const removedArr = todos.filter((todo) => todo.id !== id);
     setTodos(removedArr);
+    // 삭제 API요청
+    try {
+      const res = await axios.delete(
+        `${local_back_url}/api/todo/${memberId}/${id}`
+      );
+      // 투두 다시 불러오기
+      console.log(
+        "삭제 완료",
+        `${local_back_url}/api/todo/${memberId}/${id}`,
+        res
+      );
+      await refetchTodo();
+    } catch (error) {
+      console.error("투두 삭제 에러:", error);
+    }
   };
 
   // 전역관리
@@ -91,6 +119,12 @@ export default function TodoList() {
       setTodos(todoData.data);
     }
   }, [todoData]);
+
+  // 최초 로딩시
+  useEffect(() => {
+    refetchTodo();
+    console.log("todo 불러오기");
+  }, []);
 
   return (
     <>

@@ -18,10 +18,20 @@
 .NavGoogleBtn {
   margin-right: 20px;
 }
+.FreeTxt{
+  font-size: 12px;
+  font-family: SUITE-Regular;
+  font-weight: 700;
+  margin-left: 15px;
+  display: flex;
+}
+.NotFree{
+  color: red;
+}
 .PnjInput {
   border-radius: 5px;
   padding: 10px 10px 10px 10px;
-  width: 60% !important;
+  width: 45% !important;
   font-family: SUITE-Regular;
   max-height: 50px;
   resize: none;
@@ -50,7 +60,7 @@
 }
 
 .InputContaier {
-  width: 70%;
+  width: 80%;
   /* border: 2px solid rgb(32, 127, 28); */
   display: flex;
   justify-content: left;

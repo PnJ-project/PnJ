@@ -3,8 +3,6 @@
 import { useState } from "react";
 import moment from "moment";
 import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
 import { fetchStt } from "../../api/SttApi";
 import { EventData, addCalendar, readCalendar } from "../../api/CalendarApi";
 import { readTodo } from "../../api/TodoApi";
@@ -18,10 +16,13 @@ import Mike from "/image/mike.svg";
 import Paste from "/image/paste.svg";
 import "./DemoCalendar.css";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 export default function DemoCalendar() {
   // 기본 세팅
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
+  const [freetime, setFreeTime] = useState(3); // 무료이용 가능횟수
   const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
   const [timeMin] = useState(
     moment().endOf("month").endOf("week").toDate().toISOString()
@@ -36,7 +37,7 @@ export default function DemoCalendar() {
   ); // stt API
   const { refetch: refetchCal } = useQuery(
     "calendarData",
-    () => readCalendar(timeMax, timeMin, memberID),
+    () => readCalendar(timeMax, timeMin),
     { enabled: false, retry: false }
   ); // calendar API
   const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
@@ -70,25 +71,46 @@ export default function DemoCalendar() {
   };
 
   // 제출하기
+  const flask = import.meta.env.VITE_APP_FLASK_SERVER;
   const handleSubmit = async () => {
+    // 무료이용 가능횟수 제한
+    if (!freetime) {
+      setTextSave("로그인후 자유롭게 이용해보세요!!! ");
+      return;
+    }
     // 빈값일시 반환
     if (textSave.trim() === "") {
       console.log("빈값 반환");
       return;
     }
+    console.log("플라스크 가자");
+    setFreeTime(freetime - 1);
+    try {
+      const data = await axios.post(`${flask}/trans/date`, {
+        input: textSave,
+      });
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error("Error flask data:", error);
+    }
 
-    // api 연결
-    const getSampleData = async () => {
-      try {
-        console.log("플라스크 가자")
-        const data = await axios.post(`https://${import.meta.env.VITE_APP_FLASK_SERVER}:5000/trans/date`, {input:textSave})
-        console.log(data)
-        return data
-      } catch (error) {
-        console.error("Error flask data:", error);
-      }
-    };
-    getSampleData()
+    // 플라스크 api 연결
+    try {
+      console.log("플라스크 가자");
+      const data = await axios.post(
+        `${import.meta.env.VITE_APP_FLASK_SERVER}/trans/date`,
+        { input: textSave }
+      );
+      console.log(data);
+      return data;
+      // 임시 데이터에 넣어주기
+      // 1. 투두
+
+      // 2. 캘린더
+    } catch (error) {
+      console.error("Error flask data:", error);
+    }
 
     // 등록 API 요청
     for (let i = 0; i < changes.length; i++) {
@@ -133,6 +155,12 @@ export default function DemoCalendar() {
             <button className="submitBtn" onClick={handleSubmit}>
               등록
             </button>
+            <div className="FreeTxt">
+              <div>횟수제한 : </div>
+              <div className={`${freetime === 0 ? "NotFree" : ""}`}>
+                {freetime}
+              </div>
+            </div>
           </div>
           <div className="NavGoogleBtn">
             <GoogleLogin />
@@ -140,11 +168,10 @@ export default function DemoCalendar() {
         </div>
         {/* Body */}
         <div className="CalendarContainer">
-
           {/* 왼쪽 사이드 - 작은캘린더 / 투두리스트 */}
           <div className="LeftSideContainer">
             <div className="SmallCalendar">
-              <SmallCal/>
+              <SmallCal />
             </div>
             <div className="Todo-Container">
               <TodoList />
@@ -153,7 +180,7 @@ export default function DemoCalendar() {
           {/* 오른쪽 사이드 - 큰 캘린더 */}
           <div className="RightSideContainer">
             <div className="Calendar">
-              <BigCalendar/>
+              <BigCalendar />
             </div>
           </div>
         </div>
