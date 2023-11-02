@@ -3,10 +3,15 @@ from include.model.hanspell import check
 from include.model.transform_date import use_dateutil, not_dateutil
 from konlpy.tag import Okt
 from dateutil.parser import parse
+from flask_cors import CORS
 
 import re
 
 app = Flask(__name__)
+
+CORS(app, resources={r"/*": {"origins": "*"}})
+app.config["CORS_SUPPORTS_CREDENTIALS"] = True
+
 
 PREFIX = "/trans"
 
