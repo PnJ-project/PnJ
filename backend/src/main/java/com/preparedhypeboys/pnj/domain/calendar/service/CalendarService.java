@@ -1,6 +1,7 @@
 package com.preparedhypeboys.pnj.domain.calendar.service;
 
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.EventRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToEventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToTodoRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto;
@@ -20,5 +21,7 @@ public interface CalendarService {
     public List<EventDto> updateEventList(EventDto event);
 
     public TodoResponseDto exchangeToTodo(ExchangeToTodoRequestDto requestDto);
+
+    public EventDto exchangeToEvent(ExchangeToEventRequestDto requestDto);
 
 }
