@@ -4,11 +4,8 @@ import axios from "axios";
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 // 구글 캘린더 정보 불러오기
-export const readCalendar = async (
-  timeMax: string,
-  timeMin: string,
-  memberId: number | null
-) => {
+export const readCalendar = async (timeMax: string, timeMin: string) => {
+  const memberId = localStorage.getItem("memberId");
   const response = await axios.get(
     `${local_back_url}/api/calendar/${memberId}/${timeMax}/${timeMin}`
   );
@@ -44,10 +41,8 @@ export const updateCalendar = async (formdata: EventData) => {
 };
 
 // 구글 캘린더 정보 삭제하기
-export const deleteCalendar = async (
-  eventId: number,
-  memberId: number | null
-) => {
+export const deleteCalendar = async (eventId: number) => {
+  const memberId = localStorage.getItem("memberId");
   const response = await axios.delete(
     `${local_back_url}/api/calendar/${memberId}/${eventId}`
   );

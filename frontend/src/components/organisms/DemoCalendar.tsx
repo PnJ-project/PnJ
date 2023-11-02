@@ -3,8 +3,6 @@
 import { useState } from "react";
 import moment from "moment";
 import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
 import { fetchStt } from "../../api/SttApi";
 import { EventData, addCalendar, readCalendar } from "../../api/CalendarApi";
 import { readTodo } from "../../api/TodoApi";
@@ -15,6 +13,7 @@ import TodoList from "../molecules/TodoList";
 import Mike from "/image/mike.svg";
 import Paste from "/image/paste.svg";
 import "./DemoCalendar.css";
+import axios from "axios";
 
 export default function DemoCalendar() {
   // 기본 세팅
@@ -23,7 +22,6 @@ export default function DemoCalendar() {
   const [timeMin] = useState(
     moment().endOf("month").endOf("week").toDate().toISOString()
   );
-  const memberID = useSelector((state: RootState) => state.auth.data.memberId);
   const changes: EventData[] = [];
   const { error: sttError, refetch: refetchStt } = useQuery(
     "sttData",
@@ -32,7 +30,7 @@ export default function DemoCalendar() {
   ); // stt API
   const { refetch: refetchCal } = useQuery(
     "calendarData",
-    () => readCalendar(timeMax, timeMin, memberID),
+    () => readCalendar(timeMax, timeMin),
     { enabled: false, retry: false }
   ); // calendar API
   const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
@@ -66,11 +64,23 @@ export default function DemoCalendar() {
   };
 
   // 제출하기
+  const flask = import.meta.env.VITE_APP_FLASK_SERVER;
   const handleSubmit = async () => {
     // 빈값일시 반환
     if (textSave.trim() === "") {
       console.log("빈값 반환");
       return;
+    }
+    console.log("플라스크 가자");
+
+    try {
+      const data = await axios.post(`${flask}/trans/date`, {
+        input: textSave,
+      });
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error("Error flask data:", error);
     }
 
     // 등록 API 요청
