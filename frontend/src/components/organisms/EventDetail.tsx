@@ -2,16 +2,20 @@
 
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
-import { closeModal } from "../../store/slice/calendar/ModalSlice";
+import {
+  updateEvent,
+  deleteEvent,
+} from "../../store/slice/calendar/CalendarSlice";
+import { closeSideModal } from "../../store/slice/calendar/ModalSlice";
 import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import { QueryObserverResult, RefetchOptions } from "react-query";
+// import { Event as BigCalendarEvent } from "react-big-calendar";
 
 // 모달 타입
 interface ModalProps {
-  selectedRange: { start: Date; end: Date };
+  id: number | string | unknown;
   refetchCal: <TPageData>(
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<TPageData, unknown>>;
@@ -20,35 +24,40 @@ interface ModalProps {
 // const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
-const EventForm: React.FC<ModalProps> = ({ selectedRange, refetchCal }) => {
+const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
   // 기본 세팅
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.calendar.events);
-  const [title, setTitle] = useState("");
-  const [memo, setMemo] = useState("");
+  const event = events.find((event) => event.id === id);
+  const [title, setTitle] = useState(event?.title);
+  const [memo, setMemo] = useState(event?.memo);
   const [errorMsg, setErrorMsg] = useState("");
   const [sTime, setSTime] = useState("00:00");
   const [eTime, setETime] = useState("00:00");
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
+  console.log("zz", events);
 
-  // 이벤트 생성
-  const handleAddEvent = async () => {
+  // 이벤트 수정
+  const handleUpdateEvent = async () => {
     // 조건 만족안할시 반환
+    if (typeof id != "number" || !event) {
+      return;
+    }
     if (!title) {
       setErrorMsg("일정 내용을 입력하세요");
       return;
     }
-    const newEvent: Event = {
-      id: events.length,
+    const updateItem = {
+      id: id,
       title,
-      start: selectedRange.start.toISOString(),
-      end: selectedRange.end.toISOString(),
+      start: event.start.toString(),
+      end: event.end.toString(),
       memo,
+      resource: { event: { id: id, memo: memo } },
     };
-    // 일정생성 (개발자용)
-    dispatch(addEvent(newEvent));
-
-    // 캘린더 생성 API 요청
+    // 일정수정 (개발자용)
+    dispatch(updateEvent(updateItem));
+    // 캘린더 업데이트 API 요청
     const reqNewEvent = {
       memberId: memberId,
       event: {
@@ -56,12 +65,12 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange, refetchCal }) => {
         summary: title,
         colorId: null,
         start: {
-          dateTime: selectedRange.start.toISOString(),
+          dateTime: "",
           timeZone: "Asia/Seoul",
           date: null,
         },
         end: {
-          dateTime: selectedRange.end.toISOString(),
+          dateTime: "",
           timeZone: "Asia/Seoul",
           date: null,
         },
@@ -77,30 +86,55 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange, refetchCal }) => {
       setErrorMsg("서버와 연결할 수 없습니다. 다시 시도해주세요");
       return;
     }
-
     // 원복
-    dispatch(closeModal());
+    dispatch(closeSideModal());
     setTitle("");
     setMemo("");
+  };
+
+  // 이벤트 삭제
+  const handleDeleteEvent = async () => {
+    // 삭제할거냐는 메세지 띄우기
+    // 일정삭제 (개발자용)
+    if (typeof id == "number") {
+      dispatch(deleteEvent(id));
+    }
+    // 캘린더 삭제 API 요청
+    try {
+      const res = await axios.delete(
+        `${local_back_url}/api/calendar/${memberId}/${id}`
+      );
+      // 투두 다시 불러오기
+      console.log(
+        "캘린더 삭제 완료",
+        `${local_back_url}/api/calendar/${memberId}/${id}`,
+        res
+      );
+      await refetchCal();
+      dispatch(closeSideModal());
+    } catch (error) {
+      setErrorMsg("일정 삭제에 실패했습니다. 다시 시도해주세요");
+      console.error("캘린더 삭제 에러:", error);
+    }
   };
 
   return (
     <Overlay
       onClick={(e) => {
         if (e.target === e.currentTarget) {
-          dispatch(closeModal());
+          dispatch(closeSideModal());
         }
       }}
     >
       <InputModalContainer>
         <CloseBtn
           onClick={() => {
-            dispatch(closeModal());
+            dispatch(closeSideModal());
           }}
         >
           ✖
         </CloseBtn>
-        <Title>일정 추가하기</Title>
+        <Title>일정 수정하기</Title>
         <div>시간</div>
         <SelectDate>
           <input
@@ -138,7 +172,10 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange, refetchCal }) => {
           onChange={(e) => setMemo(e.target.value)}
         />
         <ErrorMsg>{errorMsg}</ErrorMsg>
-        <button onClick={handleAddEvent}>일정 추가</button>
+        <div>
+          <button onClick={handleDeleteEvent}>일정 삭제</button>
+          <button onClick={handleUpdateEvent}>일정 변경</button>
+        </div>
       </InputModalContainer>
     </Overlay>
   );

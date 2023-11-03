@@ -3,10 +3,8 @@
 import { useState } from "react";
 import moment from "moment";
 import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
 import { fetchStt } from "../../api/SttApi";
-import { EventData, addCalendar, readCalendar } from "../../api/CalendarApi";
+import { readCalendar } from "../../api/CalendarApi";
 import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
@@ -14,20 +12,43 @@ import GoogleLogin from "../atoms/GoogleLogin";
 import TodoList from "../molecules/TodoList";
 import SmallCal from "../../pages/test/SmallCal";
 import BigCalendar from "../../pages/test/BigCalendar";
+import DemoMadal from "../molecules/FlaskMadal";
 import Mike from "/image/mike.svg";
 import Paste from "/image/paste.svg";
 import "./DemoCalendar.css";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  openDemoModal,
+  selectIsDemoModalOpen,
+} from "../../store/slice/calendar/ModalSlice";
+import { RootState } from "../../store/store";
+import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
+
+export interface FlaskResType {
+  end: {
+    dateTime: string;
+    timeZome: string;
+  };
+  start: {
+    dateTime: string;
+    timeZome: string;
+  };
+  summary: string;
+}
 
 export default function DemoCalendar() {
   // 기본 세팅
+  const dispatch = useDispatch();
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
+  const [afterFlask, setAfterFlask] = useState<FlaskResType[]>([]); // 인풋박스 값
+  const [freetime, setFreeTime] = useState(3); // 무료이용 가능횟수
+  const isDemoOpen = useSelector(selectIsDemoModalOpen);
+  const events = useSelector((state: RootState) => state.calendar.events);
   const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
   const [timeMin] = useState(
     moment().endOf("month").endOf("week").toDate().toISOString()
   );
-  const memberID = useSelector((state: RootState) => state.auth.data.memberId);
-  const changes: EventData[] = [];
   const { error: sttError, refetch: refetchStt } = useQuery(
     "sttData",
     fetchStt,
@@ -35,7 +56,7 @@ export default function DemoCalendar() {
   ); // stt API
   const { refetch: refetchCal } = useQuery(
     "calendarData",
-    () => readCalendar(timeMax, timeMin, memberID),
+    () => readCalendar(timeMax, timeMin),
     { enabled: false, retry: false }
   ); // calendar API
   const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
@@ -69,37 +90,61 @@ export default function DemoCalendar() {
   };
 
   // 제출하기
+  const flask = import.meta.env.VITE_APP_FLASK_SERVER;
   const handleSubmit = async () => {
+    // 무료이용 가능횟수 제한
+    if (!freetime) {
+      setTextSave("로그인후 자유롭게 이용해보세요. ");
+      return;
+    }
     // 빈값일시 반환
     if (textSave.trim() === "") {
       console.log("빈값 반환");
       return;
     }
-
-    // api 연결
-    const getSampleData = async () => {
-      try {
-        console.log("플라스크 가자")
-        const data = await axios.post(`https://${import.meta.env.VITE_APP_FLASK_SERVER}:5000/trans/date`, {input:textSave})
-        console.log(data)
-        return data
-      } catch (error) {
-        console.error("Error flask data:", error);
+    setFreeTime(freetime - 1);
+    // 모달창 오픈
+    dispatch(openDemoModal());
+    // 플라스크 api 연결
+    const formData = new FormData();
+    formData.append("input", textSave);
+    try {
+      console.log("플라스크 전송");
+      const data = await axios.post(`${flask}/trans/date`, formData);
+      // const data = {
+      //   data: {
+      //     end: { dateTime: "2023-11-15T16:02:11", timeZome: "Asia/Seoul" },
+      //     start: { dateTime: "2023-11-15T15:02:11", timeZome: "Asia/Seoul" },
+      //     summary: "저녁약속",
+      //   },
+      // };
+      // 전달 데이터
+      setAfterFlask([data.data]);
+      // 리덕스 반영 (개발자용)
+      console.log("테스트", data);
+      if (data.data.end.dateTime == null) {
+        // 1. 투두
+        //
+      } else {
+        // 2. 캘린더
+        const newEvent: Event = {
+          id: events.length,
+          title: data.data.summary,
+          start: data.data.start.dateTime,
+          end: data.data.end.dateTime,
+          memo: "",
+        };
+        // 일정생성 (개발자용)
+        dispatch(addEvent(newEvent));
       }
-    };
-    getSampleData()
 
-    // 등록 API 요청
-    for (let i = 0; i < changes.length; i++) {
-      const formdata = changes[i];
-      await addCalendar(formdata);
+      // 데이터 리패치
+      await refetchTodo();
+      await refetchCal();
+      return data;
+    } catch (error) {
+      console.error("Error flask data:", error);
     }
-
-    // 투두 갱신
-    await refetchTodo();
-
-    // 캘린더 갱신
-    await refetchCal();
 
     // 인풋 필드 리셋
     setTextSave("");
@@ -132,6 +177,12 @@ export default function DemoCalendar() {
             <button className="submitBtn" onClick={handleSubmit}>
               등록
             </button>
+            <div className="FreeTxt">
+              <div>횟수제한 : </div>
+              <div className={`${freetime === 0 ? "NotFree" : ""}`}>
+                {freetime}
+              </div>
+            </div>
           </div>
           <div className="NavGoogleBtn">
             <GoogleLogin />
@@ -139,11 +190,10 @@ export default function DemoCalendar() {
         </div>
         {/* Body */}
         <div className="CalendarContainer">
-
           {/* 왼쪽 사이드 - 작은캘린더 / 투두리스트 */}
           <div className="LeftSideContainer">
             <div className="SmallCalendar">
-              <SmallCal/>
+              <SmallCal />
             </div>
             <div className="Todo-Container">
               <TodoList />
@@ -152,11 +202,13 @@ export default function DemoCalendar() {
           {/* 오른쪽 사이드 - 큰 캘린더 */}
           <div className="RightSideContainer">
             <div className="Calendar">
-              <BigCalendar/>
+              <BigCalendar />
             </div>
           </div>
         </div>
       </div>
+      {/* 기타 */}
+      {isDemoOpen && <DemoMadal before={textSave} after={afterFlask} />}
     </>
   );
 }
