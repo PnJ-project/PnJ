@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    stages {
+        stage('Check Changes') {
+            steps{
+                script {
+                    def changes = checkout scm
+                    def changedFiles = changes?.changedFiles?.collect { it.path }
+                    def dataChanges = changedFiles?.findAll { it.startsWith('data/') }
+                    
+                    if (dataChanges?.isEmpty()) {
+                        currentBuild.result = 'NOT_BUILT'
+                        echo 'No changes in data/ directory. Skipping build.'
+                        currentBuild.displayName = '#${BUILD_NUMBER} (Skipped)'
+                        return
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('data') {
+                    script {
+                        sh "docker build -t flask:latest ."
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'echo $FLASK_PORT'
+                sh 'docker rm -f flask'
+                sh 'docker run -d --name flask --network mariadb_network -p ${FLASK_PORT}:5000 flask:latest'
+            }
+        }
+
+        stage('Finish') {
+            steps {
+                sh 'docker images -qf dangling=true | xargs -I{} docker rmi {}'
+            }
+        }
+    }
+}
