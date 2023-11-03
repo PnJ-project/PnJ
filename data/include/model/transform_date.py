@@ -22,11 +22,11 @@ def parse_weekday(text):
 def get_korean_date(text):
     today = datetime.now()
     weekday = parse_weekday(text) # 요일
-    if '다다음주' in text:
+    if '다다음 주' in text:
         week_offset = 2
-    elif '다음주' in text:
+    elif '다음 주' in text:
         week_offset = 1
-    elif '이번주' in text:
+    elif '이번 주' in text:
         week_offset = 0
 
     if weekday is not None and week_offset is not None:
@@ -44,7 +44,6 @@ def get_korean_date(text):
         return datetime.now() + timedelta(days=3)
     else:
         return None
-
 
 
 
@@ -100,6 +99,8 @@ def check_date_time_format(input_string):
 
 
 
+
+
 # '/' 날짜를 년,월,일로 변환
 def convert_date_format(date_string, num):
     if num == 1:
@@ -126,6 +127,14 @@ def convert_date_format(date_string, num):
         return f'{day}일'
 
 
+def convert_ko_month(date_string):
+    month = date_string
+    for data in date_string:
+        if data:
+            month = str(int(data)).zfill(2)
+    return f'{month}월'
+
+
 def change_datetime(checked):
     current_time = datetime.now()
     checked['year'] = current_time.year if checked['year'] is None else checked['year']
@@ -148,13 +157,12 @@ def change_datetime(checked):
 
 
 
-
-
 def is_serial(text):
-    if '까지' in text or '부터' in text or '~' in text:
+    if '부터' in text or '~' in text:
         return 1
     else:
         return 0
+
 
 
 # dateutil사용할 수 있는지 확인
@@ -172,23 +180,26 @@ def check_dateutil(sentence):
     return 0
 
 
+def trans_korean(sentence):
+    # 연속인지 확인
+
+    # 별개의 일정
+
+    # 하나의 일정
+    start_time_str = get_korean_date(sentence).strftime('%Y-%m-%dT%H:%M:%S')
+    start_time = datetime.fromisoformat(start_time_str)
+    end_time = start_time + timedelta(hours=1)
+    return start_time, end_time
+
 
 def is_koreandate(sentence):
-    korean_date_list = ['다다음주', '다음주', '이번주', '오늘', '내일', '모레', '글피']
+    korean_date_list = ['다다음 주', '다음 주', '이번 주', '오늘', '내일', '모레', '글피']
     for date in korean_date_list:
+        # 한글 날짜 데이터가 있니?
         if date in sentence:
-            # 연속인지 확인
-            if is_serial(sentence.checked):
-
-            # 별개의 일정
-
-            # 하나의 일정
-            start_time = get_korean_date(sentence)
-            end_time = start_time + timedelta(hours=1)
-            return start_time, end_time
-
-        else:
-            return 0
+            return 1
+    else:
+        return 0
 
 
 def use_dateutil(sentence, dateutil_list):
@@ -226,7 +237,6 @@ def not_dateutil(sentence, pos_result):
         for word in pos_result:
             if word[1] == 'Number':
                 number_list.append(word[0])
-                temp_word = word[0]
         for number in number_list:
             temp_word = number
             if '/' in number:
@@ -247,11 +257,10 @@ def not_dateutil(sentence, pos_result):
 
     # sentence가 dateutil 형식 외, 연속되지 않은 일정이라면?
     else:
-        start_end = []
+        korean_info = ""
         number_list = []
         new_datetime = datetime.now()
         for word in pos_result:
-
             if word[1] == 'Number':
                 convert_word = word[0]
                 number_list.append(word[0])
@@ -265,14 +274,27 @@ def not_dateutil(sentence, pos_result):
 
                 elif '.' in number:
                     convert_word = convert_date_format(number, 3)
-
-
+                elif '년' in number:
+                    korean_info += number
+                elif '월' in number:
+                    korean_info += " " + number
+                elif '일' in number:
+                    korean_info += " " + number
+            if korean_info:
+                convert_ko_month(korean_info)
+                ko_checked = check_date_time_format(korean_info)
+                new_datetime = change_datetime(ko_checked)
+                start_time = new_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+                end_time = (new_datetime + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S")
+                return start_time, end_time
                 # 년 / 월 / 일 / 분 / 초 처리
+
+            else:
                 checked = check_date_time_format(convert_word)
                 new_datetime = change_datetime(checked)
-            start_time = new_datetime.strftime("%Y-%m-%dT%H:%M:%S")
-            end_time = (new_datetime + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S")
-            return start_time, end_time
+                start_time = new_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+                end_time = (new_datetime + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S")
+                return start_time, end_time
 
         else:  # 날짜 정보가 없는 것
             start_time = None
