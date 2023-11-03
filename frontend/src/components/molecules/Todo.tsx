@@ -1,3 +1,4 @@
+// import React, { useCallback, useState } from "react";
 import React, { useState } from "react";
 import { RiCloseCircleLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
@@ -14,7 +15,9 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
     id: null,
     value: "",
   });
-
+  // const [draggedEvent, setDraggedEvent] = useState()
+  // const handleDragStart = useCallback((event) => setDraggedEvent(event), [])
+  
   // 업데이트 등록
   const submitUpdate = (updatedTodo: { id: number; summary: string }) => {
     if (edit.id) {
@@ -38,7 +41,14 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
         {todos.map((todo, index) => (
           <div className={"todo-row"} key={index}>
             {!edit.id || edit.id != todo.id ? (
-              <div className="todoItem" key={todo.id}>
+              <div
+                className="todoItem"
+                key={todo.id}
+                draggable="true"
+                // onDragStart={() =>
+                //   handleDragStart({ title: todo.id })
+                // }
+              >
                 {todo.summary}
               </div>
             ) : (

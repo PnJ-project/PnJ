@@ -14,9 +14,11 @@ import {
   updateEvent,
   setEvents,
 } from "../../store/slice/calendar/CalendarSlice";
+import { TodoItems } from "../../store/slice/calendar/TodoSlice";
 import { change, handleDate } from "../../store/slice/calendar/HandleSlice";
 import Modal from "../../components/organisms/EventForm";
 import DetailModal from "../../components/organisms/EventDetail";
+import 'moment/locale/ko'; 
 import moment from "moment";
 // import { Event } from '../../store/slice/calendar/CalendarSlice'
 import withDragAndDrop, {
@@ -27,6 +29,7 @@ import styled from "styled-components";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import axios from "axios";
+import Toolbar from "../../components/molecules/Toolbar";
 
 // 이벤트 캘린더 폼
 interface FormatEvent {
@@ -55,11 +58,14 @@ const BigCalendarInfo = () => {
     () => readCalendar(timeMax, timeMin),
     { retry: false }
   ); // calendar API
+  moment.locale("ko");
   const localizer = momentLocalizer(moment);
-  moment.locale("ko-KR");
   // 캘린더를 DragAndDrop으로 바꿉니다.
   const DragAndDropCalendar = withDragAndDrop(Calendar);
+  
   const dispatch = useDispatch();
+  const todos = useSelector(TodoItems);
+
   // 캘린더용 데이터 파싱
   const [myEventsJunha] = useState(useSelector(selectEvents));
   const [, setFormattedEventsJunha] = useState<FormatEvent[]>([]);
@@ -230,9 +236,22 @@ const BigCalendarInfo = () => {
     }
   }, [myEventsJunha]);
 
+  // todo에서 캘린더로 옮기기
+  
+
+
+
+
   return (
     <Container>
       <div className="middleArticle">
+        
+        {todos && todos.map((todo) => (
+          <div key={todo.id}>
+            {/* 각 todo 아이템의 내용을 보여줍니다. */}
+            {/* {todo.summary} */}
+          </div>
+        ))}
         <DragAndDropCalendar
           //시간 현지화
           localizer={localizer}
@@ -259,7 +278,11 @@ const BigCalendarInfo = () => {
           resizable
           selectable
           style={{ height: "100%", width: "100%" }}
-          //   components={{ toolbar: Toolbar }}
+          // onDrop={(event) => handleDrop(event, slotInfo)}
+          onDragOver={(event) => event.preventDefault()}
+          components={{ 
+          toolbar: Toolbar 
+          }}
         />
       </div>
       {isOpen && selectedRange && (

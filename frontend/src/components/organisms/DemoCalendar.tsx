@@ -37,6 +37,7 @@ export interface FlaskResType {
   summary: string;
 }
 
+
 export default function DemoCalendar() {
   // 기본 세팅
   const dispatch = useDispatch();
@@ -103,6 +104,17 @@ export default function DemoCalendar() {
       return;
     }
     setFreeTime(freetime - 1);
+    const dataa = new FormData;
+    dataa.append("input", "떡볶이 옴뇸뇸")
+    try {
+      const data = await axios.post(`${flask}/trans/date`,
+      dataa);
+       console.log(data.data[0]);
+      return data;
+    } catch (error) {
+      console.error("Error flask data:", error);
+    }
+
     // 모달창 오픈
     dispatch(openDemoModal());
     // 플라스크 api 연결
