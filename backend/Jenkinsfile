@@ -32,7 +32,7 @@ pipeline {
             steps {
                 sh 'echo $BACKEND_PORT'
                 sh 'docker rm -f backend'
-                sh 'docker create -d --name backend -p ${BACKEND_PORT}:8080 backend:latest'
+                sh 'docker create --name backend -p ${BACKEND_PORT}:8080 backend:latest'
                 sh 'docker network connect mariadb_network backend'
                 sh 'docker network connect redis_network backend'
                 sh 'docker start backend'
