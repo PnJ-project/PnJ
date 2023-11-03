@@ -1,3 +1,4 @@
+
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 import re
@@ -99,8 +100,6 @@ def check_date_time_format(input_string):
 
 
 
-
-
 # '/' 날짜를 년,월,일로 변환
 def convert_date_format(date_string, num):
     if num == 1:
@@ -162,7 +161,6 @@ def is_serial(text):
         return 1
     else:
         return 0
-
 
 
 # dateutil사용할 수 있는지 확인
