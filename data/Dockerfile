@@ -3,8 +3,7 @@ FROM ubuntu:latest
 ENV LANG=C.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-  apt-get install -y --no-install-recommends tzdata g++ curl\
-  apt-get install -y libpcre3-dev
+  apt-get install -y --no-install-recommends tzdata g++ curl libpcre3-dev
 
 # install java
 RUN apt-get install -y openjdk-8-jdk
