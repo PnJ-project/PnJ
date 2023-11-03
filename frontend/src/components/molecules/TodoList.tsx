@@ -4,9 +4,10 @@ import TodoForm from "./TodoForm";
 import Todo from "./Todo";
 import "./Todo.css";
 import { readTodo } from "../../api/TodoApi";
-import { addTodo, updateTodo, removeTodo, setTodos } from "../../store/slice/TodoSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { TodoItems, setTodosRedux } from "../../store/slice/calendar/TodoSlice";
+import { useSelector } from "react-redux";
 
 interface TodoItem {
   id: number;
@@ -22,7 +23,8 @@ const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 export default function TodoList() {
   // 기본세팅
   const dispatch = useDispatch();
-  const [todos, setTodos] = useState<TodoItem[]>([]);
+  const reduxtodo = useSelector(TodoItems)
+  const [todos, setTodos] = useState<TodoItem[]>(reduxtodo);
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const { data: todoData, refetch: refetchTodo } = useQuery(
     "todoData",
@@ -51,7 +53,7 @@ export default function TodoList() {
     // 새로운 일정 적용 (개발자용)
     const newTodos = [newTodo, ...todos];
     setTodos(newTodos);
-    dispatch(addTodo(newTodo));
+    
     // 투두 생성 API 호출
     try {
       await axios.post(`${local_back_url}/api/todo`, reqNewTodo);
@@ -114,15 +116,19 @@ export default function TodoList() {
 
   // 전역관리
   useEffect(() => {
-    if (todoData) {
-      console.log("투두바뀜");
-      setTodos(todoData.data);
+    console.log("todo 갱신",todoData);
+    if (todoData && todoData.data) {
+      console.log("todo 리덕스");
+      // console.log("투두바뀜",firstTodo);
+      // setTodos(todoData.data);
+      dispatch(setTodosRedux(todoData.data));
     }
-  }, [todoData]);
+  }, [todoData,dispatch]);
 
   // 최초 로딩시
   useEffect(() => {
     refetchTodo();
+    
     console.log("todo 불러오기");
   }, []);
 

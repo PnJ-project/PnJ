@@ -17,24 +17,26 @@ const todoSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
-    addTodo: (state, action: PayloadAction<TodoItem>) => {
+    addTodoRedux: (state, action: PayloadAction<TodoItem>) => {
       state.todos.push(action.payload);
     },
-    updateTodo: (state, action: PayloadAction<{ id: number; summary: string }>) => {
+    updateTodoRedux: (state, action: PayloadAction<{ id: number; summary: string }>) => {
       const { id, summary } = action.payload;
       const todoToUpdate = state.todos.find((todo) => todo.id === id);
       if (todoToUpdate) {
         todoToUpdate.summary = summary;
       }
     },
-    removeTodo: (state, action: PayloadAction<number>) => {
+    removeTodoRedux: (state, action: PayloadAction<number>) => {
       state.todos = state.todos.filter((todo) => todo.id !== action.payload);
     },
-    setTodos: (state, action: PayloadAction<TodoItem[]>) => {
+    setTodosRedux: (state, action: PayloadAction<TodoItem[]>) => {
+      console.log(action.payload,'11111111111111111111')
       state.todos = action.payload;
     },
   },
 });
 
-export const { addTodo, updateTodo, removeTodo, setTodos } = todoSlice.actions;
+export const { addTodoRedux, updateTodoRedux, removeTodoRedux, setTodosRedux } = todoSlice.actions;
 export default todoSlice.reducer;
+export const TodoItems = (state: { todo: TodoState }) => state.todo.todos;

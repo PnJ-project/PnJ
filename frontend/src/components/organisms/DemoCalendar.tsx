@@ -16,8 +16,7 @@ import Mike from "/image/mike.svg";
 import Paste from "/image/paste.svg";
 import "./DemoCalendar.css";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+
 
 export default function DemoCalendar() {
   // 기본 세팅
@@ -27,8 +26,7 @@ export default function DemoCalendar() {
   const [timeMin] = useState(
     moment().endOf("month").endOf("week").toDate().toISOString()
   );
-  const memberID = useSelector((state: RootState) => state.auth.data.memberId);
-  const todos = useSelector((state: RootState) => state.todo.todos);
+
   const changes: EventData[] = [];
   const { error: sttError, refetch: refetchStt } = useQuery(
     "sttData",
@@ -85,11 +83,12 @@ export default function DemoCalendar() {
     }
     console.log("플라스크 가자");
     setFreeTime(freetime - 1);
+    const dataa = new FormData;
+    dataa.append("input", "떡볶이 옴뇸뇸")
     try {
-      const data = await axios.post(`${flask}/trans/date`, {
-        input: textSave,
-      });
-      console.log(data);
+      const data = await axios.post(`${flask}/trans/date`,
+      dataa);
+       console.log(data.data[0]);
       return data;
     } catch (error) {
       console.error("Error flask data:", error);

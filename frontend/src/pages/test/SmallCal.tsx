@@ -6,6 +6,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { change } from "../../store/slice/calendar/HandleSlice";
+// import Toolbar from "../../components/molecules/Toolbar";
 
 // import React from 'react';
 export default function SmallCal() {
@@ -38,6 +39,9 @@ export default function SmallCal() {
           onNavigate={handleDateChange}
           //클릭 한 view 의 유형을 가져옴
           onView={handleViewChange}
+          // components={{
+          //   toolbar: Toolbar
+          // }}
         />
       </div>
     </Container>
@@ -50,13 +54,13 @@ const Container = styled.div`
   height:100%;
   span:nth-child(1) {
     button{
-      font-size:7px;
+      font-size:10px;
       padding: 0;
       height:10%
     }
   }
   span:nth-child(2) {
-    font-size:12px;
+    font-size:10px;
   }
   span:nth-child(3) {
     display: none;
@@ -64,11 +68,10 @@ const Container = styled.div`
   // 일(일주일) 전체
   .rbc-date-cell {
     text-align: center;
-    font-size:8px;
     .rbc-button-link {
-      //오늘날짜말고 다른 거 다 포함 일자 높이
+      //오늘날짜 + 다른 거 다 포함 일자 높이
       height:25px; 
-      font-size:5px;
+      font-size:10px;
     }
   }
   // BigCalendar
@@ -86,7 +89,8 @@ const Container = styled.div`
     }
     .rbc-row.rbc-month-header {
       height: 8%;
-      font-size:8px;
+      // 월화수목금 그 줄
+      font-size:10px;
       display: flex;
       align-items: center;
       .rbc-header {
