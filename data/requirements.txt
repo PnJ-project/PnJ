@@ -1,4 +1,4 @@
-﻿blinker==1.6.3
+blinker==1.6.3
 certifi==2023.7.22
 charset-normalizer==3.3.1
 click==8.1.7
@@ -24,5 +24,6 @@ scipy==1.10.1
 six==1.16.0
 threadpoolctl==3.2.0
 urllib3==2.0.7
+uwsgi==2.0.23
 Werkzeug==3.0.0
 zipp==3.17.0
