@@ -108,18 +108,21 @@ class MicrophoneStream(object):
 
 def listen_print_loop(responses):
     num_chars_printed = 0
-    full_transcript = ""
+    full_transcript = []
     start_time = time.time()
 
     for result in responses.results:
+        print('result---------------', result)
         if not result.alternatives:
             continue
 
         # Display the transcription of the top alternative.
         transcript = result.alternatives[0].transcript
+        full_transcript.append(transcript)
 
+        print('transcript', transcript)
         # Add the transcript to the full_transcript
-        full_transcript += transcript + " "
+        last_transcript = transcript
 
         # Display interim results, but with a carriage return at the end of the line, so subsequent lines will overwrite them.
         #
@@ -131,24 +134,29 @@ def listen_print_loop(responses):
             sys.stdout.flush()
 
             num_chars_printed = len(transcript)
-            if time.time() - start_time >= 30:
+
+            if time.time() - start_time >= 10:
                 print("Exiting...")
                 stream.closed = True  # 오디오 스트림 종료
                 break
         else:
-            print(transcript + overwrite_chars)
+            sentence = transcript + overwrite_chars
+            print('sentence', sentence)
+            full_transcript.append(sentence)
 
             # Exit recognition if any of the transcribed phrases could be one of our keywords.
             # if re.search(r'\b(나가기|quit)\b', transcript, re.I):
             #     print('Exiting..')
             #     break
-            # 시간이 30초 이상 경과하면 스트림을 종료하고 반복문을 빠져나옴
-        if time.time() - start_time >= 30:
+        # 시간이 30초 이상 경과하면 스트림을 종료하고 반복문을 빠져나옴
+        if time.time() - start_time >= 10:
             print("Exiting...")
             stream.closed = True  # 오디오 스트림 종료
             break
 
-    return transcript + overwrite_chars
+
+
+    return full_transcript
 
 
 
@@ -158,6 +166,7 @@ def listen_print_loop(responses):
 
 @app.route('/test/stt', methods=['POST'])
 def main():
+    global stream
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
     language_code = 'ko-KR'  # a BCP-47 language tag
@@ -182,19 +191,24 @@ def main():
 
         responses = client.streaming_recognize(streaming_config, requests)
 
-        for response in responses:
-            result = listen_print_loop(response)
-            # print(time.time())
+        results = []
 
-            if time.time() - start_time >= 30:
+        for response in responses:
+            print('response-----------------------', response)
+            result = listen_print_loop(response)
+            if result:
+                results.append(result)
+            # results.append(result)
+
+            if time.time() - start_time >= 10:
                 print("Exiting...")
                 break
 
-            # 추가 코드: 60초가 경과하면 audio_generator를 중단
-            if time.time() - start_time >= 30:
+            # 추가 코드: 20초가 경과하면 audio_generator를 중단
+            if time.time() - start_time >= 10:
                 stream.closed = True  # MicrophoneStream을 닫음
 
-        return result
+        return results
 
 if __name__ == '__main__':
     main()
