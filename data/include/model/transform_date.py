@@ -200,6 +200,21 @@ def is_koreandate(sentence):
         return 0
 
 
+def remove_korean_date_words(input_string):
+    specific_words = [
+        '다다음 주', '다음 주', '이번 주',
+        '오늘', '내일', '모레',
+        '글피', '월요일', '화요일',
+        '수요일', '목요일', '금요일',
+        '토요일', '일요일'
+    ]
+
+    for word in specific_words:
+        input_string = re.sub(r'\b{}\b'.format(re.escape(word)), '', input_string)
+
+    return input_string
+
+
 def use_dateutil(sentence, dateutil_list):
     date_list = []
     for date_info in dateutil_list:
@@ -279,7 +294,7 @@ def not_dateutil(sentence, pos_result):
                 elif '일' in number:
                     korean_info += " " + number
             if korean_info:
-                convert_ko_month(korean_info)
+                # convert_ko_month(korean_info)
                 ko_checked = check_date_time_format(korean_info)
                 new_datetime = change_datetime(ko_checked)
                 start_time = new_datetime.strftime("%Y-%m-%dT%H:%M:%S")

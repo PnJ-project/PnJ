@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from include.model.hanspell import check
-from include.model.transform_date import use_dateutil, not_dateutil, is_koreandate, trans_korean
+from include.model.transform_date import use_dateutil, not_dateutil, is_koreandate, trans_korean, remove_korean_date_words
 from konlpy.tag import Okt
 from dateutil.parser import parse
 from flask_cors import CORS
@@ -56,12 +56,12 @@ def transform_date():
             okt = Okt()
             pos_result = okt.pos(sentence.checked)
             for word in pos_result:
-                if word[1] == 'Number' and ('시' in word[0] or '분' in word[0] or '초' in word[0]) :
+                if word[1] == 'Number' and ('시' in word[0] or '분' in word[0] or '초' in word[0]):
                     time += word[0]
                 elif word[1] == 'Number' or word[1] == 'Punctuation'or word[0] == '부터':
                     date += word[0]
                 elif (word[1] == 'Noun' or word[1] == 'Alpha'):
-                    noun += word[0]
+                    noun += word[0] + ' '
 
             # dateutil라이브러리 사용할 수 있는 형태인지 확인
             dateutil_list = check_dateutil(sentence.checked)
@@ -83,6 +83,7 @@ def transform_date():
             else:
                 # 한글 날짜 데이터가 있는지 확인
                 if is_koreandate(sentence.checked):
+                    noun = remove_korean_date_words(noun)
                     start_time, end_time = trans_korean(sentence.checked)
                     result.append({
                         "start": {
