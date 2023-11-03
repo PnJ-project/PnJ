@@ -10,17 +10,17 @@ services:
       TZ: Asial/Seoul
     volumes:
       - mariadb_data:/var/lib/mysql
+      - ./infra/mariadb/init:/docker-entrypoint-initdb.d
       # - ./infra/mariadb/conf.d:/etc/mysql/conf.d
-      # - ./infra/mariadb/init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    networks:
+      - mariadb_network
     # healthcheck:
     #   test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -u root --password=$$M                                                                              ARIADB_ROOT_PASSWORD']
     #   interval: 10s
     #   timeout: 5s
     #   retries: 5
     #   start_period: 30s
-    restart: unless-stopped
-    networks:
-      - mariadb_network
 
   redis:
     image: redis:7.2.2-alpine3.18
@@ -39,6 +39,7 @@ services:
     environment:
       FRONTEND_PORT: ${FRONTEND_PORT}
       BACKEND_PORT: ${BACKEND_PORT}
+      FLASK_PORT: ${FLASK_PORT}
     volumes:
       - /usr/bin/docker:/usr/bin/docker
       - /var/run/docker.sock:/var/run/docker.sock
@@ -46,6 +47,7 @@ services:
       - /usr/libexec/docker/cli-plugins/docker-buildx:/usr/libexec/docker/cli-plugins/docker-buildx
       - ./backend/src/main/resources/application-oauth-release.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application-oauth-release.yml
       - ./backend/src/main/resources/application-release.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application-release.yml
+      - ./backend/src/main/resources/application-flask-release.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application-flask-release.yml
     ports:
       - ${JENKINS_PORT}:8080
     privileged: true

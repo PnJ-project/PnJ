@@ -3,6 +3,50 @@ from datetime import datetime, timedelta
 from dateutil.parser import parse
 import re
 
+# 오늘, 내일, 모레 날짜 변환
+def parse_weekday(text):
+    weekdays = {
+        '월요일': 0,
+        '화요일': 1,
+        '수요일': 2,
+        '목요일': 3,
+        '금요일': 4,
+        '토요일': 5,
+        '일요일': 6
+    }
+    for weekday, value in weekdays.items():
+        if weekday in text:
+            return value
+    return None
+
+
+def get_korean_date(text):
+    today = datetime.now()
+    weekday = parse_weekday(text) # 요일
+    if '다다음 주' in text:
+        week_offset = 2
+    elif '다음 주' in text:
+        week_offset = 1
+    elif '이번 주' in text:
+        week_offset = 0
+
+    if weekday is not None and week_offset is not None:
+        days_until_target = weekday - today.weekday()
+        days_until_target += 7 * (week_offset )  # 주간 오프셋 수정
+        korean_date = today + timedelta(days=days_until_target)
+        return korean_date
+    elif '오늘' in text:
+        return datetime.now()
+    elif '내일' in text:
+        return datetime.now() + timedelta(days=1)
+    elif '모레' in text:
+        return datetime.now() + timedelta(days=2)
+    elif '글피' in text:
+        return datetime.now() + timedelta(days=3)
+    else:
+        return None
+
+
 
 
 def is_special_symbol(text):
@@ -82,6 +126,14 @@ def convert_date_format(date_string, num):
         return f'{day}일'
 
 
+def convert_ko_month(date_string):
+    month = date_string
+    for data in date_string:
+        if data:
+            month = str(int(data)).zfill(2)
+    return f'{month}월'
+
+
 def change_datetime(checked):
     current_time = datetime.now()
     checked['year'] = current_time.year if checked['year'] is None else checked['year']
@@ -104,10 +156,8 @@ def change_datetime(checked):
 
 
 
-
-
 def is_serial(text):
-    if '까지' in text or '부터' in text or '~' in text:
+    if '부터' in text or '~' in text:
         return 1
     else:
         return 0
@@ -124,9 +174,45 @@ def check_dateutil(sentence):
     for pattern in date_patterns:
         matches = re.findall(pattern, sentence)
         if matches:
-            parsed_date = matches
             return matches
     return 0
+
+
+def trans_korean(sentence):
+    # 연속인지 확인
+
+    # 별개의 일정
+
+    # 하나의 일정
+    start_time_str = get_korean_date(sentence).strftime('%Y-%m-%dT%H:%M:%S')
+    start_time = datetime.fromisoformat(start_time_str)
+    end_time = start_time + timedelta(hours=1)
+    return start_time, end_time
+
+
+def is_koreandate(sentence):
+    korean_date_list = ['다다음 주', '다음 주', '이번 주', '오늘', '내일', '모레', '글피']
+    for date in korean_date_list:
+        # 한글 날짜 데이터가 있니?
+        if date in sentence:
+            return 1
+    else:
+        return 0
+
+
+def remove_korean_date_words(input_string):
+    specific_words = [
+        '다다음 주', '다음 주', '이번 주',
+        '오늘', '내일', '모레',
+        '글피', '월요일', '화요일',
+        '수요일', '목요일', '금요일',
+        '토요일', '일요일'
+    ]
+
+    for word in specific_words:
+        input_string = re.sub(r'\b{}\b'.format(re.escape(word)), '', input_string)
+
+    return input_string
 
 
 def use_dateutil(sentence, dateutil_list):
@@ -164,7 +250,6 @@ def not_dateutil(sentence, pos_result):
         for word in pos_result:
             if word[1] == 'Number':
                 number_list.append(word[0])
-                temp_word = word[0]
         for number in number_list:
             temp_word = number
             if '/' in number:
@@ -185,11 +270,10 @@ def not_dateutil(sentence, pos_result):
 
     # sentence가 dateutil 형식 외, 연속되지 않은 일정이라면?
     else:
-        start_end = []
+        korean_info = ""
         number_list = []
         new_datetime = datetime.now()
         for word in pos_result:
-
             if word[1] == 'Number':
                 convert_word = word[0]
                 number_list.append(word[0])
@@ -203,14 +287,27 @@ def not_dateutil(sentence, pos_result):
 
                 elif '.' in number:
                     convert_word = convert_date_format(number, 3)
-
-
+                elif '년' in number:
+                    korean_info += number
+                elif '월' in number:
+                    korean_info += " " + number
+                elif '일' in number:
+                    korean_info += " " + number
+            if korean_info:
+                # convert_ko_month(korean_info)
+                ko_checked = check_date_time_format(korean_info)
+                new_datetime = change_datetime(ko_checked)
+                start_time = new_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+                end_time = (new_datetime + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S")
+                return start_time, end_time
                 # 년 / 월 / 일 / 분 / 초 처리
+
+            else:
                 checked = check_date_time_format(convert_word)
                 new_datetime = change_datetime(checked)
-            start_time = new_datetime.strftime("%Y-%m-%dT%H:%M:%S")
-            end_time = (new_datetime + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S")
-            return start_time, end_time
+                start_time = new_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+                end_time = (new_datetime + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S")
+                return start_time, end_time
 
         else:  # 날짜 정보가 없는 것
             start_time = None
