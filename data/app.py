@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from include.model.hanspell import check
-from include.model.transform_date import use_dateutil, not_dateutil
+from include.model.transform_date import use_dateutil, not_dateutil, is_koreandate, trans_korean
 from konlpy.tag import Okt
 from dateutil.parser import parse
 from flask_cors import CORS
@@ -10,8 +10,6 @@ import re
 app = Flask(__name__)
 
 CORS(app, resources={r"/*": {"origins": "*"}})
-app.config["CORS_SUPPORTS_CREDENTIALS"] = True
-
 
 PREFIX = "/trans"
 
@@ -39,65 +37,85 @@ def check_dateutil(sentence):
 
 @app.route(PREFIX + '/date', methods=['POST'])
 def transform_date():
-    result = []
-    text = request.form['input']
-    lines = text.split('\n')
-    sentences = []
-    for line in lines:
-        line = line.strip()  # 양 끝의 공백을 제거합니다.
-        if not line:  # 공백인 경우 넘어갑니다.
-            continue
-        hanspell_sent = check(line)
-        sentences.append(hanspell_sent)
+    try:
+        result = []
+        text = request.form['input']
+        lines = text.split('\n')
+        sentences = []
+        for line in lines:
+            line = line.strip()  # 양 끝의 공백을 제거합니다.
+            if not line:  # 공백인 경우 넘어갑니다.
+                continue
+            hanspell_sent = check(line)
+            sentences.append(hanspell_sent)
 
-    for sentence in sentences:
-        noun = ""
-        date = ""
-        time = ""
-        okt = Okt()
-        pos_result = okt.pos(sentence.checked)
-        for word in pos_result:
-            if word[1] == 'Number' and ('시' in word[0] or '분' in word[0] or '초' in word[0]) :
-                time += word[0]
-            elif word[1] == 'Number' or word[1] == 'Punctuation'or word[0] == '부터':
-                date += word[0]
-            elif word[1] == 'Noun' or word[1] == 'Alpha':
-                noun += word[0]
+        for sentence in sentences:
+            noun = ""
+            date = ""
+            time = ""
+            okt = Okt()
+            pos_result = okt.pos(sentence.checked)
+            for word in pos_result:
+                if word[1] == 'Number' and ('시' in word[0] or '분' in word[0] or '초' in word[0]) :
+                    time += word[0]
+                elif word[1] == 'Number' or word[1] == 'Punctuation'or word[0] == '부터':
+                    date += word[0]
+                elif (word[1] == 'Noun' or word[1] == 'Alpha'):
+                    noun += word[0]
 
-        # dateutil라이브러리 사용할 수 있는 형태인지 확인
-        dateutil_list = check_dateutil(sentence.checked)
-        # dateutil 사용할 수 있으면
-        if dateutil_list:
-            start_time, end_time = use_dateutil(sentence, dateutil_list)
-            result.append({
-                "start": {
-                    "dateTime": start_time,
-                    "timeZone": "Asia/Seoul"
-                },
-                "end": {
-                    "dateTime": end_time,
-                    "timeZone": "Asia/Seoul"
-                },
-                "summary": noun
-            })
+            # dateutil라이브러리 사용할 수 있는 형태인지 확인
+            dateutil_list = check_dateutil(sentence.checked)
+            # dateutil 사용할 수 있으면
+            if dateutil_list:
+                start_time, end_time = use_dateutil(sentence, dateutil_list)
+                result.append({
+                    "start": {
+                        "dateTime": start_time,
+                        "timeZone": "Asia/Seoul"
+                    },
+                    "end": {
+                        "dateTime": end_time,
+                        "timeZone": "Asia/Seoul"
+                    },
+                    "summary": noun
+                })
+            #dateutil 형식 외
+            else:
+                # 한글 날짜 데이터가 있는지 확인
+                if is_koreandate(sentence.checked):
+                    start_time, end_time = trans_korean(sentence.checked)
+                    result.append({
+                        "start": {
+                            "dateTime": start_time,
+                            "timeZone": "Asia/Seoul"
+                        },
+                        "end": {
+                            "dateTime": end_time,
+                            "timeZone": "Asia/Seoul"
+                        },
+                        "summary": noun
+                    })
 
+                # 한글 날짜 데이터가 없다면
+                else:
+                    start_time, end_time = not_dateutil(sentence, pos_result)
+                    result.append({
+                        "start": {
+                            "dateTime": start_time,
+                            "timeZone": "Asia/Seoul"
+                        },
+                        "end": {
+                            "dateTime": end_time,
+                            "timeZone": "Asia/Seoul"
+                        },
+                        "summary": noun
+                    })
 
-        #dateutil 형식 외
-        else:
-            start_time, end_time = not_dateutil(sentence, pos_result)
-            result.append({
-                "start": {
-                    "dateTime": start_time,
-                    "timeZone": "Asia/Seoul"
-                },
-                "end": {
-                    "dateTime": end_time,
-                    "timeZone": "Asia/Seoul"
-                },
-                "summary": noun
-            })
+        return jsonify(result)
 
-    return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
 
 
 @app.route('/test')
