@@ -115,7 +115,7 @@ export default function DemoCalendar() {
       //   data: {
       //     end: { dateTime: "2023-11-15T16:02:11", timeZome: "Asia/Seoul" },
       //     start: { dateTime: "2023-11-15T15:02:11", timeZome: "Asia/Seoul" },
-      //     summary: "나저녁약속",
+      //     summary: "저녁약속",
       //   },
       // };
       // 전달 데이터
