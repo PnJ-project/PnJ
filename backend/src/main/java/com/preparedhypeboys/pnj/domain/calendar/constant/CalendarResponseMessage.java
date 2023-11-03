@@ -11,7 +11,8 @@ public enum CalendarResponseMessage {
     DELETE_EVENT_SUCCESS("이벤트 삭제 완료"),
     UPDATE_EVENT_SUCCESS("이벤트 수정 완료"),
     EXCHANGE_TO_TODO_SUCCESS("이벤트 -> TODO 변환 완료"),
-    EXCHANGE_TO_EVENT_SUCCESS("TODO -> 이벤트 변환 완료");
+    EXCHANGE_TO_EVENT_SUCCESS("TODO -> 이벤트 변환 완료"),
+    INPUT_EASY_SUCCESS("간편 입력 완료");
 
     private final String message;
 }

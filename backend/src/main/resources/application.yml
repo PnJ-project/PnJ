@@ -1,8 +1,0 @@
-spring:
-  profiles:
-    group:
-      develop:
-        - oauth-dev
-      release:
-        - oauth-release
-    active: develop

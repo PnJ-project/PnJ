@@ -1,15 +1,19 @@
 package com.preparedhypeboys.pnj.domain.calendar.service;
 
+import com.preparedhypeboys.pnj.domain.calendar.dao.FlaskDao;
 import com.preparedhypeboys.pnj.domain.calendar.dao.GoogleCalendarDao;
 import com.preparedhypeboys.pnj.domain.calendar.dao.TodoRepository;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.EventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToEventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToTodoRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.InputRequestDto;
+import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarResponseDto.InputResponseDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto;
 import com.preparedhypeboys.pnj.domain.calendar.entity.Todo;
 import com.preparedhypeboys.pnj.domain.member.dao.MemberRepository;
 import com.preparedhypeboys.pnj.domain.member.entity.Member;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +30,8 @@ public class CalendarServiceImpl implements
     private final TodoRepository todoRepository;
 
     private final GoogleCalendarDao googleCalendarDao;
+
+    private final FlaskDao flaskDao;
 
     @Override
     public List<EventDto> readEventList(Long memberId, String tiemMax, String timeMin) {
@@ -115,5 +121,49 @@ public class CalendarServiceImpl implements
         }
         // Todo 예외처리
         return null;
+    }
+
+    @Override
+    @Transactional
+    public InputResponseDto inputProcess(InputRequestDto requestDto) {
+        Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
+
+        if (member.isEmpty()) {
+            // TODO 예외처리
+            return null;
+        }
+
+        List<EventDto> eventDtos = flaskDao.getInputTransport(requestDto.getInput());
+
+        boolean inEvent = false;
+        boolean inTodo = false;
+
+        List<Todo> todoList = new ArrayList<>();
+
+        for (EventDto e : eventDtos) {
+
+            if (e.getStart().getDateTime() == null) {
+                inTodo = true;
+
+                Todo todo = Todo.builder()
+                    .summary(e.getSummary())
+                    .member(member.get())
+                    .build();
+
+                todoList.add(todo);
+            }
+
+            if (e.getStart().getDateTime() != null) {
+                inEvent = true;
+
+                googleCalendarDao.insertEvent(e, member.get().getAccessToken());
+            }
+        }
+
+        if (!todoList.isEmpty()) {
+            todoRepository.saveAll(todoList);
+        }
+
+        return InputResponseDto.builder().inTodo(inTodo).inEvent(inEvent).build();
     }
 }
