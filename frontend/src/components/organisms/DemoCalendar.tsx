@@ -4,7 +4,7 @@ import { useState } from "react";
 import moment from "moment";
 import { useQuery } from "react-query";
 import { fetchStt } from "../../api/SttApi";
-import { EventData, addCalendar, readCalendar } from "../../api/CalendarApi";
+import { readCalendar } from "../../api/CalendarApi";
 import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
@@ -12,20 +12,43 @@ import GoogleLogin from "../atoms/GoogleLogin";
 import TodoList from "../molecules/TodoList";
 import SmallCal from "../../pages/test/SmallCal";
 import BigCalendar from "../../pages/test/BigCalendar";
+import DemoMadal from "../molecules/FlaskMadal";
 import Mike from "/image/mike.svg";
 import Paste from "/image/paste.svg";
 import "./DemoCalendar.css";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  openDemoModal,
+  selectIsDemoModalOpen,
+} from "../../store/slice/calendar/ModalSlice";
+import { RootState } from "../../store/store";
+import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
+
+export interface FlaskResType {
+  end: {
+    dateTime: string;
+    timeZome: string;
+  };
+  start: {
+    dateTime: string;
+    timeZome: string;
+  };
+  summary: string;
+}
 
 export default function DemoCalendar() {
   // 기본 세팅
+  const dispatch = useDispatch();
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
+  const [afterFlask, setAfterFlask] = useState<FlaskResType[]>([]); // 인풋박스 값
   const [freetime, setFreeTime] = useState(3); // 무료이용 가능횟수
+  const isDemoOpen = useSelector(selectIsDemoModalOpen);
+  const events = useSelector((state: RootState) => state.calendar.events);
   const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
   const [timeMin] = useState(
     moment().endOf("month").endOf("week").toDate().toISOString()
   );
-  const changes: EventData[] = [];
   const { error: sttError, refetch: refetchStt } = useQuery(
     "sttData",
     fetchStt,
@@ -71,7 +94,7 @@ export default function DemoCalendar() {
   const handleSubmit = async () => {
     // 무료이용 가능횟수 제한
     if (!freetime) {
-      setTextSave("로그인후 자유롭게 이용해보세요!!! ");
+      setTextSave("로그인후 자유롭게 이용해보세요. ");
       return;
     }
     // 빈값일시 반환
@@ -79,46 +102,49 @@ export default function DemoCalendar() {
       console.log("빈값 반환");
       return;
     }
-    console.log("플라스크 가자");
     setFreeTime(freetime - 1);
-    try {
-      const data = await axios.post(`${flask}/trans/date`, {
-        input: textSave,
-      });
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.error("Error flask data:", error);
-    }
-
+    // 모달창 오픈
+    dispatch(openDemoModal());
     // 플라스크 api 연결
+    const formData = new FormData();
+    formData.append("input", textSave);
     try {
-      console.log("플라스크 가자");
-      const data = await axios.post(
-        `${import.meta.env.VITE_APP_FLASK_SERVER}/trans/date`,
-        { input: textSave }
-      );
-      console.log(data);
-      return data;
-      // 임시 데이터에 넣어주기
-      // 1. 투두
+      console.log("플라스크 전송");
+      const data = await axios.post(`${flask}/trans/date`, formData);
+      // const data = {
+      //   data: {
+      //     end: { dateTime: "2023-11-15T16:02:11", timeZome: "Asia/Seoul" },
+      //     start: { dateTime: "2023-11-15T15:02:11", timeZome: "Asia/Seoul" },
+      //     summary: "나저녁약속",
+      //   },
+      // };
+      // 전달 데이터
+      setAfterFlask([data.data]);
+      // 리덕스 반영 (개발자용)
+      console.log("테스트", data);
+      if (data.data.end.dateTime == null) {
+        // 1. 투두
+        //
+      } else {
+        // 2. 캘린더
+        const newEvent: Event = {
+          id: events.length,
+          title: data.data.summary,
+          start: data.data.start.dateTime,
+          end: data.data.end.dateTime,
+          memo: "",
+        };
+        // 일정생성 (개발자용)
+        dispatch(addEvent(newEvent));
+      }
 
-      // 2. 캘린더
+      // 데이터 리패치
+      await refetchTodo();
+      await refetchCal();
+      return data;
     } catch (error) {
       console.error("Error flask data:", error);
     }
-
-    // 등록 API 요청
-    for (let i = 0; i < changes.length; i++) {
-      const formdata = changes[i];
-      await addCalendar(formdata);
-    }
-
-    // 투두 갱신
-    await refetchTodo();
-
-    // 캘린더 갱신
-    await refetchCal();
 
     // 인풋 필드 리셋
     setTextSave("");
@@ -181,6 +207,8 @@ export default function DemoCalendar() {
           </div>
         </div>
       </div>
+      {/* 기타 */}
+      {isDemoOpen && <DemoMadal before={textSave} after={afterFlask} />}
     </>
   );
 }

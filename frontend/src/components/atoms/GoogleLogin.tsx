@@ -39,7 +39,7 @@ export default function GoogleLogin() {
           height={20}
           style={{ marginRight: "10px" }}
         />
-        <div>Continue with Google</div>
+        <div>Google Login</div>
       </button>
     </>
   );

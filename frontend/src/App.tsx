@@ -1,12 +1,12 @@
 // 라우터
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 // import { Navigate } from "react-router-dom";
 // 리덕스
 // import { useSelector } from "react-redux";
 // import { RootState } from "./store/store";
 // 페이지
 import Main from "./pages/Main";
-import Calendar from "./pages/Calendar";
+// import Calendar from "./pages/Calendar";
 import Community from "./pages/Community";
 import Login from "./pages/Login";
 import MyPage from "./pages/MyPage";
@@ -33,7 +33,9 @@ export default function App() {
           element={!isLoggedIn ? <Main /> : <Navigate to="/" />}
         /> */}
         {/* 메인 서비스 */}
-        <Route path="/" element={<Calendar />} />
+        {/* <Route path="/" element={<Calendar />} /> */}
+        {/* 데모 MVP용 리다이렉트 home */}
+        <Route path="/" element={<Navigate to="/demo" />} />
         <Route path="/community" element={<Community />} />
         <Route path="/solution" element={<Solution />} />
         <Route path="/solutionlist" element={<SolutionList />} />

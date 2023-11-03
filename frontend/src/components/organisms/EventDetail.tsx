@@ -111,7 +111,9 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
         res
       );
       await refetchCal();
+      dispatch(closeSideModal());
     } catch (error) {
+      setErrorMsg("일정 삭제에 실패했습니다. 다시 시도해주세요");
       console.error("캘린더 삭제 에러:", error);
     }
   };
@@ -231,7 +233,7 @@ const InputModalContainer = styled.div`
   font-family: HSSaemaul-Regular;
   position: fixed;
   padding: 20px;
-  top: 40%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 400px;
