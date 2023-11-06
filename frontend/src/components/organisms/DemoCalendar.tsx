@@ -37,7 +37,6 @@ export interface FlaskResType {
   summary: string;
 }
 
-
 export default function DemoCalendar() {
   // 기본 세팅
   const dispatch = useDispatch();
@@ -104,26 +103,17 @@ export default function DemoCalendar() {
       return;
     }
     setFreeTime(freetime - 1);
-    const dataa = new FormData;
-    dataa.append("input", "떡볶이 옴뇸뇸")
-    try {
-      const data = await axios.post(`${flask}/trans/date`,
-      dataa);
-       console.log(data.data[0]);
-      return data;
-    } catch (error) {
-      console.error("Error flask data:", error);
-    }
 
     // 모달창 오픈
     dispatch(openDemoModal());
     // 플라스크 api 연결
     const formData = new FormData();
     formData.append("input", textSave);
+    // formData.append("input", textSave);
     try {
       console.log("플라스크 전송");
-      const data = await axios.post(`${flask}/trans/date`, formData);
-      // const data = {
+      const response = await axios.post(`${flask}/trans/date`, formData);
+      // const response2 = {
       //   data: {
       //     end: { dateTime: "2023-11-15T16:02:11", timeZome: "Asia/Seoul" },
       //     start: { dateTime: "2023-11-15T15:02:11", timeZome: "Asia/Seoul" },
@@ -131,29 +121,29 @@ export default function DemoCalendar() {
       //   },
       // };
       // 전달 데이터
-      setAfterFlask([data.data]);
-      // 리덕스 반영 (개발자용)
-      console.log("테스트", data);
-      if (data.data.end.dateTime == null) {
-        // 1. 투두
-        //
-      } else {
-        // 2. 캘린더
-        const newEvent: Event = {
-          id: events.length,
-          title: data.data.summary,
-          start: data.data.start.dateTime,
-          end: data.data.end.dateTime,
-          memo: "",
-        };
-        // 일정생성 (개발자용)
-        dispatch(addEvent(newEvent));
+      console.log("플라스크 반환", response);
+      setAfterFlask(response.data);
+      for (const dataItem of response.data) {
+        // 리덕스 반영 (개발자용)
+        if (dataItem.end.dateTime == null) {
+          // 1. 투두
+        } else {
+          // 2. 캘린더
+          const newEvent: Event = {
+            id: events.length,
+            title: dataItem.summary,
+            start: dataItem.start.dateTime,
+            end: dataItem.end.dateTime,
+            memo: "",
+          };
+          // 일정생성 (개발자용)
+          dispatch(addEvent(newEvent));
+        }
       }
-
       // 데이터 리패치
       await refetchTodo();
       await refetchCal();
-      return data;
+      return response;
     } catch (error) {
       console.error("Error flask data:", error);
     }

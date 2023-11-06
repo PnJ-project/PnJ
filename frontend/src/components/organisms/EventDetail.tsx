@@ -166,7 +166,7 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
         />
         <div>메모</div>
         <input
-          type="text"
+          type="textarea"
           placeholder="메모를 남기세요"
           value={memo}
           onChange={(e) => setMemo(e.target.value)}

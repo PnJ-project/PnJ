@@ -29,11 +29,18 @@ export default function Main() {
             <TextDiv>
               <Title>
                 <div>
-                  <Span>음성과 텍스트</Span>로
+                  정리되지않은
+                  <div>
+                    <Span>음성 및 텍스트</Span>를
+                  </div>
                 </div>
-                혁신적인 일정관리를 경험해보세요
+                <div>간단한 일정으로 정리</div>
+                {/* 혁신적인 일정관리를 경험해보세요 */}
               </Title>
-              <Content>innovatory Experience schedule management</Content>
+              <EngBox>
+                <EngDeco></EngDeco>
+                <Content>Innovatory Experience schedule management</Content>
+              </EngBox>
               <Btns>
                 <div onClick={handleDemo}>
                   <UseDemo />
@@ -58,29 +65,53 @@ export default function Main() {
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 90vh;
+  height: 100vh;
+  background-color: white;
+  /* background-image: linear-gradient(to bottom, #22313f, #f4f4f4); */
+  /* background-image: linear-gradient(to bottom, #22313f 70%, #f4f4f4); */
+  /* background-image: linear-gradient(to bottom, #22313f 70%, #f4f4f4); */
+  /* background-image: linear-gradient(176deg, #aacfb3 70%, #f4f4f4 70%); */
+  background-image: linear-gradient(
+    176deg,
+    #36513d 80%,
+    #f4f4f4 calc(80% + 2px)
+  );
 `;
 const TextDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
-  margin-top: auto;
+  margin: auto;
   padding-left: 60px;
+  /* text-shadow: 1px 1px 1px white; */
+  color: white;
 `;
 const Title = styled.div`
   font-family: TheJamsil5;
-  font-size: 50px;
+  font-size: 40px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  div {
+    margin-bottom: 10px;
+  }
+`;
+const EngBox = styled.div`
+  display: flex;
+`;
+const EngDeco = styled.div`
+  border-left: 5px solid #b5ff3f;
+  margin-right: 8px;
 `;
 const Span = styled.span`
-  color: #00900e;
+  font-size: 60px;
+  color: #b5ff3f;
+  /* text-shadow: 2px 2px 2px #000000, -1px -1px 1px #ffffff; */
 `;
 const Content = styled.div`
-  color: #000;
-  font-family: SUITE-Regular;
+  color: #fbfbfb;
+  font-family: TheJamsil5;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -91,7 +122,22 @@ const Btns = styled.div`
   flex-direction: column;
   width: 295px;
   gap: 10px;
+  border-radius: 4px;
+  div {
+    font-family: TheJamsil5;
+  }
 `;
 const LogoImg = styled.img`
   padding-right: 40px;
+  height: 80%;
+  margin: auto;
+  animation: moveUpDown 2s ease-in-out infinite alternate;
+  @keyframes moveUpDown {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-10px);
+    }
+  }
 `;

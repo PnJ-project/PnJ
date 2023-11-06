@@ -23,7 +23,7 @@ const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 export default function TodoList() {
   // 기본세팅
   const dispatch = useDispatch();
-  const reduxtodo = useSelector(TodoItems)
+  const reduxtodo = useSelector(TodoItems);
   const [todos, setTodos] = useState<TodoItem[]>(reduxtodo);
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const { data: todoData, refetch: refetchTodo } = useQuery(
@@ -53,7 +53,7 @@ export default function TodoList() {
     // 새로운 일정 적용 (개발자용)
     const newTodos = [newTodo, ...todos];
     setTodos(newTodos);
-    
+
     // 투두 생성 API 호출
     try {
       await axios.post(`${local_back_url}/api/todo`, reqNewTodo);
@@ -116,19 +116,19 @@ export default function TodoList() {
 
   // 전역관리
   useEffect(() => {
-    console.log("todo 갱신",todoData);
+    console.log("todo 갱신", todoData);
     if (todoData && todoData.data) {
       console.log("todo 리덕스");
       // console.log("투두바뀜",firstTodo);
-      // setTodos(todoData.data);
+      setTodos(todoData.data);
       dispatch(setTodosRedux(todoData.data));
     }
-  }, [todoData,dispatch]);
+  }, [todoData, dispatch]);
 
   // 최초 로딩시
   useEffect(() => {
     refetchTodo();
-    
+
     console.log("todo 불러오기");
   }, []);
 
