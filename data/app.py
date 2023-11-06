@@ -9,6 +9,7 @@ from flask_cors import CORS
 import re
 
 app = Flask(__name__)
+stream = None
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -107,7 +108,6 @@ def hello_world():  # put application's code here
 @app.route('/test/stt', methods=['POST'])
 def stt():
     result = main()  # main 호출
-    print(result)
     return result, 200
 
 if __name__ == '__main__':
