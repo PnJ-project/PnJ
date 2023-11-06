@@ -4,12 +4,11 @@ from include.model.transform_date import use_dateutil, not_dateutil
 from konlpy.tag import Okt
 from dateutil.parser import parse
 from include.model.stt_test.stt_test1 import main
-
 import re
 
 
 app = Flask(__name__)
-
+stream = None
 PREFIX = "/trans"
 
 # 년, 월, 일
@@ -105,8 +104,9 @@ def hello_world():  # put application's code here
 @app.route('/test/stt', methods=['POST'])
 def stt():
     result = main()  # main 호출
-    print(result)
     return result, 200
+
+
 
 if __name__ == '__main__':
     app.run()

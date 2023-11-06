@@ -112,7 +112,7 @@ def listen_print_loop(responses):
     start_time = time.time()
 
     for result in responses.results:
-        print('result---------------', result)
+        # print('result---------------', result)
         if not result.alternatives:
             continue
 
@@ -141,7 +141,7 @@ def listen_print_loop(responses):
                 break
         else:
             sentence = transcript + overwrite_chars
-            print('sentence', sentence)
+            # print('sentence', sentence)
             full_transcript.append(sentence)
 
             # Exit recognition if any of the transcribed phrases could be one of our keywords.
@@ -178,6 +178,8 @@ def main():
         language_code=language_code)
     streaming_config = speech.StreamingRecognitionConfig(
         config=config,
+        # 말을 멈추거나 끝내면 더 이상 stt가 동작하지 않도록 설정
+        # single_utterance=True,
         interim_results=True)
 
     start_time = time.time()
@@ -194,7 +196,7 @@ def main():
         results = []
 
         for response in responses:
-            print('response-----------------------', response)
+            # print('response-----------------------', response)
             result = listen_print_loop(response)
             if result:
                 results.append(result)
@@ -207,8 +209,15 @@ def main():
             # 추가 코드: 20초가 경과하면 audio_generator를 중단
             if time.time() - start_time >= 10:
                 stream.closed = True  # MicrophoneStream을 닫음
+    print(results)
+    # 중복된 결과 제거
+    if results:
+        # 가장 긴 요소 선택
+        longest_result = max(results, key=lambda x: len(''.join(x)))
+        return longest_result
 
-        return results
+
+
 
 if __name__ == '__main__':
     main()
