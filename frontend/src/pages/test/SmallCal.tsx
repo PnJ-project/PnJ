@@ -6,6 +6,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { change } from "../../store/slice/calendar/HandleSlice";
+import SmallToolbar from "../../components/molecules/SmallToolbar";
 // import Toolbar from "../../components/molecules/Toolbar";
 
 // import React from 'react';
@@ -39,9 +40,9 @@ export default function SmallCal() {
           onNavigate={handleDateChange}
           //클릭 한 view 의 유형을 가져옴
           onView={handleViewChange}
-          // components={{
-          //   toolbar: Toolbar
-          // }}
+          components={{
+            toolbar: SmallToolbar
+          }}
         />
       </div>
     </Container>
@@ -52,26 +53,33 @@ const Container = styled.div`
   display: flex;
   overflow: hidden;
   height:100%;
-  span:nth-child(1) {
+
+  // today,back,next
+  /* span:nth-child(1) {
     button{
       font-size:10px;
       padding: 0;
       height:10%
     }
-  }
+  } */
+  // 2023년 11월
   span:nth-child(2) {
-    font-size:10px;
+    font-size:13px;
   }
-  span:nth-child(3) {
+  // 월 주 일 목록
+  /* span:nth-child(3) {
     display: none;
-  }
+  } */
   // 일(일주일) 전체
   .rbc-date-cell {
+    align-items: center;
     text-align: center;
     .rbc-button-link {
+      justify-content: center;
       //오늘날짜 + 다른 거 다 포함 일자 높이
-      height:25px; 
-      font-size:10px;
+      width: 25px;
+      height: 25px; 
+      font-size:12px;
     }
   }
   // BigCalendar
@@ -79,18 +87,17 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     .rbc-month-view{
-      height:80%;
       flex:unset;
     }
     // 헤더랑 월 이름 박스
     .rbc-toolbar{
-      height: 20%;
+      height: 16%;
       margin-bottom: 0;
     }
     .rbc-row.rbc-month-header {
-      height: 8%;
       // 월화수목금 그 줄
-      font-size:10px;
+      height: 16%;
+      font-size: 13px;
       display: flex;
       align-items: center;
       .rbc-header {
@@ -102,23 +109,23 @@ const Container = styled.div`
       
     }
     .rbc-date-cell {
-      height: 10%;
-      display: flex;
-      justify-content: center;
-      align-items: end;
+      /* height: 15%; */
+      height: 25px;
+
     }
     // 일정 적힌 박스
     .rbc-event.rbc-event-allday {
       width: 100%;
     }
+
     // 오늘 클릭하면 동그라미 나타나는 거
     .rbc-date-cell.rbc-now {
       .rbc-button-link {
+        height: 25px;
         width: 25px;
-        box-shadow: 0 0 5px #aaa;
         border-radius: 50%;
-        background-color: rgba(49, 116, 173);
-        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #ffffff;
         display: flex;
         align-items:center;
         justify-content:center;
@@ -163,6 +170,7 @@ const Container = styled.div`
         }
       }
     }
+
 
     .rbc-addons-dnd-dragged-event {
       opacity: 0;

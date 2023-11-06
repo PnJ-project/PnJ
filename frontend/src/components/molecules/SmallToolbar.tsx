@@ -5,16 +5,13 @@ import styled from 'styled-components';
 const MyToolbar: React.FC<ToolbarProps> = ({
   date,
   onNavigate,
-  onView,
   children,
 }) => {
   const navigate = (action: 'PREV' | 'NEXT' | 'TODAY') => {
     onNavigate(action);
   };
 
-  const viewnavigate = (action: 'month' | 'week' | 'day' | 'agenda') => {
-    onView(action);
-  };
+
 
   return (
     <Container className="my-custom-toolbar">
@@ -30,20 +27,7 @@ const MyToolbar: React.FC<ToolbarProps> = ({
         </button>
       </div>
       <span className="rbc-toolbar-label">{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</span>
-      <div className="right-btns">
-        <button type="button" onClick={() => viewnavigate('month')}>
-          월
-        </button>
-        <button type="button" onClick={() => viewnavigate('week')}>
-          주
-        </button>
-        <button type="button" onClick={() => viewnavigate('day')}>
-          일
-        </button>
-        <button type="button" onClick={() => viewnavigate('agenda')}>
-          목록
-        </button>
-      </div>
+
 
       {/* <span>{label}</span> */}
       {children}
@@ -59,7 +43,10 @@ const Container = styled.div`
   justify-content: space-between;
   text-align: center;
   button{
+    padding: 5px;
+    height: 14px;
     border-radius: 5px;
+    font-size:11px;
 border: 2px solid #EBEBF0;
 background: #FFF;
   }

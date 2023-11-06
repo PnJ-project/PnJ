@@ -61,8 +61,6 @@ const calendarSlice = createSlice({
   },
 });
 
-export const { setEvents, addEvent, updateEvent, deleteEvent } =
-  calendarSlice.actions;
-export const selectEvents = (state: { calendar: CalendarState }) =>
-  state.calendar.events;
+export const { setEvents, addEvent, updateEvent, deleteEvent } = calendarSlice.actions;
+export const selectEvents = (state: { calendar: CalendarState }) => state.calendar.events;
 export default calendarSlice.reducer;

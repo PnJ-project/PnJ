@@ -3,31 +3,33 @@ import { useState, useCallback, useEffect } from "react";
 import { Event as BigCalendarEvent } from "react-big-calendar";
 import { Calendar, View, momentLocalizer } from "react-big-calendar";
 import { useSelector, useDispatch } from "react-redux";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+// 언어, 시간대 설정
+import moment from "moment";
+import 'moment/locale/ko'; 
+
 import {
   openModal,
   openSideModal,
   selectIsModalOpen,
   selectIsSideModalOpen,
-} from "../../store/slice/calendar/ModalSlice"; // modalSlice.ts의 경로로 수정
+} from "../../store/slice/calendar/ModalSlice";
 import {
   selectEvents,
   updateEvent,
   setEvents,
 } from "../../store/slice/calendar/CalendarSlice";
-import { TodoItems } from "../../store/slice/calendar/TodoSlice";
 import { change, handleDate } from "../../store/slice/calendar/HandleSlice";
 import Modal from "../../components/organisms/EventForm";
 import DetailModal from "../../components/organisms/EventDetail";
-import 'moment/locale/ko'; 
-import moment from "moment";
 // import { Event } from '../../store/slice/calendar/CalendarSlice'
 import withDragAndDrop, {
   EventInteractionArgs,
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import { readCalendar } from "../../api/CalendarApi";
 import styled from "styled-components";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+
 import axios from "axios";
 import Toolbar from "../../components/molecules/Toolbar";
 
@@ -58,13 +60,16 @@ const BigCalendarInfo = () => {
     () => readCalendar(timeMax, timeMin),
     { retry: false }
   ); // calendar API
-  moment.locale("ko");
-  const localizer = momentLocalizer(moment);
+
+
+
+
   // 캘린더를 DragAndDrop으로 바꿉니다.
   const DragAndDropCalendar = withDragAndDrop(Calendar);
-  
+  // 시간대 설정
+  moment.locale("ko-KR");
+  const localizer = momentLocalizer(moment); 
   const dispatch = useDispatch();
-  const todos = useSelector(TodoItems);
 
   // 캘린더용 데이터 파싱
   const [myEventsJunha] = useState(useSelector(selectEvents));
@@ -235,6 +240,9 @@ const BigCalendarInfo = () => {
       setFormattedEventsJunha(formattedEvents);
     }
   }, [myEventsJunha]);
+  // style
+
+
 
   // todo에서 캘린더로 옮기기
   
@@ -245,13 +253,6 @@ const BigCalendarInfo = () => {
   return (
     <Container>
       <div className="middleArticle">
-        
-        {todos && todos.map((todo) => (
-          <div key={todo.id}>
-            {/* 각 todo 아이템의 내용을 보여줍니다. */}
-            {/* {todo.summary} */}
-          </div>
-        ))}
         <DragAndDropCalendar
           //시간 현지화
           localizer={localizer}
@@ -281,7 +282,7 @@ const BigCalendarInfo = () => {
           // onDrop={(event) => handleDrop(event, slotInfo)}
           onDragOver={(event) => event.preventDefault()}
           components={{ 
-          toolbar: Toolbar 
+            toolbar: Toolbar 
           }}
         />
       </div>
@@ -342,15 +343,17 @@ const Container = styled.div`
     // 일정 적힌 박스
     .rbc-event.rbc-event-allday {
       width: 100%;
+      background-color: #fa92a3;
     }
+
     // 오늘 클릭하면 동그라미 나타나는 거
     .rbc-date-cell.rbc-now {
       .rbc-button-link {
         width: 25px;
-        box-shadow: 0 0 5px #aaa;
         border-radius: 50%;
-        background-color: rgba(49, 116, 173);
-        color: white;
+        /* background-color: rgba(181, 255, 63, 0.8); */
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -387,6 +390,7 @@ const Container = styled.div`
     .rbc-event {
       transition: opacity 150ms;
       width: 100%;
+      background-color: #fed136;
       &:hover {
         .rbc-addons-dnd-resize-ns-icon,
         .rbc-addons-dnd-resize-ew-icon {
