@@ -15,6 +15,13 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 PREFIX = "/trans"
 
+@app.before_request
+def before_request():
+    if 'X-Forwarded-Proto' in request.headers:
+        if request.headers['X-Forwarded-Proto'] == 'https':
+            request.url_rule.scheme = 'https'
+            _external=True
+
 # 년, 월, 일
 def dateutil_parse():
     parsed_date = parse('230901')
