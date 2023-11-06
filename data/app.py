@@ -119,7 +119,7 @@ def transform_date():
 
 
 
-@app.route('/test')
+@app.route(PREFIX + '/test', methods=['GET'])
 def hello_world():  # put application's code here
     return 'Hello World!'
 
