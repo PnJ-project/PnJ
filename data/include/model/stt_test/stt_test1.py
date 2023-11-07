@@ -1,40 +1,13 @@
-#!/usr/bin/env python
-
-# Copyright 2017 Google Inc. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-"""Google Cloud Speech API sample application using the streaming API.
-NOTE: This module requires the additional dependency `pyaudio`. To install
-using pip:
-    pip install pyaudio
-Example usage:
-    python transcribe_streaming_mic.py
-"""
-
-# [START speech_transcribe_streaming_mic]
 from __future__ import division
-from flask import Flask, request
-import re
+from flask import Flask
 import sys
-
 from google.cloud import speech
-# from google.cloud.speech import enums
-# from google.cloud.speech import types
 import pyaudio
 from six.moves import queue
 import time
-# Audio recording parameters
+from google.oauth2.service_account import Credentials
+import os
+
 app = Flask(__name__)
 
 RATE = 16000
@@ -112,10 +85,8 @@ def listen_print_loop(responses):
     start_time = time.time()
 
     for result in responses.results:
-        # print('result---------------', result)
         if not result.alternatives:
             continue
-
         # Display the transcription of the top alternative.
         transcript = result.alternatives[0].transcript
         full_transcript.append(transcript)
@@ -136,55 +107,43 @@ def listen_print_loop(responses):
             num_chars_printed = len(transcript)
 
             if time.time() - start_time >= 10:
-                print("Exiting...")
                 stream.closed = True  # 오디오 스트림 종료
                 break
         else:
             sentence = transcript + overwrite_chars
-            # print('sentence', sentence)
             full_transcript.append(sentence)
 
-            # Exit recognition if any of the transcribed phrases could be one of our keywords.
-            # if re.search(r'\b(나가기|quit)\b', transcript, re.I):
-            #     print('Exiting..')
-            #     break
         # 시간이 30초 이상 경과하면 스트림을 종료하고 반복문을 빠져나옴
         if time.time() - start_time >= 10:
-            print("Exiting...")
             stream.closed = True  # 오디오 스트림 종료
             break
-
 
 
     return full_transcript
 
 
 
-    # Print the full_transcript at the end of recognition
-    # print("Full Transcript: " + full_transcript)
-
 
 @app.route('/test/stt', methods=['POST'])
 def main():
     global stream
-    # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
-    language_code = 'ko-KR'  # a BCP-47 language tag
+    language_code = 'ko-KR'
 
-    client = speech.SpeechClient()
+    # Instantiates a client. Added credential information
+    key_file_path = os.path.join(os.path.dirname(__file__), "stt-test-403704-8fcf9347ac4d.json")
+    creds = Credentials.from_service_account_file(key_file_path)
+    client = speech.SpeechClient(credentials=creds)
+
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
         language_code=language_code)
     streaming_config = speech.StreamingRecognitionConfig(
         config=config,
-        # 말을 멈추거나 끝내면 더 이상 stt가 동작하지 않도록 설정
-        # single_utterance=True,
         interim_results=True)
 
     start_time = time.time()
-    # print(start_time)
-    static_start_time = None
 
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
@@ -196,21 +155,17 @@ def main():
         results = []
 
         for response in responses:
-            # print('response-----------------------', response)
             result = listen_print_loop(response)
             if result:
                 results.append(result)
-            # results.append(result)
 
             if time.time() - start_time >= 10:
-                print("Exiting...")
                 break
-
             # 추가 코드: 20초가 경과하면 audio_generator를 중단
             if time.time() - start_time >= 10:
                 stream.closed = True  # MicrophoneStream을 닫음
-    print(results)
-    # 중복된 결과 제거
+
+
     if results:
         # 가장 긴 요소 선택
         longest_result = max(results, key=lambda x: len(''.join(x)))
