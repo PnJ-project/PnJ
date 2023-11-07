@@ -13,8 +13,6 @@ stream = None
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-app.config['PREFERRED_URL_SCHEME'] = 'https'
-
 PREFIX = "/trans"
 
 # 년, 월, 일
