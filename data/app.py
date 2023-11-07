@@ -13,7 +13,7 @@ stream = None
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-PREFIX = "/trans"
+# PREFIX = "/trans"
 
 # 년, 월, 일
 def dateutil_parse():
@@ -37,7 +37,7 @@ def check_dateutil(sentence):
     return 0
 
 
-@app.route(PREFIX + '/date', methods=['POST'])
+@app.route('/date', methods=['POST'])
 def transform_date():
     result = []
     text = request.form['input']
@@ -101,12 +101,12 @@ def transform_date():
 
 
 
-@app.route(PREFIX + '/test', methods=['GET'])
+@app.route('/test', methods=['GET'])
 def hello_world():  # put application's code here
     print('Hello Console!')
     return 'Hello World!'
 
-@app.route(PREFIX + '/test/stt', methods=['POST'])
+@app.route('/test/stt', methods=['POST'])
 def stt():
     result = main()  # main 호출
     return result, 200
