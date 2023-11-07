@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const MyToolbar: React.FC<ToolbarProps> = ({
   date,
+  label,
   onNavigate,
   onView,
   children,
@@ -18,18 +19,18 @@ const MyToolbar: React.FC<ToolbarProps> = ({
 
   return (
     <Container className="my-custom-toolbar">
-      <div className="left-btns">
-        <button type="button" onClick={() => navigate('PREV')}>
+      <button className="todaybtn" type="button" onClick={() => navigate('TODAY')}>
+        오늘
+      </button>
+      <div className="center-btns">
+        <button className="movingbtn" type="button" onClick={() => navigate('PREV')}>
           {'<'}
         </button>
-        <button type="button" onClick={() => navigate('TODAY')}>
-          오늘
-        </button>
-        <button type="button" onClick={() => navigate('NEXT')}>
+        <span className="rbc-toolbar-label">{ label }{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</span>
+        <button className="movingbtn" type="button" onClick={() => navigate('NEXT')}>
         {'>'}
         </button>
       </div>
-      <span className="rbc-toolbar-label">{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</span>
       <div className="right-btns">
         <button type="button" onClick={() => viewnavigate('month')}>
           월
@@ -60,7 +61,10 @@ const Container = styled.div`
   text-align: center;
   button{
     border-radius: 5px;
-border: 2px solid #EBEBF0;
-background: #FFF;
+    border: 2px solid #EBEBF0;
+    background: #FFF;
+  }
+  .movingbtn{
+    border: 0;
   }
 `

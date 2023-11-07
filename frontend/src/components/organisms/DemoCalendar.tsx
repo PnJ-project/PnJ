@@ -170,6 +170,10 @@ export default function DemoCalendar() {
     }
   };
 
+  const handleDrop = () => {
+    console.log('음음')
+  };
+
   return (
     <>
       <div className="MainContainer">
@@ -207,7 +211,7 @@ export default function DemoCalendar() {
             <div className="SmallCalendar">
               <SmallCal />
             </div>
-            <div className="Todo-Container">
+            <div className="Todo-Container"onDrop={handleDrop} draggable="true">
               <TodoList />
             </div>
           </div>

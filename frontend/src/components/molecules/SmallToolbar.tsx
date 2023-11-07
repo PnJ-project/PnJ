@@ -15,18 +15,18 @@ const MyToolbar: React.FC<ToolbarProps> = ({
 
   return (
     <Container className="my-custom-toolbar">
-      <div className="left-btns">
-        <button type="button" onClick={() => navigate('PREV')}>
+      <button type="button" onClick={() => navigate('TODAY')}>
+        오늘
+      </button>
+      <div>
+        <button className="movingbtn" type="button" onClick={() => navigate('PREV')}>
           {'<'}
         </button>
-        <button type="button" onClick={() => navigate('TODAY')}>
-          오늘
-        </button>
-        <button type="button" onClick={() => navigate('NEXT')}>
-        {'>'}
+        <span className="rbc-toolbar-label">{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</span>
+        <button className="movingbtn" type="button" onClick={() => navigate('NEXT')}>
+          {'>'}
         </button>
       </div>
-      <span className="rbc-toolbar-label">{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</span>
 
 
       {/* <span>{label}</span> */}
@@ -47,7 +47,10 @@ const Container = styled.div`
     height: 14px;
     border-radius: 5px;
     font-size:11px;
-border: 2px solid #EBEBF0;
-background: #FFF;
+    border: 2px solid #EBEBF0;
+    background: #FFF;
+  }
+  .movingbtn{
+    border: 0;
   }
 `

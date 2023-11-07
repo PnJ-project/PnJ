@@ -1,7 +1,10 @@
 // import React, { useCallback, useState } from "react";
 import React, { useState } from "react";
+// import { useDrag } from 'react-dnd';
 import { RiCloseCircleLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
+import { useDispatch } from "react-redux";
+import { setDraggedTodo } from "../../store/slice/calendar/TodoSlice";
 
 interface TodoProps {
   todos: { id: number; summary: string }[];
@@ -11,6 +14,7 @@ interface TodoProps {
 
 const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
   // 기본세팅
+  const dispatch = useDispatch();
   const [edit, setEdit] = useState<{ id: number | null; value: string }>({
     id: null,
     value: "",
@@ -35,19 +39,25 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
     setEdit({ ...edit, value: e.target.value });
   };
 
+  //drag
+  const handleDragStart = (id: number, summary: string) => {
+    dispatch(setDraggedTodo({ id, summary }));
+  };
+
+
+
+
+
   return (
     <>
       <div className="todoBox">
         {todos.map((todo, index) => (
-          <div className={"todo-row"} key={index}>
+          <div className={"todo-row"} key={index}
+            draggable="true"
+            onDragStart={() => handleDragStart(todo.id,todo.summary )}>
             {!edit.id || edit.id != todo.id ? (
               <div
-                className="todoItem"
                 key={todo.id}
-                draggable="true"
-                // onDragStart={() =>
-                //   handleDragStart({ title: todo.id })
-                // }
               >
                 {todo.summary}
               </div>
