@@ -19,7 +19,7 @@ public class ApiController {
             .orElse("");
     }
 
-    @GetMapping("/health")
+    @GetMapping("/api/health")
     public String healthCheck() {
         return "UP";
     }
