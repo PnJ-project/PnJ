@@ -26,7 +26,12 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
     },
     logout: (state) => {
+      console.log("Eldyd?");
       state.isLoggedIn = false;
+      state.data = {
+        memberId: null,
+        memberEmail: "",
+      };
     },
     setUserData: (state, action: PayloadAction<infoState>) => {
       state.data = action.payload;
@@ -35,4 +40,8 @@ const authSlice = createSlice({
 });
 
 export const { loginsuccess, logout, setUserData } = authSlice.actions;
+export const selectIsLogin = (state: { auth: LogState }) =>
+  state.auth.isLoggedIn;
+export const selectMemberId = (state: { auth: LogState }) =>
+  state.auth.data.memberId;
 export default authSlice.reducer;

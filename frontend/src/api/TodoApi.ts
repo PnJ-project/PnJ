@@ -15,7 +15,6 @@ export interface TodoType {
 export const readTodo = async () => {
   const memberId = localStorage.getItem("memberId");
   const response = await axios.get(`${local_back_url}/api/todo/${memberId}`);
-  console.log("불러오기", response);
   return response.data;
 };
 

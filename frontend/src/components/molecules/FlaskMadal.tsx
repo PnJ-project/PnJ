@@ -14,6 +14,7 @@ interface FlaskModalType {
 const FlaskMadal = ({ before, after }: FlaskModalType) => {
   // 기본 세팅
   const dispatch = useDispatch();
+  const [itemIndex, setItemIndex] = useState<number | null>(null);
   const [beforeTxt] = useState(before);
   const [timeWatch, setTimeWatch] = useState(100);
   // const exampledummy = [
@@ -39,6 +40,10 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    if (after.length != 0) setItemIndex(0);
+  }, [after]);
+
   return (
     <Overlay
       onClick={(e) => {
@@ -56,29 +61,84 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
           ✖
         </CloseBtn>
         <Title>간편 일정 등록 결과 조회</Title>
-        <div>사용설명: 긴 텍스트속의 일정을 입력 한번으로 간편하게 정리!</div>
+        <div>음성 혹은 텍스트 속의 일정을 자동으로 추출하여 간편하게 등록!</div>
         <FlaskReturn>
           <Before>
             <InnerTitle>보낸 일정</InnerTitle>
-            <InnerTxtBox>{beforeTxt}</InnerTxtBox>
+            <InnerTxtBox>
+              <div>
+                {beforeTxt.split("\n").map((line, index) => (
+                  <span key={index}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
+              </div>
+            </InnerTxtBox>
           </Before>
           <Arrow> ➜</Arrow>
           <After>
             <InnerTitle>정리된 일정</InnerTitle>
+            <PageSelect>
+              {/* {after &&
+                after.map((_, index) => (
+                  <div key={index}>
+                    <button
+                      onClick={() => {
+                        console.log(index);
+                        setItemIndex(index);
+                      }}
+                    >
+                      {index + 1}
+                    </button>
+                  </div>
+                ))} */}
+            </PageSelect>
             <InnerTxtBox>
-              {after[0] ? (
+              {after && after[0] && itemIndex != null ? (
                 <>
+                  <Arrow2
+                    onClick={() => {
+                      if (itemIndex) {
+                        setItemIndex(itemIndex - 1);
+                      }
+                    }}
+                  >
+                    {itemIndex ? <>◂</> : <>◃</>}
+                  </Arrow2>
                   <div>
-                    분류 :
-                    {`${after[0].end.dateTime === null ? "투두" : "캘린더"}`}
+                    {/* <InnerTxt>
+                      <SubTitle>분류</SubTitle>
+                      <SmallTxt>
+                        {`${
+                          after[0].end.dateTime === null ? "투두" : "캘린더"
+                        }`}
+                      </SmallTxt>
+                    </InnerTxt> */}
+                    <InnerTxt>
+                      <SubTitle>날짜</SubTitle>
+                      <SmallTxt>
+                        {after[itemIndex].end.dateTime
+                          ? moment(after[itemIndex].end.dateTime).format(
+                              "YYYY-MM-DD hh:mm"
+                            )
+                          : "없음"}
+                      </SmallTxt>
+                    </InnerTxt>
+                    <InnerTxt>
+                      <SubTitle>일정</SubTitle>
+                      <SmallTxt>{after[itemIndex].summary}</SmallTxt>
+                    </InnerTxt>
                   </div>
-                  <div>
-                    날짜 :{" "}
-                    {after[0].end.dateTime
-                      ? moment(after[0].end.dateTime).format("YYYY-MM-DD hh:mm")
-                      : "없음"}
-                  </div>
-                  <div>일정 : {after[0].summary}</div>
+                  <Arrow2
+                    onClick={() => {
+                      if (itemIndex != after.length - 1) {
+                        setItemIndex(itemIndex + 1);
+                      }
+                    }}
+                  >
+                    {itemIndex != after.length - 1 ? <>▸</> : <>▹</>}
+                  </Arrow2>
                 </>
               ) : (
                 <>
@@ -108,6 +168,19 @@ const fadeIn = keyframes`
 const CloseBtn = styled.div`
   cursor: pointer;
 `;
+const PageSelect = styled.div`
+  display: flex;
+  justify-content: space-around;
+  div {
+    width: 30%;
+  }
+  button {
+    width: 100% !important;
+    font-size: 10px;
+    padding: 1 1 1 1 !important;
+    text-align: center;
+  }
+`;
 const Title = styled.div`
   font-size: 32px;
   margin: 20px;
@@ -130,6 +203,11 @@ const Arrow = styled.div`
   justify-content: space-around;
   align-items: center;
   font-size: 60px;
+`;
+const Arrow2 = styled.div`
+  font-size: 40px;
+  font-family: KyoboHand;
+  cursor: pointer;
 `;
 const After = styled.div`
   display: flex;
@@ -159,16 +237,30 @@ const Before = styled.div`
 `;
 const InnerTxtBox = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  margin: 20px;
-  padding: 20px;
-  width: 50%;
-  height: 50%;
+  justify-content: space-around;
+  /* margin: 20px; */
+  /* padding: 20px; */
+  width: 90%;
+  /* height: 50%; */
   /* border: 1px solid black; */
   border-radius: 20px;
   /* box-shadow: inset 2px 2px 5px #878585, inset -2px -2px 5px #878585; */
+  text-align: center;
+  margin: auto;
+`;
+const InnerTxt = styled.div`
+  margin: 10px;
+`;
+
+const SubTitle = styled.div`
+  font-size: 20px;
+`;
+const SmallTxt = styled.div`
+  font-weight: 100 !important;
+  font-size: 15px;
+  /* color: #6c6c6c; */
 `;
 const Overlay = styled.div`
   position: fixed;

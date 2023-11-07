@@ -7,9 +7,8 @@ const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 export const readCalendar = async (timeMax: string, timeMin: string) => {
   const memberId = localStorage.getItem("memberId");
   const response = await axios.get(
-    `${local_back_url}/api/calendar/${memberId}/${timeMax}/${timeMin}`
+    `${local_back_url}/api/calendar/${memberId}/${timeMin}/${timeMax}`
   );
-  console.log(response);
   return response.data;
 };
 
@@ -31,6 +30,7 @@ export interface EventData {
 }
 export const addCalendar = async (formdata: EventData) => {
   const response = await axios.post(`${local_back_url}/api/calendar`, formdata);
+  console.log(response);
   return response.data;
 };
 
