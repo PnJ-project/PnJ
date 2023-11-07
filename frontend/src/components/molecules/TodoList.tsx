@@ -6,7 +6,13 @@ import "./Todo.css";
 import { readTodo } from "../../api/TodoApi";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { TodoItems, setTodosRedux } from "../../store/slice/calendar/TodoSlice";
+import {
+  TodoItems,
+  addTodoRedux,
+  removeTodoRedux,
+  setTodosRedux,
+  updateTodoRedux,
+} from "../../store/slice/calendar/TodoSlice";
 import { useSelector } from "react-redux";
 
 interface TodoItem {
@@ -51,17 +57,16 @@ export default function TodoList() {
       summary: todo.summary,
     };
     // 새로운 일정 적용 (개발자용)
-    const newTodos = [newTodo, ...todos];
-    setTodos(newTodos);
+    dispatch(addTodoRedux(newTodo));
 
     // 투두 생성 API 호출
     try {
       await axios.post(`${local_back_url}/api/todo`, reqNewTodo);
       // 투두 다시 불러오기
-      console.log("생성 완료");
+      console.log("투두 생성 API 요청 완료");
       await refetchTodo();
     } catch (error) {
-      console.error("투두 생성 에러:", error);
+      console.error("투두 생성 API 에러:", error);
     }
   };
 
@@ -72,11 +77,7 @@ export default function TodoList() {
       return;
     }
     // 업데이트 적용(개발자용)
-    setTodos((prev) =>
-      prev.map((item) =>
-        item.id === todoId ? { ...item, summary: newValue } : item
-      )
-    );
+    dispatch(updateTodoRedux({ id: todoId, summary: newValue }));
     // 업데이트 요청
     try {
       await axios.put(`${local_back_url}/api/todo`, {
@@ -85,18 +86,17 @@ export default function TodoList() {
         summary: newValue,
       });
       // 투두 다시 불러오기
-      console.log("수정 완료");
+      console.log("투두 수정 API 완료");
       await refetchTodo();
     } catch (error) {
-      console.error("투두 업데이트 에러:", error);
+      console.error("투두 수정 API 에러:", error);
     }
   };
 
   // 제거
   const removeTodo = async (id: number) => {
     // 삭제 적용(개발자용)
-    const removedArr = todos.filter((todo) => todo.id !== id);
-    setTodos(removedArr);
+    dispatch(removeTodoRedux(id));
     // 삭제 API요청
     try {
       const res = await axios.delete(
@@ -104,7 +104,7 @@ export default function TodoList() {
       );
       // 투두 다시 불러오기
       console.log(
-        "삭제 완료",
+        "투두 삭제 API 완료",
         `${local_back_url}/api/todo/${memberId}/${id}`,
         res
       );
@@ -116,10 +116,8 @@ export default function TodoList() {
 
   // 전역관리
   useEffect(() => {
-    console.log("todo 갱신", todoData);
     if (todoData && todoData.data) {
-      console.log("todo 리덕스");
-      // console.log("투두바뀜",firstTodo);
+      console.log("투두 데이터가 갱신됩니다", todoData.data);
       setTodos(todoData.data);
       dispatch(setTodosRedux(todoData.data));
     }
@@ -128,9 +126,12 @@ export default function TodoList() {
   // 최초 로딩시
   useEffect(() => {
     refetchTodo();
-
-    console.log("todo 불러오기");
   }, []);
+
+  // 리덕스 useState로 반영하기
+  useEffect(() => {
+    setTodos(reduxtodo);
+  }, [reduxtodo]);
 
   return (
     <>

@@ -6,7 +6,7 @@ const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
 // STT 요청
 export const fetchStt = async () => {
   const response = await axios.post(
-    `${import.meta.env.VITE_APP_STT_SERVER}/test/stt`
+    `${import.meta.env.VITE_APP_STT_SERVER}/trans/test/stt`
   );
   return response.data;
 };

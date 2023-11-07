@@ -84,6 +84,7 @@ const TextDiv = styled.div`
   gap: 16px;
   margin: auto;
   padding-left: 60px;
+  min-width: 450px;
   /* text-shadow: 1px 1px 1px white; */
   color: white;
 `;

@@ -8,7 +8,7 @@ import {
   openSideModal,
   selectIsModalOpen,
   selectIsSideModalOpen,
-} from "../../store/slice/calendar/ModalSlice"; // modalSlice.ts의 경로로 수정
+} from "../../store/slice/calendar/ModalSlice";
 import {
   selectEvents,
   updateEvent,
@@ -18,7 +18,7 @@ import { TodoItems } from "../../store/slice/calendar/TodoSlice";
 import { change, handleDate } from "../../store/slice/calendar/HandleSlice";
 import Modal from "../../components/organisms/EventForm";
 import DetailModal from "../../components/organisms/EventDetail";
-import 'moment/locale/ko'; 
+import "moment/locale/ko";
 import moment from "moment";
 // import { Event } from '../../store/slice/calendar/CalendarSlice'
 import withDragAndDrop, {
@@ -40,45 +40,45 @@ interface FormatEvent {
   end: Date;
   memo?: string;
 }
-
+interface CalendarRes {
+  id: number;
+  start: { dateTime: string };
+  end: { dateTime: string };
+  summary: string;
+  memo: string;
+}
 // 백엔드
-// const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 const BigCalendarInfo = () => {
   // 기본 세팅
+  const dispatch = useDispatch();
+  const todos = useSelector(TodoItems);
+  const isOpen = useSelector(selectIsModalOpen);
+  const isSideOpen = useSelector(selectIsSideModalOpen);
+  const date: string = useSelector(handleDate);
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
   const [timeMin] = useState(
     moment().endOf("month").endOf("week").toDate().toISOString()
   );
   const [detailEvent, setDetailEvent] = useState<number | string | unknown>("");
+  // 쿼리세팅
   const { data: calData, refetch: refetchCal } = useQuery(
     "calendarData",
     () => readCalendar(timeMax, timeMin),
     { retry: false }
   ); // calendar API
+
+  // 캘린더를 DragAndDrop으로 바꿉니다.
   moment.locale("ko");
   const localizer = momentLocalizer(moment);
-  // 캘린더를 DragAndDrop으로 바꿉니다.
   const DragAndDropCalendar = withDragAndDrop(Calendar);
-  
-  const dispatch = useDispatch();
-  const todos = useSelector(TodoItems);
-
   // 캘린더용 데이터 파싱
-  const [myEventsJunha] = useState(useSelector(selectEvents));
-  const [, setFormattedEventsJunha] = useState<FormatEvent[]>([]);
   const myEvents = useSelector(selectEvents);
-  const formattedEvents = myEvents.map((event) => ({
-    ...event,
-    start: new Date(event.start),
-    end: new Date(event.end),
-  }));
-
-  const isOpen = useSelector(selectIsModalOpen);
-  const isSideOpen = useSelector(selectIsSideModalOpen);
-  const date: string = useSelector(handleDate);
+  const [formattedEvents, setFormattedEventsJunha] = useState<FormatEvent[]>(
+    []
+  );
   const handledate: Date = new Date(date);
 
   // 이벤트 이동 기능
@@ -100,32 +100,37 @@ const BigCalendarInfo = () => {
         })
       );
       // 캘린더 수정 API 요청
-      const reqUpdateEvent = {
-        memberId: memberId,
-        event: {
-          id: null,
-          summary: event.title?.toString(),
-          colorId: null,
-          start: {
-            dateTime: start.toString(),
-            timeZone: "Asia/Seoul",
-            date: null,
+      if ("id" in event) {
+        const new_start = new Date(start);
+        const new_end = new Date(end);
+        const send_id = event.id;
+        const reqUpdateEvent = {
+          memberId: memberId,
+          event: {
+            id: send_id,
+            summary: event.title,
+            colorId: null,
+            start: {
+              dateTime: new_start.toISOString(),
+              timeZone: "Asia/Seoul",
+              date: null,
+            },
+            end: {
+              dateTime: new_end.toISOString(),
+              timeZone: "Asia/Seoul",
+              date: null,
+            },
           },
-          end: {
-            dateTime: end.toString(),
-            timeZone: "Asia/Seoul",
-            date: null,
-          },
-        },
-      };
-      try {
-        await axios.put(`${local_back_url}/api/calendar`, reqUpdateEvent);
-        // 캘린더 다시 불러오기
-        console.log("구글 캘린더 수정 완료");
-        await refetchCal();
-      } catch (error) {
-        console.error("구글 캘린더 수정 에러:", error);
-        return;
+        };
+        try {
+          await axios.put(`${local_back_url}/api/calendar`, reqUpdateEvent);
+          // 캘린더 다시 불러오기
+          console.log("구글 캘린더 수정 완료");
+          await refetchCal();
+        } catch (error) {
+          console.error("구글 캘린더 수정 에러:", error);
+          return;
+        }
       }
     },
     [dispatch]
@@ -160,32 +165,37 @@ const BigCalendarInfo = () => {
         })
       );
       // 캘린더 수정 API 요청
-      const reqUpdateEvent = {
-        memberId: memberId,
-        event: {
-          id: null,
-          summary: event.title?.toString(),
-          colorId: null,
-          start: {
-            dateTime: start.toString(),
-            timeZone: "Asia/Seoul",
-            date: null,
+      if ("id" in event) {
+        const new_start = new Date(start);
+        const new_end = new Date(end);
+        const send_id = event.id;
+        const reqUpdateEvent = {
+          memberId: memberId,
+          event: {
+            id: send_id,
+            summary: event.title,
+            colorId: null,
+            start: {
+              dateTime: new_start.toISOString(),
+              timeZone: "Asia/Seoul",
+              date: null,
+            },
+            end: {
+              dateTime: new_end.toISOString(),
+              timeZone: "Asia/Seoul",
+              date: null,
+            },
           },
-          end: {
-            dateTime: end.toString(),
-            timeZone: "Asia/Seoul",
-            date: null,
-          },
-        },
-      };
-      try {
-        await axios.put(`${local_back_url}/api/calendar`, reqUpdateEvent);
-        // 캘린더 다시 불러오기
-        console.log("구글 캘린더 수정 완료");
-        await refetchCal();
-      } catch (error) {
-        console.error("구글 캘린더 수정 에러:", error);
-        return;
+        };
+        try {
+          await axios.put(`${local_back_url}/api/calendar`, reqUpdateEvent);
+          // 캘린더 다시 불러오기
+          console.log("구글 캘린더 수정 완료");
+          await refetchCal();
+        } catch (error) {
+          console.error("구글 캘린더 수정 에러:", error);
+          return;
+        }
       }
     },
     [dispatch]
@@ -220,38 +230,41 @@ const BigCalendarInfo = () => {
     if (calData && calData.message == "이벤트 리스트 조회 완료") {
       // 리덕스에 업데이트
       console.log("캘린더 데이터가 갱신됩니다", calData.data);
-      dispatch(setEvents(calData.data));
+      const formattedData = calData.data.map((item: CalendarRes) => ({
+        id: item.id,
+        start: item.start.dateTime,
+        end: item.end.dateTime,
+        title: item.summary,
+        memo: item.memo || "",
+      }));
+      dispatch(setEvents(formattedData));
     }
   }, [calData]);
 
   // 리덕스 데이터 -> useState 데이터 받아오기 (준하 작업)
   useEffect(() => {
-    if (myEventsJunha.length > 1 && myEventsJunha[0].start) {
-      const formattedEvents = myEventsJunha.map((event) => ({
+    if (myEvents) {
+      const formattedEvents = myEvents.map((event) => ({
         ...event,
         start: new Date(event.start),
         end: new Date(event.end),
       }));
       setFormattedEventsJunha(formattedEvents);
     }
-  }, [myEventsJunha]);
+  }, [myEvents]);
 
   // todo에서 캘린더로 옮기기
-  
-
-
-
 
   return (
     <Container>
       <div className="middleArticle">
-        
-        {todos && todos.map((todo) => (
-          <div key={todo.id}>
-            {/* 각 todo 아이템의 내용을 보여줍니다. */}
-            {/* {todo.summary} */}
-          </div>
-        ))}
+        {todos &&
+          todos.map((todo) => (
+            <div key={todo.id}>
+              {/* 각 todo 아이템의 내용을 보여줍니다. */}
+              {/* {todo.summary} */}
+            </div>
+          ))}
         <DragAndDropCalendar
           //시간 현지화
           localizer={localizer}
@@ -280,8 +293,8 @@ const BigCalendarInfo = () => {
           style={{ height: "100%", width: "100%" }}
           // onDrop={(event) => handleDrop(event, slotInfo)}
           onDragOver={(event) => event.preventDefault()}
-          components={{ 
-          toolbar: Toolbar 
+          components={{
+            toolbar: Toolbar,
           }}
         />
       </div>
@@ -294,6 +307,7 @@ const BigCalendarInfo = () => {
 };
 export default BigCalendarInfo;
 
+/** CSS */
 const Container = styled.div`
   display: flex;
   overflow: hidden;

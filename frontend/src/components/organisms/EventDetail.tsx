@@ -35,18 +35,26 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
   const [sTime, setSTime] = useState("00:00");
   const [eTime, setETime] = useState("00:00");
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
-  console.log("zz", events);
+
+  // 인풋 필드에서 엔터 키 입력 시 제출
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // 엔터 키의 기본 동작 방지
+      handleUpdateEvent();
+    }
+  };
 
   // 이벤트 수정
   const handleUpdateEvent = async () => {
     // 조건 만족안할시 반환
-    if (typeof id != "number" || !event) {
+    if (!event) {
       return;
     }
     if (!title) {
       setErrorMsg("일정 내용을 입력하세요");
       return;
     }
+    console.log(event);
     const updateItem = {
       id: id,
       title,
@@ -61,28 +69,28 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
     const reqNewEvent = {
       memberId: memberId,
       event: {
-        id: null,
+        id: id,
         summary: title,
         colorId: null,
         start: {
-          dateTime: "",
+          dateTime: event.start.toString(),
           timeZone: "Asia/Seoul",
           date: null,
         },
         end: {
-          dateTime: "",
+          dateTime: event.end.toString(),
           timeZone: "Asia/Seoul",
           date: null,
         },
       },
     };
     try {
-      await axios.post(`${local_back_url}/api/calendar`, reqNewEvent);
+      await axios.put(`${local_back_url}/api/calendar`, reqNewEvent);
       // 캘린더 다시 불러오기
-      console.log("구글 캘린더 생성 완료");
+      console.log("구글 캘린더 수정 완료");
       await refetchCal();
     } catch (error) {
-      console.error("구글 캘린더 생성 에러:", error);
+      console.error("구글 캘린더 수정 에러:", error);
       setErrorMsg("서버와 연결할 수 없습니다. 다시 시도해주세요");
       return;
     }
@@ -163,6 +171,7 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
               setErrorMsg("");
             }
           }}
+          onKeyDown={handleKeyDown}
         />
         <div>메모</div>
         <input
@@ -170,6 +179,7 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
           placeholder="메모를 남기세요"
           value={memo}
           onChange={(e) => setMemo(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <ErrorMsg>{errorMsg}</ErrorMsg>
         <div>
