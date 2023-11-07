@@ -106,10 +106,6 @@ def hello_world():  # put application's code here
     print('Hello Console!')
     return 'Hello World!'
 
-@app.route(PREFIX + '/test/stt', methods=['POST'])
-def stt():
-    result = main()  # main 호출
-    return result, 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
