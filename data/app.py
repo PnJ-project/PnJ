@@ -3,7 +3,6 @@ from include.model.hanspell import check
 from include.model.transform_date import use_dateutil, not_dateutil, is_koreandate, trans_korean, remove_korean_date_words
 from konlpy.tag import Okt
 from dateutil.parser import parse
-from include.model.stt_test.stt_test1 import main
 from flask_cors import CORS
 
 import re
