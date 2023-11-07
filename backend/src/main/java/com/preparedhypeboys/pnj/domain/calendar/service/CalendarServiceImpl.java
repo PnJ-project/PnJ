@@ -40,7 +40,7 @@ public class CalendarServiceImpl implements
         // TODO 예외처리
         return member.map(
                 value -> googleCalendarDao.getEventList(tiemMax, timeMin, value.getAccessToken()))
-            .orElse(null);
+            .orElse(new ArrayList<>());
     }
 
     @Override
@@ -49,7 +49,7 @@ public class CalendarServiceImpl implements
         Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
 
         // TODO 예외처리
-        return member.map(value -> googleCalendarDao.insertEvent(requestDto.getEventDto(),
+        return member.map(value -> googleCalendarDao.insertEvent(requestDto.getEvent(),
             value.getAccessToken())).orElse(null);
     }
 
@@ -67,7 +67,7 @@ public class CalendarServiceImpl implements
         Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
 
         // TODO 예외처리
-        return member.map(value -> googleCalendarDao.updateEvent(requestDto.getEventDto(),
+        return member.map(value -> googleCalendarDao.updateEvent(requestDto.getEvent(),
                 value.getAccessToken()))
             .orElse(null);
     }
