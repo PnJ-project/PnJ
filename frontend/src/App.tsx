@@ -19,6 +19,8 @@ import Contact from "./pages/service/Contact";
 import Team from "./pages/service/Team";
 import PageManager from "./pages/PageManager";
 import TestManager from "./pages/test/TestManager";
+import moment from "moment";
+moment.locale('ko');
 
 export default function App() {
   // 로그인 여부

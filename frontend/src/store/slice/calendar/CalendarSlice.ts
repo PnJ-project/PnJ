@@ -9,7 +9,7 @@ export interface Event {
   end: string;
   memo?: string;
 }
-interface UpdateEvent {
+export interface UpdateEvent {
   title: string | undefined;
   allDay?: boolean;
   start: string | undefined;
@@ -34,6 +34,7 @@ const calendarSlice = createSlice({
       state.events = action.payload;
     },
     addEvent: (state, action: PayloadAction<Event>) => {
+      console.log(action.payload)
       state.events.push(action.payload);
     },
     updateEvent: (state, action: PayloadAction<UpdateEvent>) => {
@@ -61,8 +62,6 @@ const calendarSlice = createSlice({
   },
 });
 
-export const { setEvents, addEvent, updateEvent, deleteEvent } =
-  calendarSlice.actions;
-export const selectEvents = (state: { calendar: CalendarState }) =>
-  state.calendar.events;
+export const { setEvents, addEvent, updateEvent, deleteEvent } = calendarSlice.actions;
+export const selectEvents = (state: { calendar: CalendarState }) => state.calendar.events;
 export default calendarSlice.reducer;

@@ -111,15 +111,14 @@
   margin: 10px auto;
   color: #fff;
   background: linear-gradient(
-    90deg,
-    rgb(212, 130, 71) 0%,
-    rgb(224, 107, 60) 100%
+    #fa92a3 0%,
+    #fa92a3 100%
   );
 
   padding: 5px 10px;
   border-radius: 5px;
   width: 80%;
-  box-shadow: 1px 1px 2px black;
+  /* box-shadow: 1px 1px 2px black; */
 }
 .todoItem {
   width: 70%;
@@ -129,7 +128,7 @@
   font-family: SUITE-Regular;
   font-weight: 600;
   font-size: 12px;
-  text-shadow: 1px 1px 4px black;
+  /* text-shadow: 1px 1px 4px black; */
 }
 .todoItemInput {
   font-size: 12px;
@@ -145,25 +144,22 @@
 
 .todo-row:nth-child(4n + 1) {
   background: linear-gradient(
-    90deg,
-    rgb(155, 130, 205) 0%,
-    rgb(170, 113, 206) 100%
+    #67c9ba 0%,
+    #67c9ba 100%
   );
 }
 
 .todo-row:nth-child(4n + 2) {
   background: linear-gradient(
-    90deg,
-    rgb(202, 125, 199) 0%,
-    rgb(197, 110, 156) 100%
+    #ba7fd1 0%,
+    #ba7fd1 100%
   );
 }
 
 .todo-row:nth-child(4n + 3) {
   background: linear-gradient(
-    90deg,
-    rgb(118, 175, 216) 0%,
-    rgb(119, 162, 218) 100%
+    #7ea0c3 0%,
+    #7ea0c3 100%
   );
 }
 

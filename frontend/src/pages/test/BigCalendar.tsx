@@ -1,8 +1,15 @@
 import { useQuery } from "react-query";
 import { useState, useCallback, useEffect } from "react";
-import { Event as BigCalendarEvent } from "react-big-calendar";
+import { Event as BigCalendarEvent, stringOrDate } from "react-big-calendar";
+import { Event as DragEvent } from '../../store/slice/calendar/CalendarSlice'
 import { Calendar, View, momentLocalizer } from "react-big-calendar";
 import { useSelector, useDispatch } from "react-redux";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+// 언어, 시간대 설정
+import moment from "moment";
+import 'moment/locale/ko'; 
+
 import {
   openModal,
   openSideModal,
@@ -13,24 +20,24 @@ import {
   selectEvents,
   updateEvent,
   setEvents,
+  addEvent,
 } from "../../store/slice/calendar/CalendarSlice";
-import { TodoItems } from "../../store/slice/calendar/TodoSlice";
 import { change, handleDate } from "../../store/slice/calendar/HandleSlice";
 import Modal from "../../components/organisms/EventForm";
 import DetailModal from "../../components/organisms/EventDetail";
-import "moment/locale/ko";
-import moment from "moment";
-// import { Event } from '../../store/slice/calendar/CalendarSlice'
 import withDragAndDrop, {
   EventInteractionArgs,
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import { readCalendar } from "../../api/CalendarApi";
 import styled from "styled-components";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+
 import axios from "axios";
 import Toolbar from "../../components/molecules/Toolbar";
 
+// Drag and Drop
+// import { useDrop } from 'react-dnd';
+
+import { removeTodoRedux, selectDraggedTodo, setDraggedTodo } from "../../store/slice/calendar/TodoSlice";
 // 이벤트 캘린더 폼
 interface FormatEvent {
   id: number;
@@ -53,7 +60,6 @@ const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 const BigCalendarInfo = () => {
   // 기본 세팅
   const dispatch = useDispatch();
-  const todos = useSelector(TodoItems);
   const isOpen = useSelector(selectIsModalOpen);
   const isSideOpen = useSelector(selectIsSideModalOpen);
   const date: string = useSelector(handleDate);
@@ -252,19 +258,69 @@ const BigCalendarInfo = () => {
       setFormattedEventsJunha(formattedEvents);
     }
   }, [myEvents]);
+  // style
+
+  // Drop
+  // Todo.tsx 에서 Drag한 event
+  const draggedTodo = useSelector(selectDraggedTodo);
+
+  const onDropFromOutside = useCallback(
+    async ({ start, end }: { start: stringOrDate; end: stringOrDate }) => {
+      if (draggedTodo === null) {
+        return;
+      }
+
+      // 드래그한 항목의 정보
+      const { id, summary } = draggedTodo;
+
+      // 새로운 이벤트 객체 생성 (여기에서는 월별 달력이므로 allDay는 무조건 true로 설정)
+      const newEvent:DragEvent = {
+        id: id,
+        title: summary,
+        allDay: true,
+        start: start.toString(),
+        end: end.toString(),
+        memo: ''
+      };
+
+      // 캘린더 상태 업데이트를 위해 액션 디스패치
+      dispatch(addEvent(newEvent));
+
+      // 드래그한 항목을 Redux store에서 제거
+      dispatch(setDraggedTodo(null));
+      console.log('BigCalendar의 id',id)
+      dispatch(removeTodoRedux(id));
+       // 삭제 API요청
+      try {
+        const res = await axios.delete(
+          `${local_back_url}/api/todo/${memberId}/${id}`
+        );
+        // 투두 다시 불러오기
+        console.log(
+          "삭제 완료",
+          `${local_back_url}/api/todo/${memberId}/${id}`,
+          res
+        );
+      } catch (error) {
+        console.error("투두 삭제 에러:", error);
+      }
+
+    },
+    [draggedTodo, dispatch]
+  );
+
+  // Drag
+  const handleDragOver = (event: React.DragEvent) => {
+    console.log('되나????????????????')
+    event.preventDefault();
+  };
+
 
   // todo에서 캘린더로 옮기기
 
   return (
     <Container>
       <div className="middleArticle">
-        {todos &&
-          todos.map((todo) => (
-            <div key={todo.id}>
-              {/* 각 todo 아이템의 내용을 보여줍니다. */}
-              {/* {todo.summary} */}
-            </div>
-          ))}
         <DragAndDropCalendar
           //시간 현지화
           localizer={localizer}
@@ -273,8 +329,10 @@ const BigCalendarInfo = () => {
           //위치 재정의
           onEventDrop={moveEvent}
           //사이즈 재정의
+          resizable
           onEventResize={resizeEvent}
           //새로운 이벤트 생성 함수
+          selectable
           onSelectSlot={handleSelectSlot}
           //이벤트 클릭시 실행 함수
           onSelectEvent={openSideMenu}
@@ -288,13 +346,14 @@ const BigCalendarInfo = () => {
           view={currentView}
           //이벤트 발생할 때마다
           //   eventPropGetter={eventPropGetter}
-          resizable
-          selectable
           style={{ height: "100%", width: "100%" }}
-          // onDrop={(event) => handleDrop(event, slotInfo)}
-          onDragOver={(event) => event.preventDefault()}
-          components={{
-            toolbar: Toolbar,
+          // Todo -> Calendar DROP 밖에서 캘린더로
+          onDropFromOutside={onDropFromOutside}
+          // Calendar -> Todo DRAG 캘린더에서 밖으로
+          onDragOver={handleDragOver}
+          // Toolbar 커스터마이징
+          components={{ 
+            toolbar: Toolbar 
           }}
         />
       </div>
@@ -356,15 +415,17 @@ const Container = styled.div`
     // 일정 적힌 박스
     .rbc-event.rbc-event-allday {
       width: 100%;
+      background-color: #fa92a3;
     }
+
     // 오늘 클릭하면 동그라미 나타나는 거
     .rbc-date-cell.rbc-now {
       .rbc-button-link {
         width: 25px;
-        box-shadow: 0 0 5px #aaa;
         border-radius: 50%;
-        background-color: rgba(49, 116, 173);
-        color: white;
+        /* background-color: rgba(181, 255, 63, 0.8); */
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -372,6 +433,7 @@ const Container = styled.div`
       }
     }
   }
+
 
   .rbc-addons-dnd {
     .rbc-addons-dnd-row-body {
@@ -401,6 +463,7 @@ const Container = styled.div`
     .rbc-event {
       transition: opacity 150ms;
       width: 100%;
+      background-color: #fed136;
       &:hover {
         .rbc-addons-dnd-resize-ns-icon,
         .rbc-addons-dnd-resize-ew-icon {
