@@ -1,21 +1,15 @@
-import { useDispatch } from "react-redux";
-import { useGoogleLogin } from "@react-oauth/google";
-import "./Google.css";
-import axios from "axios";
-import {
-  loginsuccess,
-  logout,
-  selectIsLogin,
-  setUserData,
-} from "../../store/slice/AuthSlice";
-import { useSelector } from "react-redux";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import { loginsuccess, logout, setUserData } from "../../store/slice/AuthSlice";
+import "./Google.css";
 
 export default function GoogleLogin() {
   // 기본 세팅
   const dispatch = useDispatch();
-  const isLogin = useSelector(selectIsLogin);
-  // const memberId = useSelector(selectMemberId);
+  const navigate = useNavigate();
   const [memberId, setMemberId] = useState(localStorage.getItem("memberId"));
 
   const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
@@ -37,6 +31,7 @@ export default function GoogleLogin() {
       // Save memberId to local storage
       localStorage.setItem("memberId", response.data.data.memberId);
       setMemberId(response.data.data.memberId);
+      navigate("/");
     },
     onError: (errorResponse) => {
       console.error(errorResponse);
@@ -45,12 +40,12 @@ export default function GoogleLogin() {
   });
 
   // 로그아웃버튼 클릭시
-  const googleSocialLogout = () => {
+  const googleSocialLogout = async () => {
     console.log("로그아웃");
     dispatch(logout());
     localStorage.removeItem("memberId");
-    console.log(isLogin);
     setMemberId(localStorage.getItem("memberId"));
+    navigate("/demo");
   };
 
   return (

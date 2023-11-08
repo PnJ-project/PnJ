@@ -26,7 +26,6 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
     },
     logout: (state) => {
-      console.log("Eldyd?");
       state.isLoggedIn = false;
       state.data = {
         memberId: null,

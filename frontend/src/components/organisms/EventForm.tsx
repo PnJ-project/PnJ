@@ -5,23 +5,13 @@ import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
 import { closeModal } from "../../store/slice/calendar/ModalSlice";
 import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
-import axios from "axios";
-import { QueryObserverResult, RefetchOptions } from "react-query";
 
 // 모달 타입
 interface ModalProps {
   selectedRange: { start: Date; end: Date };
-  refetchCal: <TPageData>(
-    options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<TPageData, unknown>>;
 }
-// 백엔드
-const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
-const EventForm: React.FC<ModalProps> = ({
-  selectedRange,
-  refetchCal,
-}: ModalProps) => {
+const EventForm: React.FC<ModalProps> = ({ selectedRange }: ModalProps) => {
   // 기본 세팅
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.calendar.events);
@@ -30,7 +20,6 @@ const EventForm: React.FC<ModalProps> = ({
   const [errorMsg, setErrorMsg] = useState("");
   const [sTime, setSTime] = useState("00:00");
   const [eTime, setETime] = useState("00:00");
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
 
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -47,7 +36,7 @@ const EventForm: React.FC<ModalProps> = ({
       setErrorMsg("일정 내용을 입력하세요");
       return;
     }
-    console.log('여기는 eventform, events',events)
+    console.log("여기는 eventform, events", events);
     const newEvent: Event = {
       id: events.length,
       title,
@@ -56,41 +45,8 @@ const EventForm: React.FC<ModalProps> = ({
       memo,
     };
     // 일정생성 (개발자용)
-    console.log('여기는 eventform, newEvent', newEvent)
+    console.log("여기는 eventform, newEvent", newEvent);
     dispatch(addEvent(newEvent));
-
-    // 캘린더 생성 API 요청
-    const reqNewEvent = {
-      memberId: memberId,
-      event: {
-        id: null,
-        summary: title,
-        colorId: null,
-        start: {
-          dateTime: selectedRange.start.toISOString(),
-          timeZone: "Asia/Seoul",
-          date: null,
-        },
-        end: {
-          dateTime: selectedRange.end.toISOString(),
-          timeZone: "Asia/Seoul",
-          date: null,
-        },
-      },
-    };
-    try {
-      const response = await axios.post(
-        `${local_back_url}/api/calendar`,
-        reqNewEvent
-      );
-      // 캘린더 다시 불러오기
-      console.log("구글 캘린더 생성 완료", response);
-      await refetchCal();
-    } catch (error) {
-      console.error("구글 캘린더 생성 에러:", error);
-      setErrorMsg("서버와 연결할 수 없습니다. 다시 시도해주세요");
-      return;
-    }
 
     // 원복
     dispatch(closeModal());

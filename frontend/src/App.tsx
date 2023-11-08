@@ -1,50 +1,24 @@
 // 라우터
-import { Navigate, Route, Routes } from "react-router-dom";
-// import { Navigate } from "react-router-dom";
-// 리덕스
-// import { useSelector } from "react-redux";
-// import { RootState } from "./store/store";
+import { Route, Routes } from "react-router-dom";
 // 페이지
-import Main from "./pages/Main";
-// import Calendar from "./pages/Calendar";
-import Community from "./pages/Community";
-import Login from "./pages/Login";
-import MyPage from "./pages/MyPage";
-import SignUp from "./pages/SignUp";
-import Solution from "./pages/Solution";
-import SolutionList from "./pages/SolutionList";
+import Demo from "./pages/Demo";
+import Calendar from "./pages/Main";
 import Notfound from "./pages/service/404";
 import About from "./pages/service/About";
 import Contact from "./pages/service/Contact";
 import Team from "./pages/service/Team";
 import PageManager from "./pages/PageManager";
 import TestManager from "./pages/test/TestManager";
-import moment from "moment";
-moment.locale('ko');
 
 export default function App() {
   // 로그인 여부
-  // const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   return (
     <>
       <Routes>
         {/* 홈 */}
-        <Route path="/demo" element={<Main />} />
-        {/* <Route
-          path="/demo"
-          element={!isLoggedIn ? <Main /> : <Navigate to="/" />}
-        /> */}
+        <Route path="/demo" element={<Demo />} />
         {/* 메인 서비스 */}
-        {/* <Route path="/" element={<Calendar />} /> */}
-        {/* 데모 MVP용 리다이렉트 home */}
-        <Route path="/" element={<Navigate to="/demo" />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/solution" element={<Solution />} />
-        <Route path="/solutionlist" element={<SolutionList />} />
-        {/* 회원관리 */}
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/" element={<Calendar />} />
         {/* 기타 */}
         <Route path="*" element={<Notfound />} />
         <Route path="/about" element={<About />} />

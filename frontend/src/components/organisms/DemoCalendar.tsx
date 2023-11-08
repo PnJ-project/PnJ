@@ -1,12 +1,9 @@
 // 데모 - 메인 기능 캘린더 컴포넌트
 import axios from "axios";
-import moment from "moment";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStt } from "../../api/SttApi";
-import { readCalendar } from "../../api/CalendarApi";
-import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
 import GoogleLogin from "../atoms/GoogleLogin";
@@ -51,10 +48,6 @@ export default function DemoCalendar() {
   const isDemoOpen = useSelector(selectIsDemoModalOpen);
   const events = useSelector((state: RootState) => state.calendar.events);
   const todoList = useSelector((state: RootState) => state.todo.todos); // 리스트 상태 가져오기
-  const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
-  const [timeMin] = useState(
-    moment().endOf("month").endOf("week").toDate().toISOString()
-  );
   const flask = import.meta.env.VITE_APP_FLASK_SERVER;
   // 쿼리 세팅
   const { error: sttError, refetch: refetchStt } = useQuery(
@@ -62,15 +55,6 @@ export default function DemoCalendar() {
     fetchStt,
     { enabled: false, retry: false }
   ); // stt API
-  const { refetch: refetchCal } = useQuery(
-    "calendarData",
-    () => readCalendar(timeMax, timeMin),
-    { enabled: false, retry: false }
-  ); // calendar API
-  const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
-    enabled: false,
-    retry: false,
-  }); // todo API
 
   // 붙여넣기
   const handlePaste = () => {
@@ -91,9 +75,6 @@ export default function DemoCalendar() {
     if (sttError) {
       return;
     }
-    // 투두 + 캘린더 리패치
-    await refetchCal();
-    await refetchTodo();
   };
 
   // 제출하기
@@ -145,9 +126,6 @@ export default function DemoCalendar() {
           dispatch(addEvent(newEvent));
         }
       }
-      // 데이터 리패치
-      await refetchTodo();
-      await refetchCal();
       return response;
     } catch (error) {
       console.error("Error flask data:", error);
@@ -166,7 +144,7 @@ export default function DemoCalendar() {
   };
 
   const handleDrop = () => {
-    console.log('음음')
+    console.log("음음");
   };
 
   return (
@@ -206,7 +184,11 @@ export default function DemoCalendar() {
             <div className="SmallCalendar">
               <SmallCal />
             </div>
-            <div className="Todo-Container"onDrop={handleDrop} draggable="true">
+            <div
+              className="Todo-Container"
+              onDrop={handleDrop}
+              draggable="true"
+            >
               <TodoList />
             </div>
           </div>
