@@ -48,4 +48,8 @@ public class Member extends BaseEntity {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+
+    public void refreshExpiredToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 }
