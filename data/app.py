@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from include.model.transform_date import transform_date
+from include.model.recommend import data_preprocessing, calcultation_similarity
 
 
 app = Flask(__name__)
@@ -20,9 +21,8 @@ def trans_date():
 
 @app.route(PREFIX + '/recom', methods=['GET'])
 def get_recommend():
-    result = ''
+    result = calcultation_similarity()
     return result
-
 
 
 @app.route('/')
