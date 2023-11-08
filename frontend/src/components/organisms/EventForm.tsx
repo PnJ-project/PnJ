@@ -1,5 +1,4 @@
 // EventForm.tsx
-
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
@@ -17,10 +16,12 @@ interface ModalProps {
   ) => Promise<QueryObserverResult<TPageData, unknown>>;
 }
 // 백엔드
-// const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
-const EventForm: React.FC<ModalProps> = ({ selectedRange, refetchCal }) => {
+const EventForm: React.FC<ModalProps> = ({
+  selectedRange,
+  refetchCal,
+}: ModalProps) => {
   // 기본 세팅
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.calendar.events);
@@ -30,6 +31,14 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange, refetchCal }) => {
   const [sTime, setSTime] = useState("00:00");
   const [eTime, setETime] = useState("00:00");
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
+
+  // 인풋 필드에서 엔터 키 입력 시 제출
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // 엔터 키의 기본 동작 방지
+      handleAddEvent();
+    }
+  };
 
   // 이벤트 생성
   const handleAddEvent = async () => {
@@ -70,9 +79,12 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange, refetchCal }) => {
       },
     };
     try {
-      await axios.post(`${local_back_url}/api/calendar`, reqNewEvent);
+      const response = await axios.post(
+        `${local_back_url}/api/calendar`,
+        reqNewEvent
+      );
       // 캘린더 다시 불러오기
-      console.log("구글 캘린더 생성 완료");
+      console.log("구글 캘린더 생성 완료", response);
       await refetchCal();
     } catch (error) {
       console.error("구글 캘린더 생성 에러:", error);
@@ -131,6 +143,7 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange, refetchCal }) => {
               setErrorMsg("");
             }
           }}
+          onKeyDown={handleKeyDown}
         />
         <div>메모</div>
         <input
@@ -138,6 +151,7 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange, refetchCal }) => {
           placeholder="메모를 남기세요"
           value={memo}
           onChange={(e) => setMemo(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <ErrorMsg>{errorMsg}</ErrorMsg>
         <button onClick={handleAddEvent}>일정 추가</button>
@@ -145,8 +159,9 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange, refetchCal }) => {
     </Overlay>
   );
 };
-
 export default EventForm;
+
+/** CSS */
 const fadeIn = keyframes`
   from {
     opacity: 0;

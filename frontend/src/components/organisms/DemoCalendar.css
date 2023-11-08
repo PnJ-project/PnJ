@@ -1,9 +1,20 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .MainContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   min-width: 900px;
+  animation: fadeIn 0.5s ease-in;
 }
 .DemoNavbar {
   width: 100%;
@@ -18,14 +29,14 @@
 .NavGoogleBtn {
   margin-right: 20px;
 }
-.FreeTxt{
+.FreeTxt {
   font-size: 12px;
   font-family: SUITE-Regular;
   font-weight: 700;
   margin-left: 15px;
   display: flex;
 }
-.NotFree{
+.NotFree {
   color: red;
 }
 .PnjInput {
@@ -73,7 +84,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 110px);
   min-height: 500px;
   width: 100%;
 }

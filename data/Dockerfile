@@ -5,6 +5,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
   apt-get install -y --no-install-recommends tzdata g++ curl libpcre3-dev
 
+# install dependency for pyaudio
+RUN apt-get install -y ffmpeg libasound-dev portaudio19-dev libportaudio2 libportaudiocpp0
+
 # install java
 RUN apt-get install -y openjdk-8-jdk
 ENV JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk"
@@ -26,9 +29,9 @@ ADD . /www
 WORKDIR /www
 
 # install python package
-RUN pip install -r requirements.txt
+RUN pip install -r requirements-prod.txt
+RUN pip install uwsgi
 
 EXPOSE 5000
 
 CMD ["uwsgi", "--ini", "uwsgi.ini"]
-

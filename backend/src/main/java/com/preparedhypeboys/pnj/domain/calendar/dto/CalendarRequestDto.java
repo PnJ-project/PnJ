@@ -9,7 +9,7 @@ public class CalendarRequestDto {
 
         private Long memberId;
 
-        private EventDto eventDto;
+        private EventDto event;
 
     }
 

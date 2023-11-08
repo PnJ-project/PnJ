@@ -22,7 +22,10 @@ const todoSlice = createSlice({
     addTodoRedux: (state, action: PayloadAction<TodoItem>) => {
       state.todos.push(action.payload);
     },
-    updateTodoRedux: (state, action: PayloadAction<{ id: number; summary: string }>) => {
+    updateTodoRedux: (
+      state,
+      action: PayloadAction<{ id: number; summary: string }>
+    ) => {
       const { id, summary } = action.payload;
       const todoToUpdate = state.todos.find((todo) => todo.id === id);
       if (todoToUpdate) {

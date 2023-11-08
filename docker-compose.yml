@@ -45,9 +45,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/jenkins_home:/var/jenkins_home
       - /usr/libexec/docker/cli-plugins/docker-buildx:/usr/libexec/docker/cli-plugins/docker-buildx
+      - ./backend/src/main/resources/application.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application.yml
       - ./backend/src/main/resources/application-oauth-release.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application-oauth-release.yml
       - ./backend/src/main/resources/application-release.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application-release.yml
       - ./backend/src/main/resources/application-flask-release.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application-flask-release.yml
+      - ./frontend/.env.production:/var/jenkins_home/workspace/dep-fe/frontend/.env.production
     ports:
       - ${JENKINS_PORT}:8080
     privileged: true
