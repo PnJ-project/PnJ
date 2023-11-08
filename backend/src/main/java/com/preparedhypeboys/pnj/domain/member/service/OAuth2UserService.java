@@ -7,4 +7,5 @@ public interface OAuth2UserService {
 
     LoginResponseDto loginRedirectProcess(String code) throws JsonProcessingException;
 
+    String getAccessTokenRefresh(String refreshToken) throws JsonProcessingException;
 }

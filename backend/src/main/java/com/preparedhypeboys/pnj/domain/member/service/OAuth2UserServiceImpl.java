@@ -31,6 +31,8 @@ public class OAuth2UserServiceImpl implements
     private final String GOOGLE_TOKEN_REQUEST_URL = "https://oauth2.googleapis.com/token";
     private final String GRANT_TYPE = "authorization_code";
 
+    private final String GRANT_TYPE_REFRESH = "refresh_token";
+
     @Value("${google.redirect_uri}")
     private String redirect_uri;
 
@@ -90,5 +92,28 @@ public class OAuth2UserServiceImpl implements
             .memberEmail(member.get().getEmail())
             .memberId(member.get().getId())
             .build();
+    }
+    @Override
+    public String getAccessTokenRefresh(String refreshToken) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("client_id", googleClientId);
+        params.put("client_secret", googleClientSecret);
+        params.put("refresh_token", refreshToken);
+        params.put("grant_type", GRANT_TYPE_REFRESH);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(
+            GOOGLE_TOKEN_REQUEST_URL, params, String.class
+        );
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false);
+
+        OAuthTokenResponse oAuthTokenResponse = mapper.readValue(response.getBody(),
+            OAuthTokenResponse.class);
+
+        return oAuthTokenResponse.getAccessToken();
     }
 }
