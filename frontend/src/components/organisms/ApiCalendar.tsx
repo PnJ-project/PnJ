@@ -19,9 +19,6 @@ import {
   openDemoModal,
   selectIsDemoModalOpen,
 } from "../../store/slice/calendar/ModalSlice";
-import { RootState } from "../../store/store";
-import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
-import { addTodoRedux } from "../../store/slice/calendar/TodoSlice";
 import "./DemoCalendar.css";
 import { IoMicCircle } from "react-icons/io5";
 //stt
@@ -48,16 +45,13 @@ export default function DemoCalendar() {
   // 기본 세팅
   const dispatch = useDispatch();
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
-  const [afterFlask, setAfterFlask] = useState<FlaskResType[]>([]); // 인풋박스 값
+  const [afterFlask] = useState<FlaskResType[]>([]); // 인풋박스 값
   const isDemoOpen = useSelector(selectIsDemoModalOpen);
-  const events = useSelector((state: RootState) => state.calendar.events);
-  const todoList = useSelector((state: RootState) => state.todo.todos); // 리스트 상태 가져오기
   const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
   const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
   const [timeMin] = useState(
     moment().endOf("month").endOf("week").toDate().toISOString()
   );
-  const flask = import.meta.env.VITE_APP_FLASK_SERVER;
   const { refetch: refetchCal } = useQuery(
     "calendarData",
     () => readCalendar(timeMax, timeMin),
@@ -91,37 +85,16 @@ export default function DemoCalendar() {
     // 모달창 오픈
     dispatch(openDemoModal());
     // 플라스크 api 연결
-    const formData = new FormData();
-    formData.append("input", textSave);
+    const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
+    const memberId = localStorage.getItem("memberId");
+    const formData = { input: textSave, memberId: memberId };
     try {
-      const response = await axios.post(`${flask}/trans/date`, formData);
+      const response = await axios.post(
+        `${backend}/api/calendar/input`,
+        formData
+      );
       // 전달 데이터
-      console.log("플라스크 반환", response);
-      setAfterFlask(response.data);
-      for (let index = 0; index < response.data.length; index++) {
-        const dataItem = response.data[index];
-        // 리덕스 반영 (개발자용)
-        if (dataItem.end.dateTime == null) {
-          // 1. 투두
-          const newTodo: TodoItem = {
-            id: todoList.length + index + 1,
-            summary: dataItem.summary,
-          };
-          // 투두생성 (개발자용)
-          dispatch(addTodoRedux(newTodo));
-        } else {
-          // 2. 캘린더
-          const newEvent: Event = {
-            id: events.length,
-            title: dataItem.summary,
-            start: dataItem.start.dateTime,
-            end: dataItem.end.dateTime,
-            memo: "",
-          };
-          // 일정생성 (개발자용)
-          dispatch(addEvent(newEvent));
-        }
-      }
+      console.log("일정 변환 반환", response);
       // 데이터 리패치
       await refetchTodo();
       await refetchCal();
