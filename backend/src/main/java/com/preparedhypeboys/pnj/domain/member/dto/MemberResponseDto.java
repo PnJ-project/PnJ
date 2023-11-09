@@ -1,6 +1,6 @@
 package com.preparedhypeboys.pnj.domain.member.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,30 +11,30 @@ public class MemberResponseDto {
     @NoArgsConstructor
     public static class OAuthTokenResponse {
 
-        @JsonProperty("access_token")
+        @SerializedName("access_token")
         private String accessToken;
 
-        @JsonProperty("expires_in")
-        private Integer expriesIn;
+        @SerializedName("expires_in")
+        private Integer expiresIn;
 
-        @JsonProperty("refresh_token")
+        @SerializedName("refresh_token")
         private String refreshToken;
 
-        @JsonProperty("scope")
+        @SerializedName("scope")
         private String scope;
 
-        @JsonProperty("token_type")
+        @SerializedName("token_type")
         private String tokenType;
 
-        @JsonProperty("id_token")
+        @SerializedName("id_token")
         private String idToken;
 
         @Builder
-        public OAuthTokenResponse(String accessToken, Integer expriesIn, String refreshToken,
+        public OAuthTokenResponse(String accessToken, Integer expiresIn, String refreshToken,
             String scope,
             String tokenType, String idToken) {
             this.accessToken = accessToken;
-            this.expriesIn = expriesIn;
+            this.expiresIn = expiresIn;
             this.refreshToken = refreshToken;
             this.scope = scope;
             this.tokenType = tokenType;
