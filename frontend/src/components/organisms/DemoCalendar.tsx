@@ -1,10 +1,7 @@
 // 데모 - 메인 기능 캘린더 컴포넌트
 import axios from "axios";
 import { useState } from "react";
-import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { readCalendar } from "../../api/CalendarApi";
-import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
 import GoogleLogin from "../atoms/GoogleLogin";
@@ -23,8 +20,7 @@ import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
 import { addTodoRedux } from "../../store/slice/calendar/TodoSlice";
 import "./DemoCalendar.css";
 //stt
-import { useSpeechRecognition } from 'react-speech-kit';
-
+import { useSpeechRecognition } from "react-speech-kit";
 
 // 타입 선언
 export interface FlaskResType {
@@ -69,7 +65,6 @@ export default function DemoCalendar() {
     setTextSave(event.target.value);
   };
 
-
   // 제출하기
   const handleSubmit = async () => {
     // 무료이용 가능횟수 제한
@@ -101,7 +96,7 @@ export default function DemoCalendar() {
         if (dataItem.end.dateTime == null) {
           // 1. 투두
           const newTodo: TodoItem = {
-            id: todoList.length + index,
+            id: todoList.length + index + 1,
             summary: dataItem.summary,
           };
           // 투두생성 (개발자용)
@@ -136,15 +131,11 @@ export default function DemoCalendar() {
     }
   };
 
-  const handleDrop = () => {
-    console.log("음음");
-  };
-
   // stt
   const { listen, stop } = useSpeechRecognition({
     onResult: (result: string) => {
-    // 이전 텍스트와 음성 인식으로 받은 텍스트를 합친다.
-    setTextSave((prevText) => prevText + ' ' + result);
+      // 이전 텍스트와 음성 인식으로 받은 텍스트를 합친다.
+      setTextSave((prevText) => prevText + " " + result);
     },
   });
   // 음성녹음
@@ -156,7 +147,6 @@ export default function DemoCalendar() {
     }
     setIsListening(!isListening); // 상태를 반전시킴
   };
-
 
   return (
     <>
@@ -172,9 +162,11 @@ export default function DemoCalendar() {
               placeholder="일정을 입력해보세요"
               value={textSave}
             />
-            <IoMicCircle style={{ verticalAlign: 'middle', fontSize: '30px' }} 
-            onClick={toggleListening}
-            className={isListening ? 'icon-listening' : ''} />
+            <IoMicCircle
+              style={{ verticalAlign: "middle", fontSize: "30px" }}
+              onClick={toggleListening}
+              className={isListening ? "icon-listening" : ""}
+            />
             <img src={Paste} className="pasteImg" onClick={handlePaste} />
             <button className="submitBtn" onClick={handleSubmit}>
               등록
@@ -197,11 +189,7 @@ export default function DemoCalendar() {
             <div className="SmallCalendar">
               <SmallCal />
             </div>
-            <div
-              className="Todo-Container"
-              onDrop={handleDrop}
-              draggable="true"
-            >
+            <div className="Todo-Container" draggable="true">
               <TodoList />
             </div>
           </div>

@@ -39,6 +39,7 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
   //drag
   const handleDragStart = (id: number, summary: string) => {
     dispatch(setDraggedTodo({ id, summary }));
+    console.log(id, summary);
   };
 
   return (
@@ -74,7 +75,9 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
               <TiEdit
                 onClick={() => {
                   // 수정 시도
+                  console.log("힝구리", !edit.id || edit.id != todo.id);
                   if (!edit.id || edit.id != todo.id) {
+                    console.log("변경요청");
                     setEdit({ id: todo.id, value: todo.summary });
                   } else {
                     // 수정 완료
