@@ -15,15 +15,15 @@ export default function SmallCal() {
   const dispatch = useDispatch();
   const [, setHandleDate] = useState<Date>();
 
-  const handleDateChange = (date:Date) => {
+  const handleDateChange = (date: Date) => {
     console.log(date);
     setHandleDate(date);
-    const formDate = date.toISOString()
-    dispatch(change(formDate))
+    const formDate = date.toISOString();
+    dispatch(change(formDate));
   };
   //클릭한 view의 정보를 받아옴
-  const [, setCurrentView] = useState('');
-  const handleViewChange = (newView:string) => {
+  const [, setCurrentView] = useState("");
+  const handleViewChange = (newView: string) => {
     setCurrentView(newView);
   };
 
@@ -32,8 +32,8 @@ export default function SmallCal() {
       <div className="leftArticle">
         <Calendar
           localizer={localizer}
-          style={{ width: "100%", height: '100%' }}
-        //   components={{ toolbar: ToolbarMini }}
+          style={{ width: "100%", height: "100%" }}
+          //   components={{ toolbar: ToolbarMini }}
           view="month"
           defaultView="month"
           //클릭한 date날짜를 가져옴
@@ -41,7 +41,7 @@ export default function SmallCal() {
           //클릭 한 view 의 유형을 가져옴
           onView={handleViewChange}
           components={{
-            toolbar: SmallToolbar
+            toolbar: SmallToolbar,
           }}
         />
       </div>
@@ -52,19 +52,19 @@ export default function SmallCal() {
 const Container = styled.div`
   display: flex;
   overflow: hidden;
-  height:100%;
+  height: 100%;
 
-  // today,back,next
-  /* span:nth-child(1) {
-    button{
-      font-size:10px;
-      padding: 0;
-      height:10%
-    }
-  } */
+  /* 세로 격자 */
+  .rbc-day-bg + .rbc-day-bg {
+    border-left: unset;
+  }
+  /* 가로 격자 */
+  .rbc-month-row + .rbc-month-row {
+    border-top: unset;
+  }
   // 2023년 11월
   span:nth-child(2) {
-    font-size:13px;
+    font-size: 11px;
   }
   // 월 주 일 목록
   /* span:nth-child(3) {
@@ -74,23 +74,26 @@ const Container = styled.div`
   .rbc-date-cell {
     align-items: center;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    padding: 0;
     .rbc-button-link {
       justify-content: center;
       //오늘날짜 + 다른 거 다 포함 일자 높이
       width: 25px;
-      height: 25px; 
-      font-size:12px;
+      height: 25px;
+      font-size: 10px;
     }
   }
   // BigCalendar
   .leftArticle {
     width: 100%;
     height: 100%;
-    .rbc-month-view{
-      flex:unset;
+    .rbc-month-view {
+      flex: unset;
     }
     // 헤더랑 월 이름 박스
-    .rbc-toolbar{
+    .rbc-toolbar {
       height: 16%;
       margin-bottom: 0;
     }
@@ -102,16 +105,15 @@ const Container = styled.div`
       align-items: center;
       .rbc-header {
         border-bottom: none;
+        font-size: 8px;
       }
     }
     .rbc-day-bg.rbc-today {
       background-color: white;
-      
     }
     .rbc-date-cell {
       /* height: 15%; */
       height: 25px;
-
     }
     // 일정 적힌 박스
     .rbc-event.rbc-event-allday {
@@ -127,9 +129,9 @@ const Container = styled.div`
         background-color: rgba(0, 0, 0, 0.5);
         color: #ffffff;
         display: flex;
-        align-items:center;
-        justify-content:center;
-        margin:auto;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
       }
     }
   }
@@ -144,6 +146,9 @@ const Container = styled.div`
       top: 0;
       left: 0;
       right: 0;
+    }
+    .rbc-day-bg {
+      background-color: black !important;
     }
     .rbc-day-bg {
       &:hover {
@@ -170,7 +175,6 @@ const Container = styled.div`
         }
       }
     }
-
 
     .rbc-addons-dnd-dragged-event {
       opacity: 0;

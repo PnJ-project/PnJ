@@ -19,14 +19,11 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
     id: null,
     value: "",
   });
-  // const [draggedEvent, setDraggedEvent] = useState()
-  // const handleDragStart = useCallback((event) => setDraggedEvent(event), [])
-  
+
   // 업데이트 등록
   const submitUpdate = (updatedTodo: { id: number; summary: string }) => {
     if (edit.id) {
       updateTodo(edit.id, updatedTodo.summary);
-      console.log("바꿀녀석은", edit, updatedTodo);
       setEdit({
         id: null,
         value: "",
@@ -44,21 +41,18 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
     dispatch(setDraggedTodo({ id, summary }));
   };
 
-
-
-
-
   return (
     <>
       <div className="todoBox">
         {todos.map((todo, index) => (
-          <div className={"todo-row"} key={index}
+          <div
+            className={"todo-row"}
+            key={index}
             draggable="true"
-            onDragStart={() => handleDragStart(todo.id,todo.summary )}>
+            onDragStart={() => handleDragStart(todo.id, todo.summary)}
+          >
             {!edit.id || edit.id != todo.id ? (
-              <div
-                key={todo.id}
-              >
+              <div className="todo-summary" key={todo.id}>
                 {todo.summary}
               </div>
             ) : (
@@ -67,6 +61,11 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
                 type="text"
                 value={edit.value}
                 onChange={handleUpdateValue}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey && edit.id) {
+                    submitUpdate({ id: edit.id, summary: edit.value });
+                  }
+                }}
               />
             )}
 

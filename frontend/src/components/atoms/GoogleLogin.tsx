@@ -5,6 +5,8 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { loginsuccess, logout, setUserData } from "../../store/slice/AuthSlice";
 import "./Google.css";
+import { setTodosRedux } from "../../store/slice/calendar/TodoSlice";
+import { setEvents } from "../../store/slice/calendar/CalendarSlice";
 
 export default function GoogleLogin() {
   // 기본 세팅
@@ -43,6 +45,8 @@ export default function GoogleLogin() {
   const googleSocialLogout = async () => {
     console.log("로그아웃");
     dispatch(logout());
+    dispatch(setEvents([]));
+    dispatch(setTodosRedux([]));
     localStorage.removeItem("memberId");
     setMemberId(localStorage.getItem("memberId"));
     navigate("/demo");

@@ -1,5 +1,5 @@
 // 데모 페이지
-import DemoCalendar from "../components/organisms/DemoCalendar";
+import Calendar from "../components/organisms/ApiCalendar";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { scroller } from "react-scroll";
@@ -67,7 +67,6 @@ export default function Main() {
     if (scrollIndex == 1) {
       return;
     }
-    console.log("부여");
     window.removeEventListener("wheel", handleWheel);
     window.addEventListener("wheel", handleWheel, { passive: false });
     return () => {
@@ -104,7 +103,7 @@ export default function Main() {
 
       {/* 캘린더 부 */}
       <div id="calendar">
-        <DemoCalendar />
+        <Calendar />
       </div>
 
       {/* 추천 부 */}
