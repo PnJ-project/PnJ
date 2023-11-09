@@ -90,6 +90,7 @@ const BigCalendarInfo = () => {
   // 이벤트 이동 기능
   const moveEvent = useCallback(
     async ({ event, start, end }: EventInteractionArgs<BigCalendarEvent>) => {
+      console.log('이야아아아아아아아아 이거 이동기능',event, start, end)
       // event 객체에서 start와 end를 제외한 속성들을 추리기
       const restEvent = Object.assign({}, event, {
         start: undefined,

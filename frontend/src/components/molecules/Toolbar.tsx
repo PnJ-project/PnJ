@@ -15,6 +15,7 @@ const MyToolbar: React.FC<ToolbarProps> = ({
 
   const viewnavigate = (action: 'month' | 'week' | 'day' | 'agenda') => {
     onView(action);
+    console.log(action)
   };
 
   return (
