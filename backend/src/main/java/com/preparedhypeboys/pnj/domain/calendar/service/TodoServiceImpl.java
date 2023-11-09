@@ -1,14 +1,18 @@
 package com.preparedhypeboys.pnj.domain.calendar.service;
 
+import static com.preparedhypeboys.pnj.global.error.constant.ExceptionMessage.NOT_FOUND_TODO;
+import static com.preparedhypeboys.pnj.global.error.constant.ExceptionMessage.NOT_FOUND_USER;
+
 import com.preparedhypeboys.pnj.domain.calendar.dao.TodoRepository;
 import com.preparedhypeboys.pnj.domain.calendar.dto.TodoRequestDto.CreateTodoRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.TodoRequestDto.UpdateTodoRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto;
 import com.preparedhypeboys.pnj.domain.calendar.entity.Todo;
+import com.preparedhypeboys.pnj.domain.calendar.exception.TodoNotFoundException;
 import com.preparedhypeboys.pnj.domain.member.dao.MemberRepository;
 import com.preparedhypeboys.pnj.domain.member.entity.Member;
+import com.preparedhypeboys.pnj.domain.member.exception.MemberNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,38 +34,35 @@ public class TodoServiceImpl implements
     @Override
     @Transactional
     public TodoResponseDto createTodo(CreateTodoRequestDto requestDto) {
-        Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
+        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+            () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
-        if (member.isPresent()) {
-            Todo todo = requestDto.toTodo(member.get());
+        Todo todo = requestDto.toTodo(member);
 
-            todoRepository.save(todo);
+        todoRepository.save(todo);
 
-            return new TodoResponseDto(todo);
-
-        }
-        return null;
+        return new TodoResponseDto(todo);
     }
 
     @Override
     @Transactional
     public TodoResponseDto updateTodo(UpdateTodoRequestDto requestDto) {
-        Optional<Todo> todo = todoRepository.findById(requestDto.getTodoId());
+        Todo todo = todoRepository.findById(requestDto.getTodoId()).orElseThrow(
+            () -> new TodoNotFoundException(NOT_FOUND_TODO.getMessage()));
 
-        if (todo.isPresent()) {
-            todo.get().modifySummary(requestDto.getSummary());
+        todo.modifySummary(requestDto.getSummary());
 
-            return new TodoResponseDto(todo.get());
-        }
-        return null;
+        return new TodoResponseDto(todo);
+
     }
 
     @Override
     @Transactional
     public void deleteTodo(Long memberId, Long todoId) {
-        Optional<Todo> todo = todoRepository.findById(todoId);
+        Todo todo = todoRepository.findById(todoId).orElseThrow(
+            () -> new TodoNotFoundException(NOT_FOUND_TODO.getMessage()));
 
-        todo.ifPresent(todoRepository::delete);
-        // TODO 예외처리
+        todoRepository.delete(todo);
+
     }
 }

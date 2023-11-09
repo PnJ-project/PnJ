@@ -1,10 +1,11 @@
 package com.preparedhypeboys.pnj.domain.member.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.LoginResponseDto;
+import com.preparedhypeboys.pnj.domain.member.entity.Member;
 
 public interface OAuth2UserService {
 
-    LoginResponseDto loginRedirectProcess(String code) throws JsonProcessingException;
+    LoginResponseDto loginRedirectProcess(String code);
 
+    Member getAccessTokenRefresh(Member member);
 }
