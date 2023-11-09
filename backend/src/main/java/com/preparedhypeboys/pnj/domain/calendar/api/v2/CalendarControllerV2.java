@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("api/calendar/v2")
 public class CalendarControllerV2 {
+
     private final CalendarServiceV2 calendarService;
 
     @GetMapping("/{memberId}/{timeMax}/{timeMin}")
@@ -42,7 +43,7 @@ public class CalendarControllerV2 {
         @PathVariable(value = "memberId") Long memberId,
         @PathVariable(value = "timeMax") String timeMax,
         @PathVariable(value = "timeMin") String timeMin
-    ) throws JsonProcessingException {
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(GET_EVENT_SUCCESS.getMessage(),
                 calendarService.readEventList(memberId, timeMax, timeMin))
@@ -52,7 +53,7 @@ public class CalendarControllerV2 {
     @PostMapping(value = "")
     public ResponseEntity<ResponseDto<EventDto>> insertEvent(
         @RequestBody EventRequestDto requestDto
-    ) throws JsonProcessingException {
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(INSERT_EVENT_SUCCESS.getMessage(),
                 calendarService.createEvent(requestDto))
@@ -63,7 +64,7 @@ public class CalendarControllerV2 {
     public ResponseEntity<ResponseDto<?>> deleteEvent(
         @PathVariable(value = "memberId") Long memberId,
         @PathVariable(value = "eventId") String eventId
-    ) throws JsonProcessingException {
+    ) {
         calendarService.deleteEvent(memberId, eventId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -74,7 +75,7 @@ public class CalendarControllerV2 {
     @PutMapping(value = "")
     public ResponseEntity<ResponseDto<EventDto>> updateEvent(
         @RequestBody EventRequestDto requestDto
-    ) throws JsonProcessingException {
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(UPDATE_EVENT_SUCCESS.getMessage(),
                 calendarService.updateEvent(requestDto))
@@ -84,7 +85,7 @@ public class CalendarControllerV2 {
     @PostMapping(value = "/to/todo")
     public ResponseEntity<ResponseDto<TodoResponseDto>> exchangeToTodo(
         @RequestBody ExchangeToTodoRequestDto requestDto
-    ) throws JsonProcessingException {
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(EXCHANGE_TO_TODO_SUCCESS.getMessage(),
                 calendarService.exchangeToTodo(requestDto))
@@ -94,7 +95,7 @@ public class CalendarControllerV2 {
     @PostMapping(value = "/to/event")
     public ResponseEntity<ResponseDto<EventDto>> exchangeToEvent(
         @RequestBody ExchangeToEventRequestDto requestDto
-    ) throws JsonProcessingException {
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(EXCHANGE_TO_EVENT_SUCCESS.getMessage(),
                 calendarService.exchangeToEvent(requestDto))
@@ -104,7 +105,7 @@ public class CalendarControllerV2 {
     @PostMapping(value = "/input")
     public ResponseEntity<ResponseDto<InputResponseDto>> inputProcess(
         @RequestBody InputRequestDto requestDto
-    ) throws JsonProcessingException {
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(INPUT_EASY_SUCCESS.getMessage(),
                 calendarService.inputProcess(requestDto)

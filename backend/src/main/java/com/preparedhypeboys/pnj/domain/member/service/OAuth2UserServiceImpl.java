@@ -1,8 +1,7 @@
 package com.preparedhypeboys.pnj.domain.member.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.preparedhypeboys.pnj.domain.member.dao.MemberRepository;
 import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.LoginResponseDto;
 import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.OAuthMemberInfoDto;
@@ -13,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,12 +21,13 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Slf4j
 public class OAuth2UserServiceImpl implements
     OAuth2UserService {
 
     private final MemberRepository memberRepository;
     private final JWTUtil jwtUtil;
+    private final Gson gson = buildGson();
 
     private final String GOOGLE_TOKEN_REQUEST_URL = "https://oauth2.googleapis.com/token";
     private final String GRANT_TYPE = "authorization_code";
@@ -44,7 +45,7 @@ public class OAuth2UserServiceImpl implements
 
     @Override
     @Transactional
-    public LoginResponseDto loginRedirectProcess(String code) throws JsonProcessingException {
+    public LoginResponseDto loginRedirectProcess(String code) {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> params = new HashMap<>();
 
@@ -58,16 +59,15 @@ public class OAuth2UserServiceImpl implements
             GOOGLE_TOKEN_REQUEST_URL, params, String.class
         );
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false);
-        OAuthTokenResponse oAuthTokenResponse = mapper.readValue(response.getBody(),
+        OAuthTokenResponse oAuthTokenResponse = gson.fromJson(response.getBody(),
             OAuthTokenResponse.class);
 
         String decoded = jwtUtil.decodeGoogleInfo(oAuthTokenResponse.getIdToken());
-        mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        OAuthMemberInfoDto oAuthMemberInfoDto = mapper.readValue(decoded, OAuthMemberInfoDto.class);
-
+        log.info("decoded:" + decoded);
+        OAuthMemberInfoDto oAuthMemberInfoDto = gson.fromJson(decoded, OAuthMemberInfoDto.class);
+        log.info(oAuthMemberInfoDto.getEmail());
+        log.info(oAuthMemberInfoDto.getName());
+        log.info(oAuthMemberInfoDto.getSub());
         Optional<Member> member = memberRepository.findByNameAndEmail(oAuthMemberInfoDto.getName(),
             oAuthMemberInfoDto.getEmail());
 
@@ -84,7 +84,7 @@ public class OAuth2UserServiceImpl implements
         }
 
         member.get().setToken(oAuthTokenResponse.getAccessToken(),
-            oAuthTokenResponse.getRefreshToken());
+            oAuthTokenResponse.getRefreshToken(), oAuthTokenResponse.getExpiresIn());
 
         // TODO JWT TOKEN 암호화 + ResponseDto 변경
 
@@ -93,27 +93,38 @@ public class OAuth2UserServiceImpl implements
             .memberId(member.get().getId())
             .build();
     }
+
     @Override
-    public String getAccessTokenRefresh(String refreshToken) throws JsonProcessingException {
+    @Transactional
+    public Member getAccessTokenRefresh(Member member) {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, Object> params = new HashMap<>();
 
         params.put("client_id", googleClientId);
         params.put("client_secret", googleClientSecret);
-        params.put("refresh_token", refreshToken);
+        params.put("refresh_token", member.getRefreshToken());
         params.put("grant_type", GRANT_TYPE_REFRESH);
 
         ResponseEntity<String> response = restTemplate.postForEntity(
             GOOGLE_TOKEN_REQUEST_URL, params, String.class
         );
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false);
-
-        OAuthTokenResponse oAuthTokenResponse = mapper.readValue(response.getBody(),
+        OAuthTokenResponse oAuthTokenResponse = gson.fromJson(response.getBody(),
             OAuthTokenResponse.class);
 
-        return oAuthTokenResponse.getAccessToken();
+        member.refreshExpiredToken(oAuthTokenResponse.getAccessToken(),
+            oAuthTokenResponse.getExpiresIn());
+
+        memberRepository.save(member);
+
+        return member;
+    }
+
+    private Gson buildGson() {
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        builder.setLenient();
+
+        return builder.create();
     }
 }

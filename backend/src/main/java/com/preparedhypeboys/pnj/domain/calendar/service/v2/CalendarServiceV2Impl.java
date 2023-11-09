@@ -1,6 +1,8 @@
 package com.preparedhypeboys.pnj.domain.calendar.service.v2;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import static com.preparedhypeboys.pnj.global.error.constant.ExceptionMessage.NOT_FOUND_TODO;
+import static com.preparedhypeboys.pnj.global.error.constant.ExceptionMessage.NOT_FOUND_USER;
+
 import com.preparedhypeboys.pnj.domain.calendar.dao.FlaskDao;
 import com.preparedhypeboys.pnj.domain.calendar.dao.GoogleCalendarDao;
 import com.preparedhypeboys.pnj.domain.calendar.dao.TodoRepository;
@@ -12,20 +14,21 @@ import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarResponseDto.InputRes
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.TodoResponseDto;
 import com.preparedhypeboys.pnj.domain.calendar.entity.Todo;
+import com.preparedhypeboys.pnj.domain.calendar.exception.TodoNotFoundException;
 import com.preparedhypeboys.pnj.domain.member.dao.MemberRepository;
 import com.preparedhypeboys.pnj.domain.member.entity.Member;
+import com.preparedhypeboys.pnj.domain.member.exception.MemberNotFoundException;
 import com.preparedhypeboys.pnj.domain.member.service.OAuth2UserService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CalendarServiceV2Impl implements
     CalendarServiceV2 {
 
@@ -40,106 +43,59 @@ public class CalendarServiceV2Impl implements
     private final OAuth2UserService memberService;
 
     @Override
-    public List<EventDto> readEventList(Long memberId, String timeMax, String timeMin)
-        throws JsonProcessingException {
-        Optional<Member> member = memberRepository.findById(memberId);
+    public List<EventDto> readEventList(Long memberId, String timeMax, String timeMin) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+            () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
-        List<EventDto> dtoList = new ArrayList<>();
-
-        try {
-            if (member.isPresent()) {
-                dtoList = googleCalendarDao.getEventList(timeMax, timeMin,
-                    member.get().getAccessToken());
-            }
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
-                String accessToken = expiredTokenExceptionHandle(member.get().getRefreshToken());
-
-                member.ifPresent(m -> {
-                    m.refreshExpiredToken(accessToken);
-                    memberRepository.save(m);
-                });
-
-                dtoList = googleCalendarDao.getEventList(timeMax, timeMin, accessToken);
-            }
-            // TODO 추가 예외처리
+        if (member.isTokenInvalid()) {
+            member = memberService.getAccessTokenRefresh(member);
         }
 
-        return dtoList;
-
+        return googleCalendarDao.getEventList(timeMax, timeMin, member.getAccessToken());
     }
 
     @Override
     @Transactional
-    public EventDto createEvent(EventRequestDto requestDto) throws JsonProcessingException {
-        Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
+    public EventDto createEvent(EventRequestDto requestDto) {
+        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+            () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
-        try {
-            return member.map(value -> googleCalendarDao.insertEvent(requestDto.getEvent(),
-                value.getAccessToken())).orElse(null);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
-                String accessToken = expiredTokenExceptionHandle(member.get().getRefreshToken());
-
-                member.ifPresent(m -> {
-                    m.refreshExpiredToken(accessToken);
-                    memberRepository.save(m);
-                });
-
-                return googleCalendarDao.insertEvent(requestDto.getEvent(), accessToken);
-            }
-            // Todo 추가예외처리
-            return null;
+        if (member.isTokenInvalid()) {
+            member = memberService.getAccessTokenRefresh(member);
         }
 
+        log.info(requestDto.getEvent().getStart().toString());
+        log.info(requestDto.getEvent().getSummary());
+
+        return googleCalendarDao.insertEvent(requestDto.getEvent(),
+            member.getAccessToken());
     }
 
     @Override
     @Transactional
-    public void deleteEvent(Long memberId, String eventId) throws JsonProcessingException {
-        Optional<Member> member = memberRepository.findById(memberId);
+    public void deleteEvent(Long memberId, String eventId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+            () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
-        try {
-            member.ifPresent(
-                value -> googleCalendarDao.deleteEvent(eventId, value.getAccessToken()));
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
-                String accessToken = expiredTokenExceptionHandle(member.get().getRefreshToken());
-
-                member.ifPresent(m -> {
-                    m.refreshExpiredToken(accessToken);
-                    memberRepository.save(m);
-                });
-                googleCalendarDao.deleteEvent(eventId, accessToken);
-            }
-            // Todo 추가예외처리
+        if (member.isTokenInvalid()) {
+            member = memberService.getAccessTokenRefresh(member);
         }
 
+        googleCalendarDao.deleteEvent(eventId, member.getAccessToken());
     }
 
     @Override
     @Transactional
-    public EventDto updateEvent(EventRequestDto requestDto) throws JsonProcessingException {
-        Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
+    public EventDto updateEvent(EventRequestDto requestDto) {
+        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+            () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
-        try {
-            return member.map(value -> googleCalendarDao.updateEvent(requestDto.getEvent(),
-                    value.getAccessToken()))
-                .orElse(null);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
-                String accessToken = expiredTokenExceptionHandle(member.get().getRefreshToken());
-
-                member.ifPresent(m -> {
-                    m.refreshExpiredToken(accessToken);
-                    memberRepository.save(m);
-                });
-                return googleCalendarDao.updateEvent(requestDto.getEvent(), accessToken);
-            }
-            // Todo 추가예외처리
+        if (member.isTokenInvalid()) {
+            member = memberService.getAccessTokenRefresh(member);
         }
 
-        return null;
+        return googleCalendarDao.updateEvent(requestDto.getEvent(),
+            member.getAccessToken());
     }
 
     @Override
@@ -149,91 +105,63 @@ public class CalendarServiceV2Impl implements
 
     @Override
     @Transactional
-    public TodoResponseDto exchangeToTodo(ExchangeToTodoRequestDto requestDto)
-        throws JsonProcessingException {
-        Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
+    public TodoResponseDto exchangeToTodo(ExchangeToTodoRequestDto requestDto) {
+        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+            () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
-        if (member.isPresent()) {
-
-            try {
-                googleCalendarDao.deleteEvent(requestDto.getEventId(),
-                    member.get().getAccessToken());
-            } catch (HttpClientErrorException e) {
-                if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
-                    String accessToken = expiredTokenExceptionHandle(
-                        member.get().getRefreshToken());
-
-                    member.ifPresent(m -> {
-                        m.refreshExpiredToken(accessToken);
-                        memberRepository.save(m);
-                    });
-
-                    googleCalendarDao.deleteEvent(requestDto.getEventId(),
-                        member.get().getAccessToken());
-                }
-            }
-
-            Todo todo = Todo.builder()
-                .member(member.get())
-                .summary(requestDto.getSummary())
-                .build();
-
-            todoRepository.save(todo);
-
-            return new TodoResponseDto(todo);
+        if (member.isTokenInvalid()) {
+            member = memberService.getAccessTokenRefresh(member);
         }
-        return null;
+
+        googleCalendarDao.deleteEvent(requestDto.getEventId(), member.getAccessToken());
+
+        Todo todo = Todo.builder()
+            .member(member)
+            .summary(requestDto.getSummary())
+            .build();
+
+        todoRepository.save(todo);
+
+        return new TodoResponseDto(todo);
+
     }
 
     @Override
     @Transactional
-    public EventDto exchangeToEvent(ExchangeToEventRequestDto requestDto)
-        throws JsonProcessingException {
-        Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
+    public EventDto exchangeToEvent(ExchangeToEventRequestDto requestDto) {
+        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+            () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
-        Optional<Todo> todo = todoRepository.findById(requestDto.getTodoId());
-
-        if (member.isPresent() && todo.isPresent()) {
-            EventDto eventDto = EventDto.builder()
-                .summary(todo.get().getSummary())
-                .start(requestDto.getStart())
-                .end(requestDto.getEnd())
-                .build();
-
-            todoRepository.delete(todo.get());
-
-            try {
-                return googleCalendarDao.insertEvent(eventDto,
-                    member.get().getAccessToken());
-            } catch (HttpClientErrorException e) {
-                if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
-                    String accessToken = expiredTokenExceptionHandle(
-                        member.get().getRefreshToken());
-
-                    member.ifPresent(m -> {
-                        m.refreshExpiredToken(accessToken);
-                        memberRepository.save(m);
-                    });
-
-                    return googleCalendarDao.insertEvent(eventDto,
-                        accessToken);
-                }
-                // TODO 트랜지션 롤백 처리
-            }
+        if (member.isTokenInvalid()) {
+            member = memberService.getAccessTokenRefresh(member);
         }
-        // Todo 예외처리
-        return null;
+
+        Todo todo = todoRepository.findById(requestDto.getTodoId()).orElseThrow(
+            () -> new TodoNotFoundException(NOT_FOUND_TODO.getMessage())
+        );
+
+        EventDto eventDto = EventDto.builder()
+            .summary(todo.getSummary())
+            .start(requestDto.getStart())
+            .end(requestDto.getEnd())
+            .build();
+
+        EventDto response = googleCalendarDao.insertEvent(eventDto,
+            member.getAccessToken());
+
+        todoRepository.delete(todo);
+
+        return response;
     }
 
     @Override
     @Transactional
-    public InputResponseDto inputProcess(InputRequestDto requestDto)
-        throws JsonProcessingException {
-        Optional<Member> member = memberRepository.findById(requestDto.getMemberId());
+    public InputResponseDto inputProcess(InputRequestDto requestDto) {
+        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+            () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
-        if (member.isEmpty()) {
-            // TODO 예외처리
-            return null;
+        if (member.isTokenInvalid()) {
+            member = memberService.getAccessTokenRefresh(member);
         }
 
         List<EventDto> eventDtos = flaskDao.getInputTransport(requestDto.getInput());
@@ -250,7 +178,7 @@ public class CalendarServiceV2Impl implements
 
                 Todo todo = Todo.builder()
                     .summary(e.getSummary())
-                    .member(member.get())
+                    .member(member)
                     .build();
 
                 todoList.add(todo);
@@ -258,22 +186,8 @@ public class CalendarServiceV2Impl implements
 
             if (e.getStart().getDateTime() != null) {
                 inEvent = true;
-                try {
-                    googleCalendarDao.insertEvent(e, member.get().getAccessToken());
-                } catch (HttpClientErrorException exception) {
-                    if (exception.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
-                        String accessToken = expiredTokenExceptionHandle(
-                            member.get().getRefreshToken());
 
-                        member.ifPresent(m -> {
-                            m.refreshExpiredToken(accessToken);
-                            memberRepository.save(m);
-                        });
-
-                        googleCalendarDao.insertEvent(e, accessToken);
-                    }
-                }
-
+                googleCalendarDao.insertEvent(e, member.getAccessToken());
             }
         }
 
@@ -283,9 +197,4 @@ public class CalendarServiceV2Impl implements
 
         return InputResponseDto.builder().inTodo(inTodo).inEvent(inEvent).build();
     }
-
-    private String expiredTokenExceptionHandle(String accessToken) throws JsonProcessingException {
-        return memberService.getAccessTokenRefresh(accessToken);
-    }
-
 }

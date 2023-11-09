@@ -1,6 +1,5 @@
 package com.preparedhypeboys.pnj.domain.calendar.service.v2;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.EventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToEventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToTodoRequestDto;
@@ -13,23 +12,20 @@ import java.util.List;
 
 public interface CalendarServiceV2 {
 
-    List<EventDto> readEventList(Long memberId, String tiemMax, String timeMin)
-        throws JsonProcessingException;
+    List<EventDto> readEventList(Long memberId, String timeMax, String timeMin);
 
-    EventDto createEvent(EventRequestDto event) throws JsonProcessingException;
+    EventDto createEvent(EventRequestDto event);
 
-    void deleteEvent(Long memberId, String eventId) throws JsonProcessingException;
+    void deleteEvent(Long memberId, String eventId);
 
-    EventDto updateEvent(EventRequestDto requestDto) throws JsonProcessingException;
+    EventDto updateEvent(EventRequestDto requestDto);
 
     List<EventDto> updateEventList(EventDto event);
 
-    TodoResponseDto exchangeToTodo(ExchangeToTodoRequestDto requestDto)
-        throws JsonProcessingException;
+    TodoResponseDto exchangeToTodo(ExchangeToTodoRequestDto requestDto);
 
-    EventDto exchangeToEvent(ExchangeToEventRequestDto requestDto)
-        throws JsonProcessingException;
+    EventDto exchangeToEvent(ExchangeToEventRequestDto requestDto);
 
-    InputResponseDto inputProcess(InputRequestDto requestDto) throws JsonProcessingException;
+    InputResponseDto inputProcess(InputRequestDto requestDto);
 
 }
