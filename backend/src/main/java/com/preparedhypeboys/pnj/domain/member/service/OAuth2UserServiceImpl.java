@@ -63,11 +63,9 @@ public class OAuth2UserServiceImpl implements
             OAuthTokenResponse.class);
 
         String decoded = jwtUtil.decodeGoogleInfo(oAuthTokenResponse.getIdToken());
-        log.info("decoded:" + decoded);
+
         OAuthMemberInfoDto oAuthMemberInfoDto = gson.fromJson(decoded, OAuthMemberInfoDto.class);
-        log.info(oAuthMemberInfoDto.getEmail());
-        log.info(oAuthMemberInfoDto.getName());
-        log.info(oAuthMemberInfoDto.getSub());
+
         Optional<Member> member = memberRepository.findByNameAndEmail(oAuthMemberInfoDto.getName(),
             oAuthMemberInfoDto.getEmail());
 
