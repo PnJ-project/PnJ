@@ -19,9 +19,11 @@ def trans_date():
     return jsonify(date)
 
 
-@app.route(PREFIX + '/recom', methods=['GET'])
+@app.route(PREFIX + '/recom', methods=['POST'])
 def get_recommend():
-    result = calcultation_similarity()
+    summary_list = []
+    summary_list.append(request.form['input'])
+    result = calcultation_similarity(summary_list)
     return result
 
 
@@ -32,4 +34,4 @@ def hello_world():  # put application's code here
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', debug=True, port=5000)
