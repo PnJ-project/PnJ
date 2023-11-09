@@ -1,24 +1,26 @@
-// 데모 - 메인 기능 캘린더 컴포넌트
+// 메인 기능 캘린더 컴포넌트
 import axios from "axios";
+import moment from "moment";
 import { useState } from "react";
+import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
+import { readCalendar } from "../../api/CalendarApi";
+import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
 import GoogleLogin from "../atoms/GoogleLogin";
-import TodoList from "../molecules/TodoList";
+import TodoList from "../molecules/todo/ApiTodoList";
 import DemoMadal from "../molecules/FlaskMadal";
 import SmallCal from "../../pages/test/SmallCal";
-import BigCalendar from "../../pages/test/BigCalendar";
-import { IoMicCircle } from "react-icons/io5";
+import BigCalendar from "../molecules/ApiBigCalendar";
+// import Mike from "/image/mike.svg";
 import Paste from "/image/paste.svg";
 import {
   openDemoModal,
   selectIsDemoModalOpen,
 } from "../../store/slice/calendar/ModalSlice";
-import { RootState } from "../../store/store";
-import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
-import { addTodoRedux } from "../../store/slice/calendar/TodoSlice";
 import "./DemoCalendar.css";
+import { IoMicCircle } from "react-icons/io5";
 //stt
 import { useSpeechRecognition } from "react-speech-kit";
 
@@ -42,16 +44,23 @@ export interface TodoItem {
 export default function DemoCalendar() {
   // 기본 세팅
   const dispatch = useDispatch();
-  // const { textsave, listening, toggleListening } = SpeechToText();
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
-  const [afterFlask, setAfterFlask] = useState<FlaskResType[]>([]); // 인풋박스 값
-  const [freetime, setFreeTime] = useState(3); // 무료이용 가능횟수
+  const [afterFlask] = useState<FlaskResType[]>([]); // 인풋박스 값
   const isDemoOpen = useSelector(selectIsDemoModalOpen);
-  const events = useSelector((state: RootState) => state.calendar.events);
-  const todoList = useSelector((state: RootState) => state.todo.todos); // 리스트 상태 가져오기
-  const flask = import.meta.env.VITE_APP_FLASK_SERVER;
-  // 쿼리 세팅
   const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
+  const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
+  const [timeMin] = useState(
+    moment().endOf("month").endOf("week").toDate().toISOString()
+  );
+  const { refetch: refetchCal } = useQuery(
+    "calendarData",
+    () => readCalendar(timeMax, timeMin),
+    { enabled: false, retry: false }
+  ); // calendar API
+  const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
+    enabled: false,
+    retry: false,
+  }); // todo API
 
   // 붙여넣기
   const handlePaste = () => {
@@ -67,53 +76,28 @@ export default function DemoCalendar() {
 
   // 제출하기
   const handleSubmit = async () => {
-    // 무료이용 가능횟수 제한
-    if (!freetime) {
-      setTextSave("로그인후 자유롭게 이용해보세요. ");
-      return;
-    }
     // 빈값일시 반환
     if (textSave.trim() === "") {
       console.log("빈값 반환");
       return;
     }
-    setFreeTime(freetime - 1);
 
     // 모달창 오픈
     dispatch(openDemoModal());
     // 플라스크 api 연결
-    const formData = new FormData();
-    formData.append("input", textSave);
-    // formData.append("input", textSave);
+    const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
+    const memberId = localStorage.getItem("memberId");
+    const formData = { input: textSave, memberId: memberId };
     try {
-      const response = await axios.post(`${flask}/trans/date`, formData);
+      const response = await axios.post(
+        `${backend}/api/calendar/input`,
+        formData
+      );
       // 전달 데이터
-      console.log("플라스크 반환", response);
-      setAfterFlask(response.data);
-      for (let index = 0; index < response.data.length; index++) {
-        const dataItem = response.data[index];
-        // 리덕스 반영 (개발자용)
-        if (dataItem.end.dateTime == null) {
-          // 1. 투두
-          const newTodo: TodoItem = {
-            id: todoList.length + index + 1,
-            summary: dataItem.summary,
-          };
-          // 투두생성 (개발자용)
-          dispatch(addTodoRedux(newTodo));
-        } else {
-          // 2. 캘린더
-          const newEvent: Event = {
-            id: events.length,
-            title: dataItem.summary,
-            start: dataItem.start.dateTime,
-            end: dataItem.end.dateTime,
-            memo: "",
-          };
-          // 일정생성 (개발자용)
-          dispatch(addEvent(newEvent));
-        }
-      }
+      console.log("일정 변환 반환", response);
+      // 데이터 리패치
+      await refetchTodo();
+      await refetchCal();
       return response;
     } catch (error) {
       console.error("Error flask data:", error);
@@ -171,12 +155,6 @@ export default function DemoCalendar() {
             <button className="submitBtn" onClick={handleSubmit}>
               등록
             </button>
-            <div className="FreeTxt">
-              <div>횟수제한 : </div>
-              <div className={`${freetime === 0 ? "NotFree" : ""}`}>
-                {freetime}
-              </div>
-            </div>
           </div>
           <div className="NavGoogleBtn">
             <GoogleLogin />

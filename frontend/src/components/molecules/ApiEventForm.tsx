@@ -1,73 +1,99 @@
 // EventForm.tsx
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateEvent,
-  deleteEvent,
-} from "../../store/slice/calendar/CalendarSlice";
-import { closeSideModal } from "../../store/slice/calendar/ModalSlice";
+import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
+import { closeModal } from "../../store/slice/calendar/ModalSlice";
 import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
+import axios from "axios";
+import { QueryObserverResult, RefetchOptions } from "react-query";
 
 // 모달 타입
 interface ModalProps {
-  id: number | string | unknown;
+  selectedRange: { start: Date; end: Date };
+  refetchCal: <TPageData>(
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<TPageData, unknown>>;
 }
+// 백엔드
+const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
-const EventForm: React.FC<ModalProps> = ({ id }) => {
+const EventForm: React.FC<ModalProps> = ({
+  selectedRange,
+  refetchCal,
+}: ModalProps) => {
   // 기본 세팅
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.calendar.events);
-  const event = events.find((event) => event.id === id);
-  const [title, setTitle] = useState(event?.title);
-  const [memo, setMemo] = useState(event?.memo);
+  const [title, setTitle] = useState("");
+  const [memo, setMemo] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [sTime, setSTime] = useState("00:00");
   const [eTime, setETime] = useState("00:00");
+  const [memberId] = useState(Number(localStorage.getItem("memberId")));
 
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); // 엔터 키의 기본 동작 방지
-      handleUpdateEvent();
+      handleAddEvent();
     }
   };
 
-  // 이벤트 수정
-  const handleUpdateEvent = async () => {
+  // 이벤트 생성
+  const handleAddEvent = async () => {
     // 조건 만족안할시 반환
-    if (!event) {
-      return;
-    }
     if (!title) {
       setErrorMsg("일정 내용을 입력하세요");
       return;
     }
-    console.log(event);
-    const updateItem = {
-      id: id,
+    console.log("여기는 eventform, events", events);
+    const newEvent: Event = {
+      id: events.length,
       title,
-      start: event.start.toString(),
-      end: event.end.toString(),
+      start: selectedRange.start.toISOString(),
+      end: selectedRange.end.toISOString(),
       memo,
-      resource: { event: { id: id, memo: memo } },
     };
-    // 일정수정 (개발자용)
-    dispatch(updateEvent(updateItem));
-
+    // 일정생성 (개발자용)
+    console.log("여기는 eventform, newEvent", newEvent);
     // 원복
-    dispatch(closeSideModal());
     setTitle("");
     setMemo("");
-  };
+    dispatch(addEvent(newEvent));
+    dispatch(closeModal());
 
-  // 이벤트 삭제
-  const handleDeleteEvent = async () => {
-    // 삭제할거냐는 메세지 띄우기
-    // 일정삭제 (개발자용)
-    if (typeof id == "number") {
-      dispatch(deleteEvent(id));
-      dispatch(closeSideModal());
+    // 캘린더 생성 API 요청
+    const reqNewEvent = {
+      memberId: memberId,
+      event: {
+        id: null,
+        summary: title,
+        colorId: null,
+        start: {
+          dateTime: selectedRange.start.toISOString(),
+          timeZone: "Asia/Seoul",
+          date: null,
+        },
+        end: {
+          dateTime: selectedRange.end.toISOString(),
+          timeZone: "Asia/Seoul",
+          date: null,
+        },
+      },
+    };
+    try {
+      const response = await axios.post(
+        `${local_back_url}/api/calendar/v2`,
+        reqNewEvent
+      );
+      // 캘린더 다시 불러오기
+      console.log("구글 캘린더 생성 완료", response);
+      await refetchCal();
+    } catch (error) {
+      console.error("구글 캘린더 생성 에러:", error);
+      setErrorMsg("서버와 연결할 수 없습니다. 다시 시도해주세요");
+      return;
     }
   };
 
@@ -75,19 +101,19 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     <Overlay
       onClick={(e) => {
         if (e.target === e.currentTarget) {
-          dispatch(closeSideModal());
+          dispatch(closeModal());
         }
       }}
     >
       <InputModalContainer>
         <CloseBtn
           onClick={() => {
-            dispatch(closeSideModal());
+            dispatch(closeModal());
           }}
         >
           ✖
         </CloseBtn>
-        <Title>일정 수정하기</Title>
+        <Title>일정 추가하기</Title>
         <div>시간</div>
         <SelectDate>
           <input
@@ -120,23 +146,21 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
         />
         <div>메모</div>
         <input
-          type="textarea"
+          type="text"
           placeholder="메모를 남기세요"
           value={memo}
           onChange={(e) => setMemo(e.target.value)}
           onKeyDown={handleKeyDown}
         />
         <ErrorMsg>{errorMsg}</ErrorMsg>
-        <div>
-          <button onClick={handleDeleteEvent}>일정 삭제</button>
-          <button onClick={handleUpdateEvent}>일정 변경</button>
-        </div>
+        <button onClick={handleAddEvent}>일정 추가</button>
       </InputModalContainer>
     </Overlay>
   );
 };
-
 export default EventForm;
+
+/** CSS */
 const fadeIn = keyframes`
   from {
     opacity: 0;

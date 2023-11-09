@@ -25,7 +25,7 @@ const TodoForm: React.FC<TodoFormProps> = (props) => {
 
     if (input) {
       props.onSubmit({
-        id: Math.floor(Math.random() * 1000000000000000000000000) - 0.01,
+        id: Math.floor(Math.random() * 10000),
         summary: input,
       });
       setInput("");

@@ -1,144 +1,131 @@
-// 홈페이지
-// 데모버튼을 누를시 컴포넌트가 체인지됩니다. 홈버튼 누르면 다시 원래대로 돌아갑니다
-// import React from "react";
-import plogo from "../assets/main.svg";
-import UseDemo from "../components/atoms/UseDemo";
-import GoogleLogin from "../components/atoms/GoogleLogin";
-import DemoCalendar from "../components/organisms/DemoCalendar";
+// 데모 페이지
+import Calendar from "../components/organisms/ApiCalendar";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { setDemoTrue } from "../store/slice/ToggleSlice";
-import { RootState } from "../store/store";
+import { useEffect, useState } from "react";
+import { scroller } from "react-scroll";
+import Recommend from "../components/organisms/Recommend";
+import { useNavigate } from "react-router-dom";
 
 export default function Main() {
   // 기본세팅
-  const dispatch = useDispatch();
-  const useDemoVisible = useSelector(
-    (state: RootState) => state.toggle.isUseDemo
-  );
-  // 데모버튼 클릭시
-  const handleDemo = () => {
-    dispatch(setDemoTrue());
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [scrollIndex, setScrollIndex] = useState(0);
+  const navigate = useNavigate();
+  // 로그아웃시 리다이렉트
+  useEffect(() => {
+    if (!localStorage.getItem("memberId")) {
+      navigate("/demo");
+    }
+  }, []);
+
+  // 휠 이벤트
+  const resetWheel = () => {
+    setTimeout(() => {
+      setIsScrolling(false);
+    }, 800);
   };
+  const handleWheel = (event: WheelEvent) => {
+    if (!isScrolling) {
+      const delta = Math.sign(event.deltaY); // 마우스 휠 방향을 확인하기 위한 값
+      setIsScrolling(true);
+      if (delta > 0) {
+        // 마우스 휠을 아래로 스크롤할 때
+        const currentScrollPos = window.scrollY;
+        if (currentScrollPos < 5) {
+          scroller.scrollTo("recommand", {
+            smooth: true,
+            duration: 800,
+          });
+          setScrollIndex(1);
+        }
+      } else {
+        // 마우스 휠을 위로 스크롤할 때
+        const currentScrollPos = window.scrollY;
+        if (currentScrollPos >= 100) {
+          scroller.scrollTo("calendar", {
+            smooth: true,
+            duration: 800,
+          });
+          setScrollIndex(0);
+        }
+      }
+      resetWheel();
+    } else {
+      event.preventDefault();
+    }
+  };
+
+  // 최상단 이동
+  useEffect(() => {
+    // 페이지가 로드될 때 스크롤 위치를 맨 위로 이동
+    window.scrollTo(0, 0);
+  }, []);
+
+  // 스크롤 이벤트 부여
+  useEffect(() => {
+    // 마우스 휠 이벤트 추가
+    if (scrollIndex == 1) {
+      return;
+    }
+    window.removeEventListener("wheel", handleWheel);
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+    };
+  }, [isScrolling]);
+
+  // 추천 페이지 진입시 이벤트 제고
+  useEffect(() => {
+    if (scrollIndex == 1) {
+      window.removeEventListener("wheel", handleWheel);
+    }
+    if (scrollIndex == 0) {
+      window.removeEventListener("wheel", handleWheel);
+      window.addEventListener("wheel", handleWheel, { passive: false });
+    }
+  }, [scrollIndex]);
+
+  // 캘린더 재진입시
+  useEffect(() => {
+    const currentScrollPos = window.scrollY;
+    const recommendationStart =
+      document.getElementById("recommand")?.getBoundingClientRect().top || 0;
+    if (currentScrollPos < recommendationStart) {
+      setScrollIndex(0);
+    }
+  }, [window.scrollY]);
+
   return (
     <>
+      <BackGround></BackGround>
       {/* 메인 페이지 부 */}
-      {!useDemoVisible && (
-        <>
-          <Container>
-            <TextDiv>
-              <Title>
-                <div>
-                  정리되지않은
-                  <div>
-                    <Span>음성 및 텍스트</Span>를
-                  </div>
-                </div>
-                <div>간단한 일정으로 정리</div>
-                {/* 혁신적인 일정관리를 경험해보세요 */}
-              </Title>
-              <EngBox>
-                <EngDeco></EngDeco>
-                <Content>Innovatory Experience schedule management</Content>
-              </EngBox>
-              <Btns>
-                <div onClick={handleDemo}>
-                  <UseDemo />
-                </div>
-                <GoogleLogin />
-              </Btns>
-            </TextDiv>
-            <LogoImg src={plogo} alt="PnJ LOGO" />
-          </Container>
-        </>
-      )}
+      <div id="top"></div>
+
       {/* 캘린더 부 */}
-      {useDemoVisible && (
-        <>
-          <DemoCalendar />
-        </>
-      )}
+      <div id="calendar">
+        <Calendar />
+      </div>
+
+      {/* 추천 부 */}
+      <div id="recommand">
+        <Recommend />
+      </div>
     </>
   );
 }
 
-const Container = styled.div`
+/** CSS */
+const BackGround = styled.div`
   display: flex;
-  justify-content: space-between;
+  position: fixed;
   height: 100vh;
+  width: 100vw;
+  top: 0;
   background-color: white;
-  /* background-image: linear-gradient(to bottom, #22313f, #f4f4f4); */
-  /* background-image: linear-gradient(to bottom, #22313f 70%, #f4f4f4); */
-  /* background-image: linear-gradient(to bottom, #22313f 70%, #f4f4f4); */
-  /* background-image: linear-gradient(176deg, #aacfb3 70%, #f4f4f4 70%); */
   background-image: linear-gradient(
     176deg,
     #36513d 80%,
-    #f4f4f4 calc(80% + 2px)
+    #dddddd calc(80% + 2px)
   );
-`;
-const TextDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  margin: auto;
-  padding-left: 60px;
-  min-width: 450px;
-  /* text-shadow: 1px 1px 1px white; */
-  color: white;
-`;
-const Title = styled.div`
-  font-family: TheJamsil5;
-  font-size: 40px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  div {
-    margin-bottom: 10px;
-  }
-`;
-const EngBox = styled.div`
-  display: flex;
-`;
-const EngDeco = styled.div`
-  border-left: 5px solid #b5ff3f;
-  margin-right: 8px;
-`;
-const Span = styled.span`
-  font-size: 60px;
-  color: #b5ff3f;
-  /* text-shadow: 2px 2px 2px #000000, -1px -1px 1px #ffffff; */
-`;
-const Content = styled.div`
-  color: #fbfbfb;
-  font-family: TheJamsil5;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-`;
-const Btns = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 295px;
-  gap: 10px;
-  border-radius: 4px;
-  div {
-    font-family: TheJamsil5;
-  }
-`;
-const LogoImg = styled.img`
-  padding-right: 40px;
-  height: 80%;
-  margin: auto;
-  animation: moveUpDown 2s ease-in-out infinite alternate;
-  @keyframes moveUpDown {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(-10px);
-    }
-  }
+  z-index: -1;
 `;
