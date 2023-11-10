@@ -51,7 +51,7 @@ def calcultation_similarity(summary_list):
 
 
 def calcultation_similarity_classification(summary_list):
-    result = {"travel": [], "show": [], "sport": []}
+    result = {"all": [],"travel": [], "show": [], "sport": []}
 
     origin_data, selected_data = data_preprocessing()
 
@@ -78,10 +78,13 @@ def calcultation_similarity_classification(summary_list):
     for idx, similarity in top_similarities:
         category = selected_data.loc[idx, "category"]
         if category == "여행":
+            result.setdefault("all", []).append(origin_data.loc[idx, travel_keys].to_dict())
             result.setdefault("travel", []).append(origin_data.loc[idx, travel_keys].to_dict())
         elif category == "공연, 뮤지컬, 콘서트":
+            result.setdefault("all", []).append(origin_data.loc[idx, show_keys].to_dict())
             result.setdefault("show", []).append(origin_data.loc[idx, show_keys].to_dict())
         elif category == "스포츠":
+            result.setdefault("all", []).append(origin_data.loc[idx, sport_keys].to_dict())
             result.setdefault("sport", []).append(origin_data.loc[idx, sport_keys].to_dict())
 
     json_result = json.dumps(result, ensure_ascii=False, indent=4)
