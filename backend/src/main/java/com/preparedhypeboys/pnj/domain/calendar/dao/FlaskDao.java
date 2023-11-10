@@ -4,15 +4,18 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
 import java.lang.reflect.Type;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -29,15 +32,15 @@ public class FlaskDao {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        Map<String, Object> params = new HashMap<>();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        params.put("input", input);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(params);
+        params.put("input", Collections.singletonList(input));
 
-        log.debug("******여기로 보냅니다 : " + FLASK_HOST );
-        log.debug(input);
-        log.debug(requestEntity);
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
+
         ResponseEntity<String> response = restTemplate.postForEntity(
             FLASK_HOST + "/trans/date", requestEntity, String.class
         );
