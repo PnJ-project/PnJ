@@ -13,6 +13,7 @@ PREFIX = "/trans"
 
 @app.route(PREFIX + '/date', methods=['POST'])
 def trans_date():
+    print(request)
     text = request.form['input']
     date = transform_date(text)
     return jsonify(date)
