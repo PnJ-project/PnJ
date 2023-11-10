@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from include.model.transform_date import transform_date
+from include.model.recommend import data_preprocessing, calcultation_similarity
 
 
 app = Flask(__name__)
@@ -13,24 +14,24 @@ PREFIX = "/trans"
 
 @app.route(PREFIX + '/date', methods=['POST'])
 def trans_date():
-    print(request)
     text = request.form['input']
     date = transform_date(text)
     return jsonify(date)
 
 
-@app.route(PREFIX + '/recom', methods=['GET'])
+@app.route(PREFIX + '/recom', methods=['POST'])
 def get_recommend():
-    result = ''
+    summary_list = []
+    summary_list.append(request.form['input'])
+    result = calcultation_similarity(summary_list)
     return result
 
 
-
-@app.route(PREFIX + '/')
+@app.route(PREFIX +'/')
 def hello_world():  # put application's code here
     print('Hello Console!')
     return 'Hello World!'
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', debug=True, port=5000)
