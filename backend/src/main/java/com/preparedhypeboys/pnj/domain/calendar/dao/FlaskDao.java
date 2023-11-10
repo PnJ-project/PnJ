@@ -10,6 +10,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -31,10 +32,14 @@ public class FlaskDao {
         Map<String, Object> params = new HashMap<>();
 
         params.put("input", input);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(params);
+
         log.debug("******여기로 보냅니다 : " + FLASK_HOST );
         log.debug(input);
+        log.debug(requestEntity);
         ResponseEntity<String> response = restTemplate.postForEntity(
-            FLASK_HOST + "/trans/date", params, String.class
+            FLASK_HOST + "/trans/date", requestEntity, String.class
         );
 
         Type type = new TypeToken<List<EventDto>>() {
