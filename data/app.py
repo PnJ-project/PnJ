@@ -27,6 +27,7 @@ def get_recommend():
     return result
 
 
+
 @app.route('/')
 def hello_world():  # put application's code here
     print('Hello Console!')
