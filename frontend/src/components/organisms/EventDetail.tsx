@@ -1,5 +1,4 @@
 // EventForm.tsx
-
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,21 +9,13 @@ import { closeSideModal } from "../../store/slice/calendar/ModalSlice";
 import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
-import { QueryObserverResult, RefetchOptions } from "react-query";
-// import { Event as BigCalendarEvent } from "react-big-calendar";
 
 // 모달 타입
 interface ModalProps {
   id: number | string | unknown;
-  refetchCal: <TPageData>(
-    options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<TPageData, unknown>>;
 }
-// 백엔드
-// const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
-const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
-const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
+const EventForm: React.FC<ModalProps> = ({ id }) => {
   // 기본 세팅
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.calendar.events);
@@ -45,6 +36,7 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
       handleUpdateEvent();
     }
   };
+  const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
   // 이벤트 수정
   const handleUpdateEvent = async () => {
@@ -109,23 +101,7 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
     // 일정삭제 (개발자용)
     if (typeof id == "number") {
       dispatch(deleteEvent(id));
-    }
-    // 캘린더 삭제 API 요청
-    try {
-      const res = await axios.delete(
-        `${local_back_url}/api/calendar/${memberId}/${id}`
-      );
-      // 투두 다시 불러오기
-      console.log(
-        "캘린더 삭제 완료",
-        `${local_back_url}/api/calendar/${memberId}/${id}`,
-        res
-      );
-      await refetchCal();
       dispatch(closeSideModal());
-    } catch (error) {
-      setErrorMsg("일정 삭제에 실패했습니다. 다시 시도해주세요");
-      console.error("캘린더 삭제 에러:", error);
     }
   };
 
@@ -426,3 +402,7 @@ const InputModalContainer = styled.div`
     }
   }
 `;
+function refetchCal() {
+  throw new Error("Function not implemented.");
+}
+

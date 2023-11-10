@@ -1,12 +1,7 @@
 // 데모 - 메인 기능 캘린더 컴포넌트
 import axios from "axios";
-import moment from "moment";
 import { useState } from "react";
-import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchStt } from "../../api/SttApi";
-import { readCalendar } from "../../api/CalendarApi";
-import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
 import GoogleLogin from "../atoms/GoogleLogin";
@@ -14,7 +9,7 @@ import TodoList from "../molecules/TodoList";
 import DemoMadal from "../molecules/FlaskMadal";
 import SmallCal from "../../pages/test/SmallCal";
 import BigCalendar from "../../pages/test/BigCalendar";
-import Mike from "/image/mike.svg";
+import { IoMicCircle } from "react-icons/io5";
 import Paste from "/image/paste.svg";
 import {
   openDemoModal,
@@ -24,6 +19,8 @@ import { RootState } from "../../store/store";
 import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
 import { addTodoRedux } from "../../store/slice/calendar/TodoSlice";
 import "./DemoCalendar.css";
+//stt
+import { useSpeechRecognition } from "react-speech-kit";
 
 // 타입 선언
 export interface FlaskResType {
@@ -45,32 +42,16 @@ export interface TodoItem {
 export default function DemoCalendar() {
   // 기본 세팅
   const dispatch = useDispatch();
+  // const { textsave, listening, toggleListening } = SpeechToText();
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
   const [afterFlask, setAfterFlask] = useState<FlaskResType[]>([]); // 인풋박스 값
   const [freetime, setFreeTime] = useState(3); // 무료이용 가능횟수
   const isDemoOpen = useSelector(selectIsDemoModalOpen);
   const events = useSelector((state: RootState) => state.calendar.events);
   const todoList = useSelector((state: RootState) => state.todo.todos); // 리스트 상태 가져오기
-  const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
-  const [timeMin] = useState(
-    moment().endOf("month").endOf("week").toDate().toISOString()
-  );
   const flask = import.meta.env.VITE_APP_FLASK_SERVER;
   // 쿼리 세팅
-  const { error: sttError, refetch: refetchStt } = useQuery(
-    "sttData",
-    fetchStt,
-    { enabled: false, retry: false }
-  ); // stt API
-  const { refetch: refetchCal } = useQuery(
-    "calendarData",
-    () => readCalendar(timeMax, timeMin),
-    { enabled: false, retry: false }
-  ); // calendar API
-  const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
-    enabled: false,
-    retry: false,
-  }); // todo API
+  const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
 
   // 붙여넣기
   const handlePaste = () => {
@@ -82,18 +63,6 @@ export default function DemoCalendar() {
   // 인풋필드 변경시 저장
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextSave(event.target.value);
-  };
-
-  // 음성녹음
-  const handleRecord = async () => {
-    // API 요청
-    await refetchStt();
-    if (sttError) {
-      return;
-    }
-    // 투두 + 캘린더 리패치
-    await refetchCal();
-    await refetchTodo();
   };
 
   // 제출하기
@@ -127,7 +96,7 @@ export default function DemoCalendar() {
         if (dataItem.end.dateTime == null) {
           // 1. 투두
           const newTodo: TodoItem = {
-            id: todoList.length + index,
+            id: todoList.length + index + 1,
             summary: dataItem.summary,
           };
           // 투두생성 (개발자용)
@@ -145,9 +114,6 @@ export default function DemoCalendar() {
           dispatch(addEvent(newEvent));
         }
       }
-      // 데이터 리패치
-      await refetchTodo();
-      await refetchCal();
       return response;
     } catch (error) {
       console.error("Error flask data:", error);
@@ -165,8 +131,21 @@ export default function DemoCalendar() {
     }
   };
 
-  const handleDrop = () => {
-    console.log('음음')
+  // stt
+  const { listen, stop } = useSpeechRecognition({
+    onResult: (result: string) => {
+      // 이전 텍스트와 음성 인식으로 받은 텍스트를 합친다.
+      setTextSave((prevText) => prevText + " " + result);
+    },
+  });
+  // 음성녹음
+  const toggleListening = () => {
+    if (isListening) {
+      stop(); // 음성 인식 비활성화
+    } else {
+      listen({ interimResults: false }); // 음성 인식 활성화
+    }
+    setIsListening(!isListening); // 상태를 반전시킴
   };
 
   return (
@@ -183,7 +162,11 @@ export default function DemoCalendar() {
               placeholder="일정을 입력해보세요"
               value={textSave}
             />
-            <img src={Mike} className="mikeImg" onClick={handleRecord} />
+            <IoMicCircle
+              style={{ verticalAlign: "middle", fontSize: "30px" }}
+              onClick={toggleListening}
+              className={isListening ? "icon-listening" : ""}
+            />
             <img src={Paste} className="pasteImg" onClick={handlePaste} />
             <button className="submitBtn" onClick={handleSubmit}>
               등록
@@ -206,7 +189,7 @@ export default function DemoCalendar() {
             <div className="SmallCalendar">
               <SmallCal />
             </div>
-            <div className="Todo-Container"onDrop={handleDrop} draggable="true">
+            <div className="Todo-Container" draggable="true">
               <TodoList />
             </div>
           </div>

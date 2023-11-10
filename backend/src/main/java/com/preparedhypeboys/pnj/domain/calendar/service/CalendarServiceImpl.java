@@ -17,11 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CalendarServiceImpl implements
     CalendarService {
 
@@ -141,7 +143,10 @@ public class CalendarServiceImpl implements
         List<Todo> todoList = new ArrayList<>();
 
         for (EventDto e : eventDtos) {
-
+            log.debug("---------일정 등록 로직 중---------");
+            log.debug(e.getSummary());
+            log.debug(e.getStart().getDateTime());
+            log.debug(e.getStart().getTimeZone());
             if (e.getStart().getDateTime() == null) {
                 inTodo = true;
 

@@ -1,4 +1,5 @@
-
+from .hanspell import check
+from konlpy.tag import Okt
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 import re
@@ -76,7 +77,6 @@ def date_combined(data_list):
         for key, value in result.items():
             if isinstance(value, list):
                 result[key] = ' '.join(value)
-
 
 
 
@@ -200,6 +200,16 @@ def is_koreandate(sentence):
         return 0
 
 
+def is_korean_year_month_day(num_list):
+    year_month_day = ['년', '월', '일']
+
+    for x in year_month_day:
+        if x in num_list:
+            return 1
+    else:
+        return 0
+
+
 def remove_korean_date_words(input_string):
     specific_words = [
         '다다음 주', '다음 주', '이번 주',
@@ -242,11 +252,50 @@ def use_dateutil(sentence, dateutil_list):
         return start_time, end_time
 
 
+
+# 특수 기호인지 한글 인지 구별
+def seperate_special_korean(num_list):
+    print("num_list", num_list)
+    korean_info = ""
+    korean_list = []
+    start_end = []
+    # 년 / 월 / 일 이 포함되어 있는지?
+    for number in num_list:
+        if is_korean_year_month_day(number):
+            print("???")
+            if '년' in number:
+                korean_info += number
+            elif '월' in number:
+                korean_info += " " + number
+            elif '일' in number:
+                korean_info += " " + number
+                korean_list.append(korean_info)
+                korean_info = ""
+        else:
+            temp_word = number
+            if '/' in number:
+                temp_word = convert_date_format(number, 1)
+            elif '-' in number:
+                temp_word = convert_date_format(number, 2)
+            elif '.' in number:
+                temp_word = convert_date_format(number, 3)
+
+            checked = check_date_time_format(temp_word)
+            new_datetime = change_datetime(checked)
+            start_end.append(str(new_datetime))
+
+    print("start_end", start_end)
+    return start_end
+
+
+
+
 def not_dateutil(sentence, pos_result):
     # 연속된 일정이라면?
     if is_serial(sentence.checked):
         start_end = []
         number_list = []
+        korean_info = ""
         for word in pos_result:
             if word[1] == 'Number':
                 number_list.append(word[0])
@@ -258,6 +307,20 @@ def not_dateutil(sentence, pos_result):
                 temp_word = convert_date_format(number, 2)
             elif '.' in number:
                 temp_word = convert_date_format(number, 3)
+            elif '년' in number:
+                korean_info += number
+            elif '월' in number:
+                korean_info += " " + number
+            elif '일' in number:
+                korean_info += " " + number
+
+            if korean_info:
+                # convert_ko_month(korean_info)
+                ko_checked = check_date_time_format(korean_info)
+                new_datetime = change_datetime(ko_checked)
+                start_time = new_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+                end_time = (new_datetime + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%S")
+                return start_time, end_time
 
             checked = check_date_time_format(temp_word)
             new_datetime = change_datetime(checked)
@@ -313,3 +376,81 @@ def not_dateutil(sentence, pos_result):
             start_time = None
             end_time = None
             return start_time, end_time
+
+
+
+
+def transform_date(text):
+    result = []
+    lines = text.split('\n')
+    sentences = []
+    for line in lines:
+        line = line.strip()  # 양 끝의 공백을 제거합니다.
+        if not line:  # 공백인 경우 넘어갑니다.
+            continue
+        hanspell_sent = check(line)
+        sentences.append(hanspell_sent)
+    for sentence in sentences:
+        noun = ""
+        date = ""
+        time = ""
+        okt = Okt()
+        pos_result = okt.pos(sentence.checked)
+        for word in pos_result:
+            if word[1] == 'Number' and ('시' in word[0] or '분' in word[0] or '초' in word[0]):
+                time += word[0]
+            elif word[1] == 'Number' or word[1] == 'Punctuation' or word[0] == '부터':
+                date += word[0]
+            elif (word[1] == 'Noun' or word[1] == 'Alpha'):
+                noun += word[0] + ' '
+
+        # dateutil라이브러리 사용할 수 있는 형태인지 확인
+        dateutil_list = check_dateutil(sentence.checked)
+        # dateutil 사용할 수 있으면
+        if dateutil_list:
+            start_time, end_time = use_dateutil(sentence, dateutil_list)
+            result.append({
+                "start": {
+                    "dateTime": start_time,
+                    "timeZone": "Asia/Seoul"
+                },
+                "end": {
+                    "dateTime": end_time,
+                    "timeZone": "Asia/Seoul"
+                },
+                "summary": noun
+            })
+        # dateutil 형식 외
+        else:
+            # 한글 날짜 데이터가 있는지 확인
+            if is_koreandate(sentence.checked):
+                noun = remove_korean_date_words(noun)
+                start_time, end_time = trans_korean(sentence.checked)
+                result.append({
+                    "start": {
+                        "dateTime": start_time,
+                        "timeZone": "Asia/Seoul"
+                    },
+                    "end": {
+                        "dateTime": end_time,
+                        "timeZone": "Asia/Seoul"
+                    },
+                    "summary": noun
+                })
+
+            # 한글 날짜 데이터가 없다면
+            else:
+                start_time, end_time = not_dateutil(sentence, pos_result)
+                result.append({
+                    "start": {
+                        "dateTime": start_time,
+                        "timeZone": "Asia/Seoul"
+                    },
+                    "end": {
+                        "dateTime": end_time,
+                        "timeZone": "Asia/Seoul"
+                    },
+                    "summary": noun
+                })
+
+    return result

@@ -1,14 +1,13 @@
-import { useQuery } from "react-query";
 import { useState, useCallback, useEffect } from "react";
 import { Event as BigCalendarEvent, stringOrDate } from "react-big-calendar";
-import { Event as DragEvent } from '../../store/slice/calendar/CalendarSlice'
+import { Event as DragEvent } from "../../store/slice/calendar/CalendarSlice";
 import { Calendar, View, momentLocalizer } from "react-big-calendar";
 import { useSelector, useDispatch } from "react-redux";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 // 언어, 시간대 설정
 import moment from "moment";
-import 'moment/locale/ko'; 
+import "moment/locale/ko";
 
 import {
   openModal,
@@ -19,7 +18,6 @@ import {
 import {
   selectEvents,
   updateEvent,
-  setEvents,
   addEvent,
 } from "../../store/slice/calendar/CalendarSlice";
 import { change, handleDate } from "../../store/slice/calendar/HandleSlice";
@@ -28,16 +26,17 @@ import DetailModal from "../../components/organisms/EventDetail";
 import withDragAndDrop, {
   EventInteractionArgs,
 } from "react-big-calendar/lib/addons/dragAndDrop";
-import { readCalendar } from "../../api/CalendarApi";
 import styled from "styled-components";
-
-import axios from "axios";
 import Toolbar from "../../components/molecules/Toolbar";
 
 // Drag and Drop
 // import { useDrop } from 'react-dnd';
 
-import { removeTodoRedux, selectDraggedTodo, setDraggedTodo } from "../../store/slice/calendar/TodoSlice";
+import {
+  removeTodoRedux,
+  selectDraggedTodo,
+  setDraggedTodo,
+} from "../../store/slice/calendar/TodoSlice";
 // 이벤트 캘린더 폼
 interface FormatEvent {
   id: number;
@@ -47,15 +46,6 @@ interface FormatEvent {
   end: Date;
   memo?: string;
 }
-interface CalendarRes {
-  id: number;
-  start: { dateTime: string };
-  end: { dateTime: string };
-  summary: string;
-  memo: string;
-}
-// 백엔드
-const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 const BigCalendarInfo = () => {
   // 기본 세팅
@@ -63,18 +53,7 @@ const BigCalendarInfo = () => {
   const isOpen = useSelector(selectIsModalOpen);
   const isSideOpen = useSelector(selectIsSideModalOpen);
   const date: string = useSelector(handleDate);
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
-  const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
-  const [timeMin] = useState(
-    moment().endOf("month").endOf("week").toDate().toISOString()
-  );
   const [detailEvent, setDetailEvent] = useState<number | string | unknown>("");
-  // 쿼리세팅
-  const { data: calData, refetch: refetchCal } = useQuery(
-    "calendarData",
-    () => readCalendar(timeMax, timeMin),
-    { retry: false }
-  ); // calendar API
 
   // 캘린더를 DragAndDrop으로 바꿉니다.
   moment.locale("ko");
@@ -106,39 +85,6 @@ const BigCalendarInfo = () => {
           resource: { event: restEvent },
         })
       );
-      // 캘린더 수정 API 요청
-      if ("id" in event) {
-        const new_start = new Date(start);
-        const new_end = new Date(end);
-        const send_id = event.id;
-        const reqUpdateEvent = {
-          memberId: memberId,
-          event: {
-            id: send_id,
-            summary: event.title,
-            colorId: null,
-            start: {
-              dateTime: new_start.toISOString(),
-              timeZone: "Asia/Seoul",
-              date: null,
-            },
-            end: {
-              dateTime: new_end.toISOString(),
-              timeZone: "Asia/Seoul",
-              date: null,
-            },
-          },
-        };
-        try {
-          await axios.put(`${local_back_url}/api/calendar`, reqUpdateEvent);
-          // 캘린더 다시 불러오기
-          console.log("구글 캘린더 수정 완료");
-          await refetchCal();
-        } catch (error) {
-          console.error("구글 캘린더 수정 에러:", error);
-          return;
-        }
-      }
     },
     [dispatch]
   );
@@ -171,39 +117,6 @@ const BigCalendarInfo = () => {
           resource: { event: restEvent },
         })
       );
-      // 캘린더 수정 API 요청
-      if ("id" in event) {
-        const new_start = new Date(start);
-        const new_end = new Date(end);
-        const send_id = event.id;
-        const reqUpdateEvent = {
-          memberId: memberId,
-          event: {
-            id: send_id,
-            summary: event.title,
-            colorId: null,
-            start: {
-              dateTime: new_start.toISOString(),
-              timeZone: "Asia/Seoul",
-              date: null,
-            },
-            end: {
-              dateTime: new_end.toISOString(),
-              timeZone: "Asia/Seoul",
-              date: null,
-            },
-          },
-        };
-        try {
-          await axios.put(`${local_back_url}/api/calendar`, reqUpdateEvent);
-          // 캘린더 다시 불러오기
-          console.log("구글 캘린더 수정 완료");
-          await refetchCal();
-        } catch (error) {
-          console.error("구글 캘린더 수정 에러:", error);
-          return;
-        }
-      }
     },
     [dispatch]
   );
@@ -232,22 +145,6 @@ const BigCalendarInfo = () => {
     setCurrentView(newView);
   };
 
-  // 캘린더 데이터 리덕스에 업데이트 (준하 작업)
-  useEffect(() => {
-    if (calData && calData.message == "이벤트 리스트 조회 완료") {
-      // 리덕스에 업데이트
-      console.log("캘린더 데이터가 갱신됩니다", calData.data);
-      const formattedData = calData.data.map((item: CalendarRes) => ({
-        id: item.id,
-        start: item.start.dateTime,
-        end: item.end.dateTime,
-        title: item.summary,
-        memo: item.memo || "",
-      }));
-      dispatch(setEvents(formattedData));
-    }
-  }, [calData]);
-
   // 리덕스 데이터 -> useState 데이터 받아오기 (준하 작업)
   useEffect(() => {
     if (myEvents) {
@@ -275,13 +172,13 @@ const BigCalendarInfo = () => {
       const { id, summary } = draggedTodo;
 
       // 새로운 이벤트 객체 생성 (여기에서는 월별 달력이므로 allDay는 무조건 true로 설정)
-      const newEvent:DragEvent = {
+      const newEvent: DragEvent = {
         id: id,
         title: summary,
         allDay: true,
         start: start.toString(),
         end: end.toString(),
-        memo: ''
+        memo: "",
       };
 
       // 캘린더 상태 업데이트를 위해 액션 디스패치
@@ -289,35 +186,16 @@ const BigCalendarInfo = () => {
 
       // 드래그한 항목을 Redux store에서 제거
       dispatch(setDraggedTodo(null));
-      console.log('BigCalendar의 id',id)
+      console.log("BigCalendar의 id", id);
       dispatch(removeTodoRedux(id));
-       // 삭제 API요청
-      try {
-        const res = await axios.delete(
-          `${local_back_url}/api/todo/${memberId}/${id}`
-        );
-        // 투두 다시 불러오기
-        console.log(
-          "삭제 완료",
-          `${local_back_url}/api/todo/${memberId}/${id}`,
-          res
-        );
-      } catch (error) {
-        console.error("투두 삭제 에러:", error);
-      }
-
     },
     [draggedTodo, dispatch]
   );
 
   // Drag
   const handleDragOver = (event: React.DragEvent) => {
-    console.log('되나????????????????')
     event.preventDefault();
   };
-
-
-  // todo에서 캘린더로 옮기기
 
   return (
     <Container>
@@ -353,15 +231,13 @@ const BigCalendarInfo = () => {
           // Calendar -> Todo DRAG 캘린더에서 밖으로
           onDragOver={handleDragOver}
           // Toolbar 커스터마이징
-          components={{ 
-            toolbar: Toolbar 
+          components={{
+            toolbar: Toolbar,
           }}
         />
       </div>
-      {isOpen && selectedRange && (
-        <Modal selectedRange={selectedRange} refetchCal={refetchCal} />
-      )}
-      {isSideOpen && <DetailModal id={detailEvent} refetchCal={refetchCal} />}
+      {isOpen && selectedRange && <Modal selectedRange={selectedRange} />}
+      {isSideOpen && <DetailModal id={detailEvent} />}
     </Container>
   );
 };
@@ -374,7 +250,12 @@ const Container = styled.div`
   height: 100%;
   /* 일정 항목 */
   .rbc-event-content {
-    font-size: 12px;
+    margin: auto;
+    width: 95%;
+    font-size: 10px;
+    font-family: SUITE-Regular;
+    text-shadow: 1px 1px 2px rgba(73, 73, 73, 0.6),
+      -1px -1px 1px rgba(73, 73, 73, 0.2) !important;
   }
   // 일(일주일) 전체
   .rbc-date-cell {
@@ -389,7 +270,7 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     .rbc-month-view {
-      height: 90%;
+      height: 100%;
       flex: unset;
     }
     .rbc-toolbar {
@@ -434,7 +315,6 @@ const Container = styled.div`
       }
     }
   }
-
 
   .rbc-addons-dnd {
     .rbc-addons-dnd-row-body {
@@ -512,9 +392,13 @@ const Container = styled.div`
     }
 
     .rbc-addons-dnd-resize-ew-anchor {
-      position: absolute;
-      top: 4px;
+      /* position: absolute; */
+      top: 0px;
       bottom: 0;
+      margin: auto;
+      height: 80%;
+      width: 4px;
+      /* background-color: black; */
       &:first-child {
         left: 0;
       }
