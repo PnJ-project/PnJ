@@ -1,6 +1,6 @@
 import json
 from konlpy.tag import Okt
-from include.dataloader.dataloader import load_data
+from include.dataloader.dataloader import data_preprocessing
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from sklearn.metrics.pairwise import cosine_similarity #유사도 산출
@@ -11,12 +11,6 @@ def get_morphemes(text):
     morphemes = okt.morphs(text)
     return morphemes
 
-def data_preprocessing():
-    data_load = load_data('place_01.csv')
-
-    selected_data = data_load[['title', 'info', 'category', 'category_name']]
-
-    return data_load, selected_data
 
 def calcultation_similarity(summary_list):
     result = []
@@ -39,15 +33,19 @@ def calcultation_similarity(summary_list):
     similarities_with_target = list(enumerate(cosine_similarities[0]))
     top_similarities = sorted(similarities_with_target, key=lambda x: x[1], reverse=True)[:20]
 
+    travel_keys = ['category', 'title', 'info', 'road_address', 'jibun_address', 'category_name', 'homepage', 'image']
+    show_keys = ['title','opendate','finaldate','info','image','category_name','category']
+    sport_keys = ['categoryName','gameDate','gameDateTime','homeTeamName','homeTeamScore','awayTeamName','awayTeamScore','winner','statusCode','statusInfo','cancel','suspended','reversedHomeAway','homeTeamEmblemUrl','awayTeamEmblemUrl','title','info','category','category_name']
+
     for idx, similarity in top_similarities:
-        # print("index",idx)
-        result.append(origin_data.iloc[idx].tolist())
-        print(f"유사도: {similarity}, 데이터: {selected_data.iloc[idx]}")
+        if selected_data.loc[idx, "category"] == "여행":
+            result.append(origin_data.loc[idx, travel_keys].to_dict())
+        elif selected_data.loc[idx, "category"] == "공연, 뮤지컬, 콘서트":
+            result.append(origin_data.loc[idx, show_keys].to_dict())
+        elif selected_data.loc[idx, "category"] == "스포츠":
+            result.append(origin_data.loc[idx, sport_keys].to_dict())
 
-    keys = ["category", "title", "info", "road_address", "jibun_address", "category_name", "homepage", "image"]
-    json_data = [dict(zip(keys, item)) for item in result]
-
-    json_result = json.dumps(json_data, ensure_ascii=False, indent=4)
+    json_result = json.dumps(result, ensure_ascii=False, indent=4)
 
     return json_result
 
