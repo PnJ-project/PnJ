@@ -1,4 +1,4 @@
-// EventForm.tsx
+// EventForm.tsx 일정 추가하는 모달
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
@@ -28,9 +28,10 @@ const EventForm: React.FC<ModalProps> = ({
   const [title, setTitle] = useState("");
   const [memo, setMemo] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [sTime, setSTime] = useState("00:00");
-  const [eTime, setETime] = useState("00:00");
+  const [sTime, setSTime] = useState('00:00');
+  const [eTime, setETime] = useState('00:00');
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
+  const [allDay, setAllDay] = useState(false);
 
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -114,12 +115,31 @@ const EventForm: React.FC<ModalProps> = ({
           ✖
         </CloseBtn>
         <Title>일정 추가하기</Title>
+        <div>
+          <input
+            type="checkbox"
+            checked={allDay}
+            onChange={(e) => setAllDay(e.target.checked)}
+          />
+          <label htmlFor="allDay">하루 종일</label>
+        </div>
         <div>시간</div>
-        <SelectDate>
+        {allDay? (<SelectDate>
+          <input
+            type="time"
+            value={"00:00"}
+            disabled
+          />
+          <input
+            type="time"
+            value={"00:00"}
+            disabled
+          />
+        </SelectDate>):(<SelectDate>
           <input
             type="time"
             value={sTime}
-            step="6000"
+            step="600"
             onChange={(e) => {
               setSTime(e.target.value);
             }}
@@ -130,7 +150,7 @@ const EventForm: React.FC<ModalProps> = ({
             step="600"
             onChange={(e) => setETime(e.target.value)}
           />
-        </SelectDate>
+        </SelectDate>)}
         <div>일정</div>
         <input
           type="text"

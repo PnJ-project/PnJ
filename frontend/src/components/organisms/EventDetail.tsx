@@ -1,14 +1,13 @@
-// EventForm.tsx
-import React, { useState } from "react";
+// EventDetail.tsx
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateEvent,
   deleteEvent,
+  selectEvents,
 } from "../../store/slice/calendar/CalendarSlice";
 import { closeSideModal } from "../../store/slice/calendar/ModalSlice";
-import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
-import axios from "axios";
 
 // 모달 타입
 interface ModalProps {
@@ -18,17 +17,29 @@ interface ModalProps {
 const EventForm: React.FC<ModalProps> = ({ id }) => {
   // 기본 세팅
   const dispatch = useDispatch();
-  const events = useSelector((state: RootState) => state.calendar.events);
+  const events = useSelector(selectEvents);
   const event = events.find((event) => event.id === id);
-  const starttime = event?.start.toString().split("T")[1]?.substr(0, 5);
-  const endtime = event?.end.toString().split("T")[1]?.substr(0, 5);
   const [title, setTitle] = useState(event?.title);
   const [memo, setMemo] = useState(event?.memo);
   const [errorMsg, setErrorMsg] = useState("");
+  const startDate = event?.start.split("T")[0];
+  const endDate = event?.end.split("T")[0];
+  const [sDate, setSDate] = useState(startDate);
+  const [eDate, setEDate] = useState(endDate);
+  const starttime = event?.start.split("T")[1]?.substr(0, 5);
+  const endtime = event?.end.split("T")[1]?.substr(0, 5);
   const [sTime, setSTime] = useState(starttime);
   const [eTime, setETime] = useState(endtime);
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const [allDay, setAllDay] = useState(false);
+
+  // sDate와 eDate가 다르면 allDay를 체크하도록 설정
+  useEffect(() => {
+    if (sDate !== eDate) {
+      setAllDay(true);
+    }
+  }, [sDate, eDate]);
+
+
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -36,7 +47,6 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       handleUpdateEvent();
     }
   };
-  const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
   // 이벤트 수정
   const handleUpdateEvent = async () => {
@@ -48,47 +58,16 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       setErrorMsg("일정 내용을 입력하세요");
       return;
     }
-    console.log("모달 창에서 event",event);
     const updateItem = {
       id: id,
       title,
-      start: event.start.toString().split("T")[0]+'T'+sTime+':00+09:00z',
-      end: event.end.toString().split("T")[0]+'T'+eTime+':00+09:00z',
-      memo,
-      resource: { event: { id: id, memo: memo } },
+      start: sDate+'T'+sTime+':00.000',
+      end: eDate+'T'+eTime+':00.000',
+      memo:memo,
+      resource: { event: { id: id, memo} },
     };
     // 일정수정 (개발자용)
     dispatch(updateEvent(updateItem));
-    // 캘린더 업데이트 API 요청
-    const reqNewEvent = {
-      memberId: memberId,
-      event: {
-        id: id,
-        summary: title,
-        colorId: null,
-        start: {
-          dateTime: event.start.split("T")[0]+'T'+sTime+':00+09:00',
-          timeZone: "Asia/Seoul",
-          date: null,
-        },
-        end: {
-          dateTime: event.end.toString().split("T")[0]+'T'+eTime+':00+09:00',
-          timeZone: "Asia/Seoul",
-          date: null,
-        },
-      },
-    };
-    try {
-      await axios.put(`${local_back_url}/api/calendar`, reqNewEvent);
-      // 캘린더 다시 불러오기
-      console.log("구글 캘린더 수정 완료");
-      await refetchCal();
-    } catch (error) {
-      console.error("구글 캘린더 수정 에러:", error);
-      console.error("보낸 데이터:", reqNewEvent);
-      setErrorMsg("서버와 연결할 수 없습니다. 다시 시도해주세요");
-      return;
-    }
     // 원복
     dispatch(closeSideModal());
     setTitle("");
@@ -122,11 +101,23 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
           ✖
         </CloseBtn>
         <Title>일정 수정하기</Title>
+        <div>일정</div>
+        <SelectDay>
+          <input type="date" value={sDate}
+            onChange={(e) => {
+              setSDate(e.target.value);
+            }}/>
+          <input type="date" value={eDate}
+          onChange={(e) => {
+            setEDate(e.target.value);
+          }}/>
+        </SelectDay>
         <div>
           <input
             type="checkbox"
             checked={allDay}
             onChange={(e) => setAllDay(e.target.checked)}
+            disabled={sDate !== eDate}
           />
           <label htmlFor="allDay">하루 종일</label>
         </div>
@@ -134,19 +125,19 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
         {allDay? (<SelectDate>
           <input
             type="time"
-            value={"00:00"}
+            value={sTime}
             disabled
           />
           <input
             type="time"
-            value={"00:00"}
+            value={eTime}
             disabled
           />
         </SelectDate>):(<SelectDate>
           <input
             type="time"
             value={sTime}
-            step="600"
+            step="6000"
             onChange={(e) => {
               setSTime(e.target.value);
             }}
@@ -154,7 +145,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
           <input
             type="time"
             value={eTime}
-            step="600"
+            step="6000"
             onChange={(e) => setETime(e.target.value)}
           />
         </SelectDate>)}
@@ -210,6 +201,18 @@ const ErrorMsg = styled.div`
   font-size: 12px;
   margin: 10px;
   color: #a73131;
+`;
+const SelectDay = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  input {
+    width: 30% !important;
+    height: 20px !important;
+    margin: unset !important;
+    margin-bottom: 20px !important;
+  }
 `;
 const SelectDate = styled.div`
   display: flex;
@@ -402,7 +405,5 @@ const InputModalContainer = styled.div`
     }
   }
 `;
-function refetchCal() {
-  throw new Error("Function not implemented.");
-}
+
 

@@ -1,4 +1,4 @@
-// EventForm.tsx
+// ApiEventDetail.tsx api수정 모달 창
 
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,12 +29,15 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.calendar.events);
   const event = events.find((event) => event.id === id);
+  const starttime = event?.start.toString().split("T")[1]?.substr(0, 5);
+  const endtime = event?.end.toString().split("T")[1]?.substr(0, 5);
   const [title, setTitle] = useState(event?.title);
   const [memo, setMemo] = useState(event?.memo);
   const [errorMsg, setErrorMsg] = useState("");
-  const [sTime, setSTime] = useState("00:00");
-  const [eTime, setETime] = useState("00:00");
+  const [sTime, setSTime] = useState(starttime);
+  const [eTime, setETime] = useState(endtime);
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
+  const [allDay, setAllDay] = useState(false);
 
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -77,12 +80,12 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
         summary: title,
         colorId: null,
         start: {
-          dateTime: event.start.toString(),
+          dateTime: event.start.split("T")[0]+'T'+sTime+':00+09:00',
           timeZone: "Asia/Seoul",
           date: null,
         },
         end: {
-          dateTime: event.end.toString(),
+          dateTime: event.end.toString().split("T")[0]+'T'+eTime+':00+09:00',
           timeZone: "Asia/Seoul",
           date: null,
         },
@@ -144,12 +147,31 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
           ✖
         </CloseBtn>
         <Title>일정 수정하기</Title>
+        <div>
+          <input
+            type="checkbox"
+            checked={allDay}
+            onChange={(e) => setAllDay(e.target.checked)}
+          />
+          <label htmlFor="allDay">하루 종일</label>
+        </div>
         <div>시간</div>
-        <SelectDate>
+        {allDay? (<SelectDate>
+          <input
+            type="time"
+            value={"00:00"}
+            disabled
+          />
+          <input
+            type="time"
+            value={"00:00"}
+            disabled
+          />
+        </SelectDate>):(<SelectDate>
           <input
             type="time"
             value={sTime}
-            step="6000"
+            step="600"
             onChange={(e) => {
               setSTime(e.target.value);
             }}
@@ -160,7 +182,7 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
             step="600"
             onChange={(e) => setETime(e.target.value)}
           />
-        </SelectDate>
+        </SelectDate>)}
         <div>일정</div>
         <input
           type="text"

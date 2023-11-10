@@ -1,26 +1,43 @@
-// EventForm.tsx
-import React, { useState } from "react";
+// EventForm.tsx 생성
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
 import { closeModal } from "../../store/slice/calendar/ModalSlice";
 import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
+import { setSelectDate } from "../../store/slice/calendar/HandleSlice";
 
 // 모달 타입
-interface ModalProps {
-  selectedRange: { start: Date; end: Date };
-}
+// interface ModalProps {
+//   selectedRange: { start: Date; end: Date };
+// }
 
-const EventForm: React.FC<ModalProps> = ({ selectedRange }: ModalProps) => {
+const EventForm: React.FC = () => {
   // 기본 세팅
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.calendar.events);
+  const selectedRange = useSelector(setSelectDate);
   const [title, setTitle] = useState("");
   const [memo, setMemo] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [sTime, setSTime] = useState("00:00");
-  const [eTime, setETime] = useState("00:00");
+  const newSDate = new Date(selectedRange.rangeStart);
+  const newEDate = new Date(selectedRange.rangeEnd);
+  const starttime = newSDate.toISOString().split("T")[1]?.substr(0, 5);
+  const endtime = newEDate.toISOString().split("T")[1]?.substr(0, 5);
+  const [sTime, setSTime] = useState(starttime||"00:00");
+  const [eTime, setETime] = useState(endtime || "00:00");
+  //시작 날짜에서 하루 더하면
+  newSDate.setDate(newSDate.getDate() + 1); 
+  const [sDate, setSDate] = useState(newSDate.toISOString().split('T')[0]);
+  const [eDate, setEDate] = useState(newEDate.toISOString().split('T')[0]);
+  const [allDay, setAllDay] = useState(false);
 
+    // sDate와 eDate가 다르면 allDay를 체크하도록 설정
+    useEffect(() => {
+      if (sDate !== eDate) {
+        setAllDay(true);
+      }
+    }, [sDate, eDate]);
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -37,22 +54,41 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange }: ModalProps) => {
       return;
     }
     console.log("여기는 eventform, events", events);
-    const newEvent: Event = {
-      id: events.length,
-      title,
-      start: selectedRange.start.toISOString(),
-      end: selectedRange.end.toISOString(),
-      memo,
-    };
+
+    if (selectedRange && allDay) {
+      const newEvent: Event = {
+        id: events.length,
+        title,
+        start: sDate+'T'+"00:00"+':00.000',
+        end: eDate+'T'+'23:59'+':00.000',
+        memo: memo,
+      };
+
     // 일정생성 (개발자용)
-    console.log("여기는 eventform, newEvent", newEvent);
+    console.log("여기는 생성 form, newEvent", newEvent);
     dispatch(addEvent(newEvent));
+    }
+
+    if (selectedRange && !allDay) {
+      const newEvent: Event = {
+        id: events.length,
+        title,
+        start: sDate+'T'+sTime+':00.000',
+        end: eDate+'T'+eTime+':00.000',
+        memo: memo,
+      };
+
+    // 일정생성 (개발자용)
+    console.log("여기는 생성 form, newEvent", newEvent);
+    dispatch(addEvent(newEvent));
+    }
 
     // 원복
     dispatch(closeModal());
     setTitle("");
     setMemo("");
   };
+
 
   return (
     <Overlay
@@ -71,8 +107,39 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange }: ModalProps) => {
           ✖
         </CloseBtn>
         <Title>일정 추가하기</Title>
+        <div>일정</div>
+        <SelectDay>
+          <input type="date" value={sDate}
+            onChange={(e) => {
+              setSDate(e.target.value);
+            }}/>
+          <input type="date" value={eDate}
+          onChange={(e) => {
+            setEDate(e.target.value);
+          }}/>
+        </SelectDay>
+        <div>
+          <input
+            type="checkbox"
+            checked={allDay}
+            onChange={(e) => setAllDay(e.target.checked)}
+            disabled={sDate !== eDate}
+          />
+          <label htmlFor="allDay">하루 종일</label>
+        </div>
         <div>시간</div>
-        <SelectDate>
+        {allDay? (<SelectDate>
+          <input
+            type="time"
+            value={sTime}
+            disabled
+          />
+          <input
+            type="time"
+            value={eTime}
+            disabled
+          />
+        </SelectDate>):(<SelectDate>
           <input
             type="time"
             value={sTime}
@@ -84,10 +151,10 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange }: ModalProps) => {
           <input
             type="time"
             value={eTime}
-            step="600"
+            step="6000"
             onChange={(e) => setETime(e.target.value)}
           />
-        </SelectDate>
+        </SelectDate>)}
         <div>일정</div>
         <input
           type="text"
@@ -138,6 +205,18 @@ const ErrorMsg = styled.div`
   font-size: 12px;
   margin: 10px;
   color: #a73131;
+`;
+const SelectDay = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  input {
+    width: 30% !important;
+    height: 20px !important;
+    margin: unset !important;
+    margin-bottom: 20px !important;
+  }
 `;
 const SelectDate = styled.div`
   display: flex;

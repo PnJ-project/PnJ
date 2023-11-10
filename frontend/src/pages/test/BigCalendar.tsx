@@ -20,7 +20,7 @@ import {
   updateEvent,
   addEvent,
 } from "../../store/slice/calendar/CalendarSlice";
-import { change, handleDate } from "../../store/slice/calendar/HandleSlice";
+import { change, handleDate, selectRangeDate } from "../../store/slice/calendar/HandleSlice";
 import Modal from "../../components/organisms/EventForm";
 import DetailModal from "../../components/organisms/EventDetail";
 import withDragAndDrop, {
@@ -56,7 +56,7 @@ const BigCalendarInfo = () => {
   const [detailEvent, setDetailEvent] = useState<number | string | unknown>("");
 
   // 캘린더를 DragAndDrop으로 바꿉니다.
-  moment.locale("ko");
+  moment.locale("ko-KR");
   const localizer = momentLocalizer(moment);
   const DragAndDropCalendar = withDragAndDrop(Calendar);
   // 캘린더용 데이터 파싱
@@ -69,34 +69,35 @@ const BigCalendarInfo = () => {
   // 이벤트 이동 기능
   const moveEvent = useCallback(
     async ({ event, start, end }: EventInteractionArgs<BigCalendarEvent>) => {
-      console.log('이야아아아아아아아아 이거 이동기능',event, start, end)
       // event 객체에서 start와 end를 제외한 속성들을 추리기
       const restEvent = Object.assign({}, event, {
         start: undefined,
         end: undefined,
       });
       // 일정변경 (개발자용)
-      dispatch(
-        updateEvent({
-          title: event.title?.toString(),
-          allDay: event.allDay,
-          start: start.toString(),
-          end: end.toString(),
-          resource: { event: restEvent },
-        })
-      );
+      if (start instanceof Date && end instanceof Date) {
+        dispatch(
+          updateEvent({
+            title: event.title?.toString(),
+            allDay: event.allDay,
+            start: start.toISOString(),
+            end: end.toISOString(),
+            resource: { event: restEvent },
+          })
+        );
+      }
     },
     [dispatch]
   );
 
   // 이벤트 추가 모달 켜기
-  const [selectedRange, setSelectedRange] = useState<{
-    start: Date;
-    end: Date;
-  } | null>(null);
   const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
-    setSelectedRange({ start, end });
     dispatch(openModal());
+    const reduxselectRangeDate = {
+      rangeStart:start.toISOString(),
+      rangeEnd:end.toISOString(),
+    }
+    dispatch(selectRangeDate(reduxselectRangeDate))
   };
 
   // 이벤트 리사이즈 기능
@@ -108,15 +109,17 @@ const BigCalendarInfo = () => {
         end: undefined,
       });
       // 일정변경 (개발자용)
-      dispatch(
-        updateEvent({
-          title: event.title?.toString(),
-          allDay: event.allDay,
-          start: start.toString(),
-          end: end.toString(),
-          resource: { event: restEvent },
-        })
-      );
+      if (start instanceof Date && end instanceof Date) {
+        dispatch(
+          updateEvent({
+            title: event.title?.toString(),
+            allDay: event.allDay,
+            start: start.toISOString(),
+            end: end.toISOString(),
+            resource: { event: restEvent },
+          })
+        );
+      }
     },
     [dispatch]
   );
@@ -134,7 +137,7 @@ const BigCalendarInfo = () => {
 
   // 클릭한 날짜의 정보를 받아옴
   const handleDateChange = (date: Date) => {
-    console.log(date);
+    console.log('클릭한 날짜의 정보를 받아옴',date);
     const formDate = date.toISOString();
     dispatch(change(formDate));
   };
@@ -236,7 +239,7 @@ const BigCalendarInfo = () => {
           }}
         />
       </div>
-      {isOpen && selectedRange && <Modal selectedRange={selectedRange} />}
+      {isOpen && <Modal/>}
       {isSideOpen && <DetailModal id={detailEvent} />}
     </Container>
   );
