@@ -326,8 +326,8 @@ def not_dateutil(sentence, pos_result):
             new_datetime = change_datetime(checked)
             start_end.append(str(new_datetime))
 
-        start_time = datetime.fromisoformat(min(start_end))
-        end_time = datetime.fromisoformat(max(start_end))
+        start_time = datetime.fromisoformat(min(start_end)).strftime("%Y-%m-%dT%H:%M:%S")
+        end_time = datetime.fromisoformat(max(start_end)).strftime("%Y-%m-%dT%H:%M:%S")
         return start_time, end_time
 
 
@@ -379,7 +379,6 @@ def not_dateutil(sentence, pos_result):
 
 
 
-
 def transform_date(text):
     result = []
     lines = text.split('\n')
@@ -411,11 +410,11 @@ def transform_date(text):
             start_time, end_time = use_dateutil(sentence, dateutil_list)
             result.append({
                 "start": {
-                    "dateTime": start_time,
+                    "dateTime": start_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "timeZone": "Asia/Seoul"
                 },
                 "end": {
-                    "dateTime": end_time,
+                    "dateTime": end_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "timeZone": "Asia/Seoul"
                 },
                 "summary": noun
@@ -428,11 +427,11 @@ def transform_date(text):
                 start_time, end_time = trans_korean(sentence.checked)
                 result.append({
                     "start": {
-                        "dateTime": start_time,
+                        "dateTime": start_time.strftime("%Y-%m-%dT%H:%M:%S"),
                         "timeZone": "Asia/Seoul"
                     },
                     "end": {
-                        "dateTime": end_time,
+                        "dateTime": end_time.strftime("%Y-%m-%dT%H:%M:%S"),
                         "timeZone": "Asia/Seoul"
                     },
                     "summary": noun
