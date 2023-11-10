@@ -2,7 +2,6 @@ import {
   motion,
   AnimatePresence,
   useMotionValue,
-  useTransform
 } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import "./Team.css";
@@ -95,24 +94,20 @@ export default function team() {
                   right: window.innerWidth
                 }}
                 dragElastic={false}
-                onDrag={(event, info) => {
+                onDrag={(_, info) => {
                   setXValue(info.point.x);
                   x.set(info.offset.x);
                 }}
-                onDragEnd={(event, info) => {
-                  if (
-                    info.offset.x < 0 &&
-                    Math.abs(info.offset.x) >= window.innerWidth / 4
-                  ) {
-                    showNextSlide();
-                  } else if (
-                    info.offset.x > 0 &&
-                    info.offset.x >= window.innerWidth / 4
-                  ) {
-                    showPrevSlide();
+                onDragEnd={(_, info) => {
+                  if ('offset' in info) {
+                    if (info.offset.x < 0 && Math.abs(info.offset.x) >= window.innerWidth / 4) {
+                      showNextSlide();
+                    } else if (info.offset.x > 0 && info.offset.x >= window.innerWidth / 4) {
+                      showPrevSlide();
+                    }
+                    setXValue(info.offset.x);
+                    x.set(info.offset.x);
                   }
-                  setXValue(info.point.x);
-                  x.set(info.point.x);
                 }}
               >
               <div>
