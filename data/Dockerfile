@@ -2,11 +2,11 @@ FROM ubuntu:latest
 
 ENV LANG=C.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update && \
   apt-get install -y --no-install-recommends tzdata g++ curl libpcre3-dev
 
-# install dependency for pyaudio
-RUN apt-get install -y ffmpeg libasound-dev portaudio19-dev libportaudio2 libportaudiocpp0
+RUN apt install -y --no-install-recommends libcairo2-dev pkg-config 
 
 # install java
 RUN apt-get install -y openjdk-8-jdk
@@ -30,6 +30,7 @@ WORKDIR /www
 
 # install python package
 RUN pip install -r requirements-prod.txt
+# install server
 RUN pip install uwsgi
 
 EXPOSE 5000
