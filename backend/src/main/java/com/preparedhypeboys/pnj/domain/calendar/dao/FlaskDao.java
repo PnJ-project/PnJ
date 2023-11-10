@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class FlaskDao {
 
     @Value("${flask.host}")
@@ -29,7 +31,8 @@ public class FlaskDao {
         Map<String, Object> params = new HashMap<>();
 
         params.put("input", input);
-
+        log.debug("******여기로 보냅니다 : " + FLASK_HOST );
+        log.debug(input);
         ResponseEntity<String> response = restTemplate.postForEntity(
             FLASK_HOST + "/trans/date", params, String.class
         );
