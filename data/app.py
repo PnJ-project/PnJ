@@ -29,7 +29,6 @@ def get_recommend():
 
 @app.route(PREFIX +'/')
 def hello_world():  # put application's code here
-    print('Hello Console!')
     return 'Hello World!'
 
 
