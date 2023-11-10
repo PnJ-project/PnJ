@@ -12,7 +12,7 @@ export default function notfound() {
             존재하지 않는 주소를 입력하였거나, <br />요청하신 페이지 주소가 변경,
             삭제되어 찾을 수 없습니다.
           </Detail>
-          <GoToMain href="/">메인으로 돌아가기 -></GoToMain>
+          <GoToMain href="/">메인으로 돌아가기 {'->'}</GoToMain>
         </TextContainer>
       </Container>
     </>
