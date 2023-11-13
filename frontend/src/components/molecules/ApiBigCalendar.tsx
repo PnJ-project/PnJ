@@ -70,12 +70,19 @@ const BigCalendarInfo = () => {
   const isSideOpen = useSelector(selectIsSideModalOpen);
   const date: string = useSelector(handleDate);
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
-  const [timeMax, setTimeMax] = useState(
-    moment().startOf("month").toDate().toISOString()
-  );
-  const [timeMin, setTimeMin] = useState(
-    moment().endOf("month").endOf("week").toDate().toISOString()
-  );
+  const startOfFiveMonthsAgo = moment()
+    .subtract(6, "months")
+    .startOf("month")
+    .toDate()
+    .toISOString(); // 5개월 전
+  const endOfFiveMonthsAhead = moment()
+    .add(6, "months")
+    .endOf("month")
+    .endOf("week")
+    .toDate()
+    .toISOString(); // 5개월 후
+  const [timeMax, setTimeMax] = useState(startOfFiveMonthsAgo);
+  const [timeMin, setTimeMin] = useState(endOfFiveMonthsAhead);
   const [detailEvent, setDetailEvent] = useState<number | string | unknown>("");
   // 쿼리세팅
   const { data: calData, refetch: refetchCal } = useQuery(
