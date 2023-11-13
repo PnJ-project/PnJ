@@ -3,22 +3,18 @@ import axios from "axios";
 import moment from "moment";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { readCalendar } from "../../api/CalendarApi";
 import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
 import GoogleLogin from "../atoms/GoogleLogin";
 import TodoList from "../molecules/todo/ApiTodoList";
-import DemoMadal from "../molecules/FlaskMadal";
 import SmallCal from "../../pages/test/SmallCal";
 import BigCalendar from "../molecules/ApiBigCalendar";
 // import Mike from "/image/mike.svg";
 import Paste from "/image/paste.svg";
-import {
-  openDemoModal,
-  selectIsDemoModalOpen,
-} from "../../store/slice/calendar/ModalSlice";
+import { openDemoModal } from "../../store/slice/calendar/ModalSlice";
 import "./DemoCalendar.css";
 import { IoMicCircle } from "react-icons/io5";
 //stt
@@ -45,8 +41,6 @@ export default function DemoCalendar() {
   // 기본 세팅
   const dispatch = useDispatch();
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
-  const [afterFlask] = useState<FlaskResType[]>([]); // 인풋박스 값
-  const isDemoOpen = useSelector(selectIsDemoModalOpen);
   const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
   const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
   const [timeMin] = useState(
@@ -74,14 +68,13 @@ export default function DemoCalendar() {
     setTextSave(event.target.value);
   };
 
-  // 제출하기
+  // 플라스크로 제출하기
   const handleSubmit = async () => {
     // 빈값일시 반환
     if (textSave.trim() === "") {
       console.log("빈값 반환");
       return;
     }
-
     // 모달창 오픈
     dispatch(openDemoModal());
     // 플라스크 api 연결
@@ -102,7 +95,6 @@ export default function DemoCalendar() {
     } catch (error) {
       console.error("Error flask data:", error);
     }
-
     // 인풋 필드 리셋
     setTextSave("");
   };
@@ -179,8 +171,6 @@ export default function DemoCalendar() {
           </div>
         </div>
       </div>
-      {/* 기타 */}
-      {isDemoOpen && <DemoMadal before={textSave} after={afterFlask} />}
     </>
   );
 }

@@ -1,7 +1,11 @@
 // EventForm.tsx
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
+import {
+  Event,
+  addEvent,
+  apiUpdateEvent,
+} from "../../store/slice/calendar/CalendarSlice";
 import { closeModal } from "../../store/slice/calendar/ModalSlice";
 import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
@@ -18,10 +22,7 @@ interface ModalProps {
 // 백엔드
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
-const EventForm: React.FC<ModalProps> = ({
-  selectedRange,
-  refetchCal,
-}: ModalProps) => {
+const EventForm: React.FC<ModalProps> = ({ selectedRange }: ModalProps) => {
   // 기본 세팅
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.calendar.events);
@@ -47,7 +48,7 @@ const EventForm: React.FC<ModalProps> = ({
       setErrorMsg("일정 내용을 입력하세요");
       return;
     }
-    console.log("여기는 eventform, events", events);
+    const tmpId = events.length;
     const newEvent: Event = {
       id: events.length,
       title,
@@ -56,7 +57,6 @@ const EventForm: React.FC<ModalProps> = ({
       memo,
     };
     // 일정생성 (개발자용)
-    console.log("여기는 eventform, newEvent", newEvent);
     // 원복
     setTitle("");
     setMemo("");
@@ -89,7 +89,10 @@ const EventForm: React.FC<ModalProps> = ({
       );
       // 캘린더 다시 불러오기
       console.log("구글 캘린더 생성 완료", response);
-      await refetchCal();
+      // await refetchCal();
+      const changeId = { ...newEvent };
+      changeId.id = response.data.data.id;
+      await dispatch(apiUpdateEvent({ before: tmpId, after: changeId }));
     } catch (error) {
       console.error("구글 캘린더 생성 에러:", error);
       setErrorMsg("서버와 연결할 수 없습니다. 다시 시도해주세요");
