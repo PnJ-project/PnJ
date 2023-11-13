@@ -6,7 +6,7 @@ import Calendar from "./pages/Main";
 import Notfound from "./pages/service/404";
 import About from "./pages/service/About";
 import Contact from "./pages/service/Contact";
-import Team from "./pages/service/Team";
+import TeamHello from "./pages/service/TeamHello";
 import PageManager from "./pages/PageManager";
 import TestManager from "./pages/test/TestManager";
 
@@ -23,7 +23,7 @@ export default function App() {
         <Route path="*" element={<Notfound />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/team" element={<Team />} />
+        <Route path="/team" element={<TeamHello />} />
         {/* 개발자용 */}
         <Route path="/pm" element={<PageManager />} />
         <Route path="/tm" element={<TestManager />} />
