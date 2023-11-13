@@ -63,11 +63,16 @@ public class MemberResponseDto {
 
         private Long memberId;
         private String memberEmail;
+        private String accessToken;
+        private String refreshToken;
 
         @Builder
-        public LoginResponseDto(Long memberId, String memberEmail) {
+        public LoginResponseDto(Long memberId, String memberEmail, String accessToken,
+            String refreshToken) {
             this.memberId = memberId;
             this.memberEmail = memberEmail;
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
         }
     }
 
