@@ -3,7 +3,7 @@ from konlpy.tag import Okt
 from include.dataloader.dataloader import data_preprocessing
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from sklearn.metrics.pairwise import cosine_similarity #유사도 산출
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 def get_morphemes(text):
