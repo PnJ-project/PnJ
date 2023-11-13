@@ -1,5 +1,5 @@
-import errorP from '../../../public/image/errorP.svg';
-import styled from 'styled-components';
+import errorP from "../../../public/image/errorP.svg";
+import styled from "styled-components";
 
 export default function notfound() {
   return (
@@ -7,12 +7,12 @@ export default function notfound() {
       <Container>
         <ImgP src={errorP} />
         <TextContainer>
-          <Title>404 ERROR</Title>
+          <Title>404 Not Found</Title>
           <Detail>
-            존재하지 않는 주소를 입력하였거나, <br />요청하신 페이지 주소가 변경,
-            삭제되어 찾을 수 없습니다.
+            존재하지 않는 주소를 입력하였거나, <br />
+            요청하신 페이지 주소가 변경, 삭제되어 찾을 수 없습니다.
           </Detail>
-          <GoToMain href="/">메인으로 돌아가기 {'->'}</GoToMain>
+          <GoToMain href="/">메인으로 돌아가기 {"->"}</GoToMain>
         </TextContainer>
       </Container>
     </>
@@ -24,7 +24,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-
+  font-family: MYYeongnamnu;
 `;
 
 const ImgP = styled.img`
@@ -40,7 +40,6 @@ const Title = styled.p`
   font-style: bold;
   font-weight: 400;
   line-height: normal;
-
 `;
 
 const Detail = styled.p`
@@ -49,7 +48,7 @@ const Detail = styled.p`
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  margin-top:20px;
+  margin-top: 20px;
 `;
 
 const GoToMain = styled.a`
@@ -59,7 +58,9 @@ const GoToMain = styled.a`
   font-weight: 400;
   line-height: normal;
   text-decoration: none;
-  margin-top:20px;
+  margin-top: 20px;
+  font-weight: 900;
+  text-decoration: underline;
 `;
 
 const TextContainer = styled.div`
@@ -67,4 +68,3 @@ const TextContainer = styled.div`
   flex-direction: column;
   margin-left: 20px;
 `;
-
