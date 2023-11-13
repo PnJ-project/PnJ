@@ -15,6 +15,8 @@ public class EventDto {
 
     private String summary;
 
+    private String description;
+
     private Integer colorId;
 
     private DateTimeDto start;
@@ -22,13 +24,14 @@ public class EventDto {
     private DateTimeDto end;
 
     @Builder
-    public EventDto(String id, String summary, Integer colorId, DateTimeDto start,
+    public EventDto(String id, String summary, String description, Integer colorId,
+        DateTimeDto start,
         DateTimeDto end) {
         this.id = id;
         this.summary = summary;
+        this.description = description;
         this.colorId = colorId;
         this.start = start;
         this.end = end;
     }
-
 }
