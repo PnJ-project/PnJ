@@ -11,16 +11,10 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
       - ./infra/mariadb/init:/docker-entrypoint-initdb.d
-      # - ./infra/mariadb/conf.d:/etc/mysql/conf.d
+      - ./infra/mariadb/conf.d/mysql.cnf:/etc/mysql/mysql.cnf
     restart: unless-stopped
     networks:
       - mariadb_network
-    # healthcheck:
-    #   test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -u root --password=$$M                                                                              ARIADB_ROOT_PASSWORD']
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
-    #   start_period: 30s
 
   redis:
     image: redis:7.2.2-alpine3.18
