@@ -1,4 +1,4 @@
-﻿categoryName,gameDate,gameDateTime,homeTeamName,homeTeamScore,awayTeamName,awayTeamScore,winner,statusCode,statusInfo,cancel,suspended,reversedHomeAway,homeTeamEmblemUrl,awayTeamEmblemUrl,title,info,category,category_name
+﻿league,gameDate,gameDateTime,homeTeamName,homeTeamScore,awayTeamName,awayTeamScore,winner,statusCode,statusInfo,cancel,suspended,reversedHomeAway,homeTeamEmblemUrl,awayTeamEmblemUrl,title,info,category,categoryName
 KBO리그,2023-11-10,2023-11-10T18:30:00,KT,0,LG,0,DRAW,BEFORE,경기전,False,False,True,https://sports-phinf.pstatic.net/team/kbo/default/KT.png,https://sports-phinf.pstatic.net/team/kbo/default/LG.png,KBO리그,"LG, KT",스포츠,야구
 KBO리그,2023-11-11,2023-11-11T14:00:00,KT,0,LG,0,DRAW,BEFORE,경기전,False,False,True,https://sports-phinf.pstatic.net/team/kbo/default/KT.png,https://sports-phinf.pstatic.net/team/kbo/default/LG.png,KBO리그,"LG, KT",스포츠,야구
 KBO리그,2023-11-13,2023-11-13T18:30:00,LG,0,KT,0,DRAW,BEFORE,경기전,False,False,True,https://sports-phinf.pstatic.net/team/kbo/default/LG.png,https://sports-phinf.pstatic.net/team/kbo/default/KT.png,KBO리그,"KT, LG",스포츠,야구

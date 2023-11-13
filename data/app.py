@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from include.model.transform_date import transform_date
-from include.model.recommend import calcultation_similarity_classification, calcultation_similarity
+from include.model.recommend import calcultation_similarity
 
 
 app = Flask(__name__)
@@ -24,14 +24,6 @@ def get_recommend():
     summary_list = []
     summary_list.append(request.form['input'])
     result = calcultation_similarity(summary_list)
-    return result
-
-
-@app.route(PREFIX + '/recom/category', methods=['POST'])
-def get_recommend_class():
-    summary_list = []
-    summary_list.append(request.form['input'])
-    result = calcultation_similarity_classification(summary_list)
     return result
 
 
