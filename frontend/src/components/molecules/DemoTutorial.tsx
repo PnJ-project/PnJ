@@ -1,8 +1,10 @@
 // import React from 'react';
+import "./DemoTutorial.css";
+
 export default function DemoTutorial() {
   return (
     <>
-      <h1>DemoTutorial</h1>
+      <div className={`TutorialBG`}></div>
     </>
   );
 }

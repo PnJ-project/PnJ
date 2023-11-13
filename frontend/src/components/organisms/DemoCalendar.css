@@ -34,7 +34,7 @@
   width: 300px;
 }
 .NavGoogleBtn button {
-  margin-left: 10px;
+  /* margin-left: 10px; */
 }
 .FreeTxt {
   font-size: 12px;
@@ -47,12 +47,19 @@
   color: red;
 }
 .PnjInput {
+  width: 45% !important;
+  font-family: SUITE-Regular;
+  resize: none;
+  display: flex;
+}
+.PnjInputInner {
+  width: 100%;
   border-radius: 5px;
   padding: 10px 10px 10px 10px;
-  width: 45% !important;
   font-family: SUITE-Regular;
   max-height: 50px;
   resize: none;
+  margin: auto;
 }
 
 .PnjInput::-webkit-scrollbar {
@@ -139,8 +146,13 @@
 .mikeImg,
 .pasteImg {
   width: 24px;
-  margin: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
   cursor: pointer;
+}
+.pasteImgBox {
+  display: flex;
+  height: 35px;
 }
 
 .submitBtn {
