@@ -241,8 +241,17 @@ const BigCalendarInfo = () => {
   const handleDateChange = async (date: Date) => {
     const formDate = date.toISOString();
     dispatch(change(formDate));
-    const timeMax = moment(date).startOf("month").toDate().toISOString();
-    const timeMin = moment(date).endOf("month").toDate().toISOString();
+    const timeMax = moment(date)
+      .subtract(6, "months")
+      .startOf("month")
+      .toDate()
+      .toISOString();
+    const timeMin = moment(date)
+      .add(6, "months")
+      .endOf("month")
+      .endOf("week")
+      .toDate()
+      .toISOString();
     console.log(timeMax, timeMin);
     // 데이터 리패치
     await setTimeMax(timeMax);
