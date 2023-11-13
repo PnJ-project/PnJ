@@ -27,6 +27,7 @@ public class OAuth2UserServiceImpl implements
 
     private final MemberRepository memberRepository;
     private final JWTUtil jwtUtil;
+
     private final Gson gson = buildGson();
 
     private final String GOOGLE_TOKEN_REQUEST_URL = "https://oauth2.googleapis.com/token";
@@ -85,10 +86,12 @@ public class OAuth2UserServiceImpl implements
             oAuthTokenResponse.getRefreshToken(), oAuthTokenResponse.getExpiresIn());
 
         // TODO JWT TOKEN 암호화 + ResponseDto 변경
+        String accessToken = jwtUtil.createToken(member.get().getId());
 
         return LoginResponseDto.builder()
             .memberEmail(member.get().getEmail())
             .memberId(member.get().getId())
+            .accessToken(accessToken)
             .build();
     }
 
