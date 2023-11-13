@@ -127,6 +127,7 @@
   /* box-shadow: 2px 2px 10px rgb(167, 167, 167), -2px -2px 10px rgb(167, 167, 167); */
   background-color: rgba(255, 255, 255, 1);
   border: 10px solid rgba(33, 112, 34, 0.5);
+  /* z-index: -1; */
 }
 
 .mikeImg,
@@ -160,3 +161,54 @@
   }
 }
 
+.ServiceIntro {
+  width: 50px;
+  height: 30px;
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+  transition: color 0.3s;
+  color: #fff;
+  
+}
+
+.ServiceIntro:hover {
+  color: #59CDFF; /* 원하는 호버 색상으로 변경 */
+}
+
+.ServiceIntroTooltip {
+  position: absolute;
+  left: -130px; 
+  transform: translateX(-50%);
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: none;
+  width: 350px;
+  height: 615px;
+  overflow: auto;
+  opacity: 0.9;
+  animation: fadeout 0.5s ease; /* 추가된 부분 */
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.ServiceIntro:hover .ServiceIntroTooltip {
+  display: block;
+  opacity: 1;
+  z-index: 100;
+}
+
+
+.ServiceIntroContent {
+font-size: 20px;
+
+}
