@@ -55,4 +55,3 @@ def calcultation_similarity(summary_list):
     json_result = json.dumps(result, ensure_ascii=False, indent=4)
 
     return json_result
-
