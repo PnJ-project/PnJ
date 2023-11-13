@@ -17,7 +17,7 @@ def data_preprocessing():
     selected_data = merged_data[['title', 'info', 'category', 'categoryName']]
 
     new_row = pd.DataFrame({'title': ['명언'], 'info': ['시험, 면접, 테스트, 자격증'], 'category': ['공부'],
-                            'categoryName': ['명상, 요가, 자기계발']})
+                            'categoryName': ['명상, 요가, 자기계발, 자기개발']})
 
     selected_data = pd.concat([selected_data, new_row], ignore_index=True)
 
