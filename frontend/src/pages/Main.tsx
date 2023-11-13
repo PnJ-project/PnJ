@@ -74,7 +74,7 @@ export default function Main() {
     };
   }, [isScrolling]);
 
-  // 추천 페이지 진입시 이벤트 제고
+  // 추천 페이지 진입시 이벤트 제거
   useEffect(() => {
     if (scrollIndex == 1) {
       window.removeEventListener("wheel", handleWheel);

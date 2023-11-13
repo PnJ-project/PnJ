@@ -8,15 +8,16 @@ import { readCalendar } from "../../api/CalendarApi";
 import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
+import TeamBtn from "../atoms/TeamBtn";
+import ServiceBtn from "../atoms/ServiceBtn";
 import GoogleLogin from "../atoms/GoogleLogin";
 import TodoList from "../molecules/todo/ApiTodoList";
 import SmallCal from "../../pages/test/SmallCal";
 import BigCalendar from "../molecules/ApiBigCalendar";
-// import Mike from "/image/mike.svg";
-import Paste from "/image/paste.svg";
 import { openDemoModal } from "../../store/slice/calendar/ModalSlice";
-import "./DemoCalendar.css";
+import Paste from "/image/paste.svg";
 import { IoMicCircle } from "react-icons/io5";
+import "./DemoCalendar.css";
 //stt
 import { useSpeechRecognition } from "react-speech-kit";
 
@@ -139,7 +140,12 @@ export default function DemoCalendar() {
               value={textSave}
             />
             <IoMicCircle
-              style={{ verticalAlign: "middle", fontSize: "30px" }}
+              style={{
+                verticalAlign: "middle",
+                fontSize: "35px",
+                cursor: "pointer",
+                color: "white",
+              }}
               onClick={toggleListening}
               className={isListening ? "icon-listening" : ""}
             />
@@ -149,6 +155,8 @@ export default function DemoCalendar() {
             </button>
           </div>
           <div className="NavGoogleBtn">
+            <TeamBtn />
+            <ServiceBtn />
             <GoogleLogin />
           </div>
         </div>

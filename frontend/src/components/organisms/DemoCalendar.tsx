@@ -163,7 +163,12 @@ export default function DemoCalendar() {
               value={textSave}
             />
             <IoMicCircle
-              style={{ verticalAlign: "middle", fontSize: "30px" }}
+              style={{
+                verticalAlign: "middle",
+                fontSize: "35px",
+                cursor: "pointer",
+                color: "white",
+              }}
               onClick={toggleListening}
               className={isListening ? "icon-listening" : ""}
             />
@@ -172,8 +177,8 @@ export default function DemoCalendar() {
               등록
             </button>
             <div className="FreeTxt">
-              <div>횟수제한 : </div>
-              <div className={`${freetime === 0 ? "NotFree" : ""}`}>
+              <div className="LimitTxt">횟수제한 : </div>
+              <div className={`LimitTxt ${freetime === 0 ? "NotFree" : ""}`}>
                 {freetime}
               </div>
             </div>
