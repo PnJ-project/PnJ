@@ -61,8 +61,8 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     const updateItem = {
       id: id,
       title,
-      start: sDate+'T'+sTime+':00.000',
-      end: eDate+'T'+eTime+':00.000',
+      start: sDate+'T'+sTime+':00',
+      end: eDate+'T'+eTime+':00',
       memo:memo,
       resource: { event: { id: id, memo} },
     };
