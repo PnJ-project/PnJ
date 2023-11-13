@@ -36,7 +36,6 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange }: ModalProps) => {
       setErrorMsg("일정 내용을 입력하세요");
       return;
     }
-    console.log("여기는 eventform, events", events);
     const newEvent: Event = {
       id: events.length,
       title,
@@ -45,7 +44,6 @@ const EventForm: React.FC<ModalProps> = ({ selectedRange }: ModalProps) => {
       memo,
     };
     // 일정생성 (개발자용)
-    console.log("여기는 eventform, newEvent", newEvent);
     dispatch(addEvent(newEvent));
 
     // 원복

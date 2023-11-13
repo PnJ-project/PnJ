@@ -1,5 +1,5 @@
 // import React from 'react';
-import pnjLogo from "/image/pnjLogo.svg";
+import pnjLogo from "/image/pnjLogoWhite.svg";
 import { setDemoFalse } from "../../store/slice/ToggleSlice";
 import { useDispatch } from "react-redux";
 
@@ -13,7 +13,11 @@ export default function PnjLogo() {
           dispatch(setDemoFalse());
         }}
       >
-        <img src={pnjLogo} alt="Logo" style={{ marginRight: "10px" }} />
+        <img
+          src={pnjLogo}
+          alt="Logo"
+          style={{ marginRight: "10px", cursor: "pointer" }}
+        />
       </div>
     </>
   );
