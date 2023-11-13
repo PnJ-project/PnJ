@@ -21,6 +21,8 @@ import { addTodoRedux } from "../../store/slice/calendar/TodoSlice";
 import "./DemoCalendar.css";
 //stt
 import { useSpeechRecognition } from "react-speech-kit";
+import {AiFillQuestionCircle} from 'react-icons/ai';
+import About from '../../pages/service/About';
 
 // 타입 선언
 export interface FlaskResType {
@@ -52,7 +54,16 @@ export default function DemoCalendar() {
   const flask = import.meta.env.VITE_APP_FLASK_SERVER;
   // 쿼리 세팅
   const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
+  const [showServiceIntro, setShowServiceIntro] = useState(false); // 서비스 소개
 
+  const handleMouseEnter = () => {
+    setShowServiceIntro(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowServiceIntro(false);
+  };
+  
   // 붙여넣기
   const handlePaste = () => {
     navigator.clipboard.readText().then((text) => {
@@ -181,6 +192,22 @@ export default function DemoCalendar() {
           <div className="NavGoogleBtn">
             <GoogleLogin />
           </div>
+
+        {/* 서비스 소개 */}
+          <div className="ServiceIntro"
+         onMouseEnter={handleMouseEnter}
+         onMouseLeave={handleMouseLeave}
+         style={{ verticalAlign: "middle", fontSize: "30px" }}>
+      <AiFillQuestionCircle />
+        {showServiceIntro && (
+        <div className="ServiceIntroTooltip">
+          <div className="ServiceIntroContent">
+            <About />
+          </div>
+        </div>
+          )}
+        </div>
+
         </div>
         {/* Body */}
         <div className="CalendarContainer">
