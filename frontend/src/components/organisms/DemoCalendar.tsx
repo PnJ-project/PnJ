@@ -1,6 +1,6 @@
 // 데모 - 메인 기능 캘린더 컴포넌트
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
@@ -23,7 +23,7 @@ import { addTodoRedux } from "../../store/slice/calendar/TodoSlice";
 import "./DemoCalendar.css";
 //stt
 import { useSpeechRecognition } from "react-speech-kit";
-import { selectIsTutorial } from "../../store/slice/Tutorial";
+import { selectIsTutorial, setTutorialStart } from "../../store/slice/Tutorial";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import About from "../../pages/service/About";
 
@@ -168,6 +168,13 @@ export default function DemoCalendar() {
     }
     setIsListening(!isListening); // 상태를 반전시킴
   };
+
+  // 컴포넌트 로딩시
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(setTutorialStart());
+    }, 800);
+  }, []);
 
   return (
     <>
