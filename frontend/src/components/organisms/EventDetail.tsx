@@ -64,7 +64,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       start: sDate+'T'+sTime+':00',
       end: eDate+'T'+eTime+':00',
       memo:memo,
-      resource: { event: { id: id, memo} },
+      resource: { event: { id: id, memo: memo} },
     };
     // 일정수정 (개발자용)
     dispatch(updateEvent(updateItem));

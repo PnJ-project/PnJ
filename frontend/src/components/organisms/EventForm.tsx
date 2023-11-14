@@ -20,7 +20,6 @@ const EventForm: React.FC = () => {
   const endtime = selectedRange.rangeEnd.split("T")[1]?.substr(0, 5);
   const [sTime, setSTime] = useState(starttime||"00:00");
   const [eTime, setETime] = useState(endtime || "00:00");
-  //시작 날짜에서 하루 더하면
   const [sDate, setSDate] = useState(selectedRange.rangeStart.split('T')[0]);
   const [eDate, setEDate] = useState(selectedRange.rangeEnd.split('T')[0]);
   const [allDay, setAllDay] = useState(false);

@@ -29,7 +29,7 @@ import {
   setEvents,
   addEvent,
 } from "../../store/slice/calendar/CalendarSlice";
-import { change, handleDate } from "../../store/slice/calendar/HandleSlice";
+import { change, handleDate, selectRangeDate } from "../../store/slice/calendar/HandleSlice";
 import Modal from "./ApiEventForm";
 import DetailModal from "./ApiEventDetail";
 import withDragAndDrop, {
@@ -47,6 +47,7 @@ import {
   selectDraggedTodo,
   setDraggedTodo,
 } from "../../store/slice/calendar/TodoSlice";
+import formatDateTime from "../../functions/BaseFunc";
 // 이벤트 캘린더 폼
 interface FormatEvent {
   id: number;
@@ -99,7 +100,7 @@ const BigCalendarInfo = () => {
   }; //todo Refetch
 
   // 캘린더를 DragAndDrop으로 바꿉니다.
-  moment.locale("ko");
+  moment.locale("ko-KR");
   const localizer = momentLocalizer(moment);
   const DragAndDropCalendar = withDragAndDrop(Calendar);
   // 캘린더용 데이터 파싱
@@ -108,7 +109,25 @@ const BigCalendarInfo = () => {
     []
   );
   const handledate: Date = new Date(date);
-
+  // 요일,날짜 Toolbar 변경
+  const formats = {
+    dateFormat: 'D',
+    dayFormat: 'D일',
+    dayRangeHeaderFormat: ({ start, end }: { start: Date; end: Date }) => {
+      const startDate = moment(start).format('M월 D일');
+      const endDate = moment(end).format('M월 D일');
+      return `${startDate} - ${endDate}`;
+    },
+    // view가 month일 때 화살표 있는 쪽 년월
+    monthHeaderFormat: 'YYYY년 M월',
+    //view가 day일 때
+    dayHeaderFormat: 'M월 D일 ddd',
+    dayRangeFormat: ({ start, end }: { start: Date; end: Date }) => {
+      const startDate = moment(start).format('M월 D일');
+      const endDate = moment(end).format('M월 D일');
+      return `${startDate} - ${endDate}`;
+    },
+  };
   // 일정 이동 기능
   const moveEvent = useCallback(
     async ({ event, start, end }: EventInteractionArgs<BigCalendarEvent>) => {
@@ -118,15 +137,17 @@ const BigCalendarInfo = () => {
         end: undefined,
       });
       // 일정변경 (개발자용)
-      dispatch(
-        updateEvent({
-          title: event.title?.toString(),
-          allDay: event.allDay,
-          start: start.toString(),
-          end: end.toString(),
-          resource: { event: restEvent },
-        })
-      );
+      if (start instanceof Date && end instanceof Date) {
+        dispatch(
+          updateEvent({
+            title: event.title?.toString(),
+            allDay: event.allDay,
+            start: formatDateTime(start),
+            end: formatDateTime(end),
+            resource: { event: restEvent },
+          })
+        );
+      }
       // 캘린더 수정 API 요청
       if ("id" in event) {
         const new_start = new Date(start);
@@ -165,13 +186,14 @@ const BigCalendarInfo = () => {
   );
 
   // 일정 추가 모달 켜기
-  const [selectedRange, setSelectedRange] = useState<{
-    start: Date;
-    end: Date;
-  } | null>(null);
   const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
-    setSelectedRange({ start, end });
     dispatch(openModal());
+    const reduxselectRangeDate = {
+      rangeStart:formatDateTime(start),
+      rangeEnd:formatDateTime(end),
+    }
+    console.log(reduxselectRangeDate,'reduxselectRangeDate')
+    dispatch(selectRangeDate(reduxselectRangeDate))
   };
 
   // 일정 리사이즈 기능
@@ -183,15 +205,17 @@ const BigCalendarInfo = () => {
         end: undefined,
       });
       // 일정변경 (개발자용)
-      dispatch(
-        updateEvent({
-          title: event.title?.toString(),
-          allDay: event.allDay,
-          start: start.toString(),
-          end: end.toString(),
-          resource: { event: restEvent },
-        })
-      );
+      if (start instanceof Date && end instanceof Date) {
+        dispatch(
+          updateEvent({
+            title: event.title?.toString(),
+            allDay: event.allDay,
+            start: formatDateTime(start),
+            end: formatDateTime(end),
+            resource: { event: restEvent },
+          })
+        );
+      }
       // 캘린더 수정 API 요청
       if ("id" in event) {
         const new_start = new Date(start);
@@ -307,13 +331,15 @@ const BigCalendarInfo = () => {
       }
       // 드래그한 항목의 정보
       const { id, summary } = draggedTodo;
+      start = new Date(start);
+      end = new Date(end);
       // 새로운 이벤트 객체 생성 (여기에서는 월별 달력이므로 allDay는 무조건 true로 설정)
       const newEvent: DragEvent = {
         id: id,
         title: summary,
         allDay: true,
-        start: start.toString(),
-        end: end.toString(),
+        start: formatDateTime(start),
+        end: formatDateTime(end),
         memo: "",
       };
       // 캘린더 상태 업데이트를 위해 액션 디스패치
@@ -391,11 +417,10 @@ const BigCalendarInfo = () => {
           components={{
             toolbar: Toolbar,
           }}
+          formats={formats}
         />
       </div>
-      {isOpen && selectedRange && (
-        <Modal selectedRange={selectedRange} refetchCal={refetchCal} />
-      )}
+      {isOpen && (<Modal refetchCal={refetchCal} />)}
       {isSideOpen && <DetailModal id={detailEvent} />}
     </Container>
   );
