@@ -56,9 +56,9 @@ def save_item_similarity():
         # 자기 자신은 제외
         cosine_similarities[0][idx] = -1
 
-        top_10_indices = heapq.nlargest(11, range(len(cosine_similarities[0])), cosine_similarities[0].take)
+        top_10_indices = heapq.nlargest(12, range(len(cosine_similarities[0])), cosine_similarities[0].take)
         # 상위 10개 아이템의 인덱스와 유사도 저장
-        # top_10_items_with_similarity = [(index, cosine_similarities[0][index]) for index in top_10_indices]
+        top_10_items_with_similarity = [(index, cosine_similarities[0][index]) for index in top_10_indices]
 
         # 인덱스를 이용하여 상위 10개 아이템 출력
         top_10_items = selected_data.iloc[top_10_indices]
@@ -69,7 +69,7 @@ def save_item_similarity():
         result_df = pd.concat([result_df, pd.DataFrame({'targetTitle': target_title,
                                                         'targetIndex': idx,
                                                         'topTitle': [top_titles],
-                                                        'topIndex': [top_10_indices]})], ignore_index=True)
+                                                        'similarity': [top_10_items_with_similarity]})], ignore_index=True)
 
     # 파일 저장
     result_df.to_csv('./include/dataset/top_similarity_results.csv', index=False)
