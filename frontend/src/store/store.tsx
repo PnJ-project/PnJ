@@ -11,6 +11,7 @@ import todoReducer from "./slice/calendar/TodoSlice";
 import tutorialReducer from "./slice/Tutorial";
 import vitoReducer from "./slice/SoundSlice";
 import toggleReducer from "./slice/ToggleSlice";
+import recommendReducer from "./slice/RecommendSlice";
 
 const rootReducer = combineReducers({
   //sample용
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   handledate: handleReducer,
   todo: todoReducer,
   tutorial: tutorialReducer,
+  recommend: recommendReducer,
 });
 
 const store = configureStore({

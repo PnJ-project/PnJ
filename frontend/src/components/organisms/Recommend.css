@@ -1,37 +1,104 @@
 .RecommendContainer {
   width: 100vw;
-  background-color: aquamarine;
+  min-width: 1000px;
+  background-color: #dddddd;
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
+  font-family: SUITE-Regular;
+}
+.RecommendSortBtnBox {
+  display: flex;
+  justify-content: right;
+  width: 90%;
+  margin: auto;
+  margin-bottom: 50px;
 }
 .RecommendTitle {
   font-size: 40px;
   margin: 20px;
   margin-top: 100px;
+  margin-bottom: 70px;
+  font-weight: 900;
 }
 .RecommendBox {
-  width: 100%;
-  border: 2px solid red;
+  width: 75vw;
+  animation: fadeIn 0.4s ease-in; /* 등장 애니메이션 적용 */
+  /* border: 2px solid red; */
+}
+.RecommendAllBox {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 500px;
+  animation: fadeIn 0.4s ease-in; /* 등장 애니메이션 적용 */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.RecommendSubTitle {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+.RecommendInner {
+  margin: 20px;
+  font-weight: 900;
 }
 .RecommendMuscic {
-  width: 100%;
-  height: 30vh;
-  background-color: blue;
+  padding: 20px;
 }
 .RecommendSports {
-  width: 100%;
-  height: 30vh;
-  background-color: rgb(0, 255, 85);
+  padding: 20px;
 }
 .RecommendStudy {
-  width: 100%;
-  height: 30vh;
-  background-color: rgb(204, 255, 0);
+  padding: 20px;
 }
 .RecommendTrip {
-  width: 100%;
+  padding: 20px;
+}
+
+.RecommendEat {
+  padding: 20px;
+}
+
+.RecommendSlider {
   height: 30vh;
-  background-color: rgb(0, 255, 221);
+  background-color: rgb(180, 174, 174);
+}
+.RecommendAllOuter {
+  display: flex;
+  justify-content: center;
+  width: 100% !important;
+}
+.RecommendAllInner {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  margin: auto;
+}
+.RecommendAllItem {
+  width: 25%;
+  /* border: 1px solid black; */
+  background-color: rgb(202, 229, 201);
+  box-shadow: 2px 2px 10px rgb(143, 143, 143), -2px -2px 10px rgb(139, 139, 139);
+  text-wrap: pretty;
+  flex-wrap: wrap;
+  word-break: break-all;
+  margin: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
 }
