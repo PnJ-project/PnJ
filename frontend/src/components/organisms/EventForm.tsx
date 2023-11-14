@@ -7,10 +7,6 @@ import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
 import { setSelectDate } from "../../store/slice/calendar/HandleSlice";
 
-// 모달 타입
-// interface ModalProps {
-//   selectedRange: { start: Date; end: Date };
-// }
 
 const EventForm: React.FC = () => {
   // 기본 세팅
@@ -47,7 +43,7 @@ const EventForm: React.FC = () => {
   const handleAddEvent = async () => {
     // 조건 만족안할시 반환
     if (!title) {
-      setErrorMsg("일정 내용을 입력하세요");
+      setErrorMsg("일정 내용을 입력하세요 !");
       return;
     }
     console.log("여기는 eventform, events", events);
@@ -110,6 +106,7 @@ const EventForm: React.FC = () => {
             <input type="date" value={eDate} min={sDate} onChange={(e) => { setEDate(e.target.value) }} />
           </SelectDate>
           <CheckBox>
+            {/* 날짜가 다르면 하루종일 체크, 변경 못하게 */}
             <input
               type="checkbox"
               id="allDay"
@@ -122,14 +119,13 @@ const EventForm: React.FC = () => {
         </DateBox>
         <TimeBox>
           <div>시간</div>
+          {/* 하루종일이면 시간 선택 못하게 */}
           {allDay? (<SelectTime>
-            <input type="time" value={sTime}
-              disabled />
+            <input type="time" value={sTime} disabled />
             <span>~</span>
-            <input type="time" value={eTime}
-              disabled
-            />
+            <input type="time" value={eTime} disabled />
           </SelectTime>) : (<SelectDate>
+              {/* 하루종일이 아닐 때 */}
             <input type="time" value={sTime} step="6000"
               onChange={(e) => {setSTime(e.target.value);}}
               />
@@ -186,7 +182,15 @@ const fadeIn = keyframes`
     opacity: 1;
   }
 `;
-const Container = styled.div`
+const blink = keyframes`
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+`
+  const Container = styled.div`
   animation: ${fadeIn} 0.2s ease-in;
   font-family: HSSaemaul-Regular;
   position: fixed;
@@ -216,11 +220,7 @@ const Container = styled.div`
     border-radius: 5px;
     font-family: insungitCutelivelyjisu;
   }
-  input:nth-of-type(1) {
-  }
-  input:nth-of-type(2) {
-    height: 100px;
-  }
+
   input[type='date'] {
   position: relative; // 캘린더 아이콘을 클릭해야만 달력이 보이기 때문에 이 영역 자체를 제어하기 위해 설정 
   text-align: center;
@@ -307,7 +307,8 @@ input {
 
 `
 const ErrorMsg = styled.div`
-  font-size: 12px;
+  animation: ${blink} 1.5s 3;
+  font-size: 18px;
   margin: 10px;
   color: #a73131;
 `;
