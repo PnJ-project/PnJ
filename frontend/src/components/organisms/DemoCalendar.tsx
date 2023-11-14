@@ -242,23 +242,22 @@ export default function DemoCalendar() {
               <GoogleLogin />
               {tutorialIndex == 7 && <DemoTutorialBox />}
             </div>
-          </div>
-
-          {/* 서비스 소개 */}
-          <div
-            className="ServiceIntro"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            style={{ verticalAlign: "middle", fontSize: "30px" }}
-          >
-            <AiFillQuestionCircle />
-            {showServiceIntro && (
-              <div className="ServiceIntroTooltip">
-                <div className="ServiceIntroContent">
-                  <About />
+            {/* 서비스 소개 */}
+            <div
+              className="ServiceIntro"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              style={{ verticalAlign: "middle", fontSize: "30px" }}
+            >
+              <AiFillQuestionCircle />
+              {showServiceIntro && (
+                <div className="ServiceIntroTooltip">
+                  <div className="ServiceIntroContent">
+                    <About />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
         {/* Body */}
