@@ -4,11 +4,11 @@ import counterReducer from "./slice/sample/CounterSlice";
 import stringReducer from "./slice/sample/StringSlice";
 import listReducer from "./slice/sample/ListSlice";
 import authReducer from "./slice/AuthSlice";
-import calendarReducer from './slice/calendar/CalendarSlice';
+import calendarReducer from "./slice/calendar/CalendarSlice";
 import modalReducer from "./slice/calendar/ModalSlice";
 import handleReducer from "./slice/calendar/HandleSlice";
 import todoReducer from "./slice/calendar/TodoSlice";
-
+import tutorialReducer from "./slice/Tutorial";
 import vitoReducer from "./slice/SoundSlice";
 import toggleReducer from "./slice/ToggleSlice";
 
@@ -25,6 +25,7 @@ const rootReducer = combineReducers({
   modal: modalReducer,
   handledate: handleReducer,
   todo: todoReducer,
+  tutorial: tutorialReducer,
 });
 
 const store = configureStore({

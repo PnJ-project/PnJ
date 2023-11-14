@@ -1,4 +1,4 @@
-// 회원관리 관련입니다
+// 토글 관련입니다
 import { createSlice } from "@reduxjs/toolkit";
 
 interface ToggleState {
@@ -36,4 +36,6 @@ export const {
   setFlashModalTrue,
   setFlashModalFalse,
 } = toggleSlice.actions;
+export const selectIsDemo = (state: { toggle: ToggleState }) =>
+  state.toggle.isUseDemo;
 export default toggleSlice.reducer;

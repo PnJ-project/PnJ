@@ -10,21 +10,16 @@ import { closeSideModal } from "../../store/slice/calendar/ModalSlice";
 import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
-import { QueryObserverResult, RefetchOptions } from "react-query";
-// import { Event as BigCalendarEvent } from "react-big-calendar";
 
 // 모달 타입
 interface ModalProps {
   id: number | string | unknown;
-  refetchCal: <TPageData>(
-    options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<TPageData, unknown>>;
 }
 // 백엔드
 // const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
-const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
+const EventForm: React.FC<ModalProps> = ({ id }) => {
   // 기본 세팅
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.calendar.events);
@@ -95,7 +90,6 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
       await axios.put(`${local_back_url}/api/calendar/v2`, reqNewEvent);
       // 캘린더 다시 불러오기
       console.log("구글 캘린더 수정 완료");
-      await refetchCal();
     } catch (error) {
       console.error("구글 캘린더 수정 에러:", error);
       setErrorMsg("서버와 연결할 수 없습니다. 다시 시도해주세요");
@@ -117,13 +111,8 @@ const EventForm: React.FC<ModalProps> = ({ id, refetchCal }) => {
       const res = await axios.delete(
         `${local_back_url}/api/calendar/v2/${memberId}/${id}`
       );
-      // 투두 다시 불러오기
-      console.log(
-        "캘린더 삭제 완료",
-        `${local_back_url}/api/calendar/v2/${memberId}/${id}`,
-        res
-      );
-      await refetchCal();
+      // 이벤트 다시 불러오기
+      console.log("캘린더 삭제 완료", res);
     } catch (error) {
       setErrorMsg("일정 삭제에 실패했습니다. 다시 시도해주세요");
       console.error("캘린더 삭제 에러:", error);

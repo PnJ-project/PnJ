@@ -13,7 +13,10 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 // 언어, 시간대 설정
 import moment from "moment";
 import "moment/locale/ko";
-import { Event as DragEvent } from "../../store/slice/calendar/CalendarSlice";
+import {
+  Event as DragEvent,
+  apiUpdateEvent,
+} from "../../store/slice/calendar/CalendarSlice";
 import {
   openModal,
   openSideModal,
@@ -70,12 +73,19 @@ const BigCalendarInfo = () => {
   const isSideOpen = useSelector(selectIsSideModalOpen);
   const date: string = useSelector(handleDate);
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
-  const [timeMax, setTimeMax] = useState(
-    moment().startOf("month").toDate().toISOString()
-  );
-  const [timeMin, setTimeMin] = useState(
-    moment().endOf("month").endOf("week").toDate().toISOString()
-  );
+  const startOfFiveMonthsAgo = moment()
+    .subtract(6, "months")
+    .startOf("month")
+    .toDate()
+    .toISOString(); // 5개월 전
+  const endOfFiveMonthsAhead = moment()
+    .add(6, "months")
+    .endOf("month")
+    .endOf("week")
+    .toDate()
+    .toISOString(); // 5개월 후
+  const [timeMax, setTimeMax] = useState(startOfFiveMonthsAgo);
+  const [timeMin, setTimeMin] = useState(endOfFiveMonthsAhead);
   const [detailEvent, setDetailEvent] = useState<number | string | unknown>("");
   // 쿼리세팅
   const { data: calData, refetch: refetchCal } = useQuery(
@@ -99,7 +109,7 @@ const BigCalendarInfo = () => {
   );
   const handledate: Date = new Date(date);
 
-  // 이벤트 이동 기능
+  // 일정 이동 기능
   const moveEvent = useCallback(
     async ({ event, start, end }: EventInteractionArgs<BigCalendarEvent>) => {
       // event 객체에서 start와 end를 제외한 속성들을 추리기
@@ -144,7 +154,7 @@ const BigCalendarInfo = () => {
           await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
           // 캘린더 다시 불러오기
           console.log("구글 캘린더 수정 완료");
-          await refetchCal();
+          // await refetchCal();
         } catch (error) {
           console.error("구글 캘린더 수정 에러:", error);
           return;
@@ -154,7 +164,7 @@ const BigCalendarInfo = () => {
     [dispatch]
   );
 
-  // 이벤트 추가 모달 켜기
+  // 일정 추가 모달 켜기
   const [selectedRange, setSelectedRange] = useState<{
     start: Date;
     end: Date;
@@ -164,7 +174,7 @@ const BigCalendarInfo = () => {
     dispatch(openModal());
   };
 
-  // 이벤트 리사이즈 기능
+  // 일정 리사이즈 기능
   const resizeEvent = useCallback(
     async ({ event, start, end }: EventInteractionArgs<BigCalendarEvent>) => {
       // event 객체에서 start와 end를 제외한 속성들을 추리기
@@ -209,7 +219,7 @@ const BigCalendarInfo = () => {
           await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
           // 캘린더 다시 불러오기
           console.log("구글 캘린더 수정 완료");
-          await refetchCal();
+          // await refetchCal();
         } catch (error) {
           console.error("구글 캘린더 수정 에러:", error);
           return;
@@ -219,7 +229,7 @@ const BigCalendarInfo = () => {
     [dispatch]
   );
 
-  // 이벤트 상세조회
+  // 일정 상세조회
   const openSideMenu = (event: BigCalendarEvent) => {
     console.log("이벤트 상세조회", event);
     if ("id" in event) {
@@ -230,12 +240,21 @@ const BigCalendarInfo = () => {
     dispatch(openSideModal());
   };
 
-  // 클릭한 날짜의 정보를 받아옴
+  // 달력의 월을 변경시
   const handleDateChange = async (date: Date) => {
     const formDate = date.toISOString();
     dispatch(change(formDate));
-    const timeMax = moment(date).startOf("month").toDate().toISOString();
-    const timeMin = moment(date).endOf("month").toDate().toISOString();
+    const timeMax = moment(date)
+      .subtract(6, "months")
+      .startOf("month")
+      .toDate()
+      .toISOString();
+    const timeMin = moment(date)
+      .add(6, "months")
+      .endOf("month")
+      .endOf("week")
+      .toDate()
+      .toISOString();
     console.log(timeMax, timeMin);
     // 데이터 리패치
     await setTimeMax(timeMax);
@@ -243,10 +262,9 @@ const BigCalendarInfo = () => {
     await refetchCal();
   };
 
-  // 클릭한 view의 정보를 받아옴
+  // 클릭한 일정의 정보를 받아옴
   const [currentView, setCurrentView] = useState<View | undefined>();
   const handleViewChange = (newView: View | undefined) => {
-    console.log("???");
     setCurrentView(newView);
   };
 
@@ -282,16 +300,13 @@ const BigCalendarInfo = () => {
   // Drop
   // Todo.tsx 에서 Drag한 event
   const draggedTodo = useSelector(selectDraggedTodo);
-
   const onDropFromOutside = useCallback(
     async ({ start, end }: { start: stringOrDate; end: stringOrDate }) => {
       if (draggedTodo === null) {
         return;
       }
-
       // 드래그한 항목의 정보
       const { id, summary } = draggedTodo;
-
       // 새로운 이벤트 객체 생성 (여기에서는 월별 달력이므로 allDay는 무조건 true로 설정)
       const newEvent: DragEvent = {
         id: id,
@@ -301,15 +316,12 @@ const BigCalendarInfo = () => {
         end: end.toString(),
         memo: "",
       };
-
       // 캘린더 상태 업데이트를 위해 액션 디스패치
       dispatch(addEvent(newEvent));
-
       // 드래그한 항목을 Redux store에서 제거
       dispatch(setDraggedTodo(null));
       console.log("BigCalendar의 id", id);
       dispatch(removeTodoRedux(id));
-
       //보낼 데이터
       const newStart = new Date(start);
       const newEnd = new Date(end);
@@ -331,9 +343,11 @@ const BigCalendarInfo = () => {
           `${local_back_url}/api/calendar/v2/to/event`,
           formData
         );
-        // 투두 다시 불러오기
-        console.log("삭제 완료", formData, response);
-        refetchCal();
+        // 캘린더 다시 불러오기
+        const changeId = { ...newEvent };
+        changeId.id = response.data.data.id;
+        await dispatch(apiUpdateEvent({ before: id, after: changeId }));
+        // refetchCal();
         handleRefetch();
       } catch (error) {
         console.error("투두 드래그 실패:", error);
@@ -341,8 +355,6 @@ const BigCalendarInfo = () => {
     },
     [draggedTodo, dispatch]
   );
-
-  // todo에서 캘린더로 옮기기
 
   return (
     <Container>
@@ -384,7 +396,7 @@ const BigCalendarInfo = () => {
       {isOpen && selectedRange && (
         <Modal selectedRange={selectedRange} refetchCal={refetchCal} />
       )}
-      {isSideOpen && <DetailModal id={detailEvent} refetchCal={refetchCal} />}
+      {isSideOpen && <DetailModal id={detailEvent} />}
     </Container>
   );
 };

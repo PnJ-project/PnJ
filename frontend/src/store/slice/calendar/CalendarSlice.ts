@@ -59,10 +59,18 @@ const calendarSlice = createSlice({
         (event) => event.id !== action.payload
       );
     },
+    apiUpdateEvent: (state, action) => {
+      const index = state.events.findIndex(
+        (event) => event.id === action.payload.before
+      );
+      if (index !== -1) {
+        state.events[index] = action.payload.after;
+      }
+    },
   },
 });
 
-export const { setEvents, addEvent, updateEvent, deleteEvent } =
+export const { setEvents, addEvent, updateEvent, deleteEvent, apiUpdateEvent } =
   calendarSlice.actions;
 export const selectEvents = (state: { calendar: CalendarState }) => state.calendar.events;
 export default calendarSlice.reducer;

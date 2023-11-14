@@ -8,7 +8,6 @@ import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponse
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.INSERT_EVENT_SUCCESS;
 import static com.preparedhypeboys.pnj.domain.calendar.constant.CalendarResponseMessage.UPDATE_EVENT_SUCCESS;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.EventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToEventRequestDto;
 import com.preparedhypeboys.pnj.domain.calendar.dto.CalendarRequestDto.ExchangeToTodoRequestDto;
@@ -20,6 +19,7 @@ import com.preparedhypeboys.pnj.domain.calendar.service.v2.CalendarServiceV2;
 import com.preparedhypeboys.pnj.global.dto.ResponseDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/calendar/v2")
+@RequestMapping("/api/calendar/v2")
+@Slf4j
 public class CalendarControllerV2 {
 
     private final CalendarServiceV2 calendarService;

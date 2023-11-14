@@ -48,21 +48,7 @@ const EventForm: React.FC = () => {
     }
     console.log("여기는 eventform, events", events);
 
-    if (selectedRange && allDay) {
-      const newEvent: Event = {
-        id: events.length,
-        title,
-        start: sDate+'T'+sTime+':00',
-        end: eDate+'T'+eTime+':00',
-        memo: memo,
-      };
-
-    // 일정생성 (개발자용)
-    console.log("여기는 생성 form, newEvent", newEvent);
-    dispatch(addEvent(newEvent));
-    }
-
-    if (selectedRange && !allDay) {
+    if (selectedRange) {
       const newEvent: Event = {
         id: events.length,
         title,
