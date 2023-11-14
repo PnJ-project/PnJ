@@ -59,10 +59,10 @@ interface FormatEvent {
 }
 interface CalendarRes {
   id: number;
-  start: { dateTime: string };
-  end: { dateTime: string };
+  start: { dateTime: string, date: string };
+  end: { dateTime: string, date: string };
   summary: string;
-  memo: string;
+  description: string;
 }
 // 백엔드
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
@@ -138,10 +138,10 @@ const BigCalendarInfo = () => {
       });
       // 일정변경 (개발자용)
       if (start instanceof Date && end instanceof Date) {
+        console.log(event, start, end)
         dispatch(
           updateEvent({
             title: event.title?.toString(),
-            allDay: event.allDay,
             start: formatDateTime(start),
             end: formatDateTime(end),
             resource: { event: restEvent },
@@ -149,7 +149,7 @@ const BigCalendarInfo = () => {
         );
       }
       // 캘린더 수정 API 요청
-      if ("id" in event) {
+      if ("id" in event && "memo" in event) {
         const new_start = new Date(start);
         const new_end = new Date(end);
         const send_id = event.id;
@@ -158,23 +158,24 @@ const BigCalendarInfo = () => {
           event: {
             id: send_id,
             summary: event.title,
+            description: event.memo,
             colorId: null,
             start: {
-              dateTime: new_start.toISOString(),
+              dateTime: !event.allDay ? formatDateTime(new_start) : null,
               timeZone: "Asia/Seoul",
-              date: null,
+              date: event.allDay ? formatDateTime(new_start).split("T")[0] : null,
             },
             end: {
-              dateTime: new_end.toISOString(),
+              dateTime: !event.allDay ? formatDateTime(new_end) : null,
               timeZone: "Asia/Seoul",
-              date: null,
+              date: event.allDay ? formatDateTime(new_end).split("T")[0] : null,
             },
           },
         };
         try {
-          await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
+          const res = await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
           // 캘린더 다시 불러오기
-          console.log("구글 캘린더 수정 완료");
+          console.log(" 일정 이동 기능 구글 캘린더 수정 api 요청 완료",res);
           // await refetchCal();
         } catch (error) {
           console.error("구글 캘린더 수정 에러:", error);
@@ -192,7 +193,6 @@ const BigCalendarInfo = () => {
       rangeStart:formatDateTime(start),
       rangeEnd:formatDateTime(end),
     }
-    console.log(reduxselectRangeDate,'reduxselectRangeDate')
     dispatch(selectRangeDate(reduxselectRangeDate))
   };
 
@@ -217,7 +217,7 @@ const BigCalendarInfo = () => {
         );
       }
       // 캘린더 수정 API 요청
-      if ("id" in event) {
+      if ("id" in event && "memo" in event) {
         const new_start = new Date(start);
         const new_end = new Date(end);
         const send_id = event.id;
@@ -226,23 +226,24 @@ const BigCalendarInfo = () => {
           event: {
             id: send_id,
             summary: event.title,
+            description: event.memo,
             colorId: null,
             start: {
-              dateTime: new_start.toISOString(),
+              dateTime: !event.allDay ? formatDateTime(new_start) : null,
               timeZone: "Asia/Seoul",
-              date: null,
+              date: event.allDay ? formatDateTime(new_start).split("T")[0] : null,
             },
             end: {
-              dateTime: new_end.toISOString(),
+              dateTime: !event.allDay ? formatDateTime(new_end) : null,
               timeZone: "Asia/Seoul",
-              date: null,
+              date: event.allDay ? formatDateTime(new_end).split("T")[0] : null,
             },
           },
         };
         try {
           await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
           // 캘린더 다시 불러오기
-          console.log("구글 캘린더 수정 완료");
+          console.log("일정 리사이즈 기능 구글 캘린더 수정 api 완료");
           // await refetchCal();
         } catch (error) {
           console.error("구글 캘린더 수정 에러:", error);
@@ -255,9 +256,7 @@ const BigCalendarInfo = () => {
 
   // 일정 상세조회
   const openSideMenu = (event: BigCalendarEvent) => {
-    console.log("이벤트 상세조회", event);
     if ("id" in event) {
-      console.log(event.id);
       setDetailEvent(event.id);
     }
     // 상세조회할 이벤트 리덕스에 저장
@@ -279,7 +278,7 @@ const BigCalendarInfo = () => {
       .endOf("week")
       .toDate()
       .toISOString();
-    console.log(timeMax, timeMin);
+    console.log('timeMax, timeMin',timeMax, timeMin);
     // 데이터 리패치
     await setTimeMax(timeMax);
     await setTimeMin(timeMin);
@@ -299,10 +298,11 @@ const BigCalendarInfo = () => {
       console.log("캘린더 데이터가 갱신됩니다", calData.data);
       const formattedData = calData.data.map((item: CalendarRes) => ({
         id: item.id,
-        start: item.start.dateTime,
-        end: item.end.dateTime,
+        allDay: item.start.date ? true : false,
+        start: !item.start.date ? item.start.dateTime:item.start.date+'T00:00:00',
+        end: !item.end.date ?item.end.dateTime:item.end.date+'T00:00:00',
         title: item.summary,
-        memo: item.memo || "",
+        memo: item.description || "",
       }));
       dispatch(setEvents(formattedData));
     }
@@ -346,7 +346,6 @@ const BigCalendarInfo = () => {
       dispatch(addEvent(newEvent));
       // 드래그한 항목을 Redux store에서 제거
       dispatch(setDraggedTodo(null));
-      console.log("BigCalendar의 id", id);
       dispatch(removeTodoRedux(id));
       //보낼 데이터
       const newStart = new Date(start);
@@ -355,15 +354,14 @@ const BigCalendarInfo = () => {
         memberId: memberId,
         todoId: id,
         start: {
-          dateTime: newStart.toISOString(),
+          date: formatDateTime(newStart).split("T")[0],
           timeZone: "Asia/Seoul",
         },
         end: {
-          dateTime: newEnd.toISOString(),
+          date: formatDateTime(newEnd).split("T")[0],
           timeZone: "Asia/Seoul",
         },
       };
-      console.log(formData);
       try {
         const response = await axios.post(
           `${local_back_url}/api/calendar/v2/to/event`,

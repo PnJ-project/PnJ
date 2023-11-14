@@ -12,6 +12,8 @@ import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import { QueryObserverResult, RefetchOptions } from "react-query";
 import { setSelectDate } from "../../store/slice/calendar/HandleSlice";
+import formatDateTime from "../../functions/BaseFunc";
+import calculateDateDifference from "../../functions/CalcFunc";
 
 // 모달 타입
 interface ModalProps {
@@ -38,11 +40,24 @@ const EventForm: React.FC<ModalProps> = () => {
   const [sDate, setSDate] = useState(selectedRange.rangeStart.split('T')[0]);
   const [eDate, setEDate] = useState(selectedRange.rangeEnd.split('T')[0]);
   const [allDay, setAllDay] = useState(false);
+  const [showEDate, setShowEDate] = useState("");
 
   // sDate와 eDate가 다르면 allDay를 체크하도록 설정
   useEffect(() => {
-    if (sDate !== eDate) {
+    if (sDate !== eDate && sTime == "00:00" &&  eTime == "00:00") {
       setAllDay(true);
+    }
+  }, []);
+
+  // sDate와 eDate가 다르면 allDay를 체크하도록 설정
+  useEffect(() => {
+    if (sDate !== eDate && sTime == "00:00" && eTime == "00:00" && allDay) {
+      if (calculateDateDifference(sDate, eDate) == 1) {
+        const newEDate = new Date(eDate)
+        newEDate.setDate(newEDate.getDate() - 1);
+        const lastEDate = formatDateTime(newEDate).split('T')[0];
+        setShowEDate(lastEDate)
+      }
     }
   }, [sDate, eDate]);
   // 인풋 필드에서 엔터 키 입력 시 제출
@@ -67,6 +82,7 @@ const EventForm: React.FC<ModalProps> = () => {
       start: sDate + 'T' + sTime + ':00',
       end: eDate + 'T' + eTime + ':00',
       memo: memo,
+      allDay: allDay,
     };
     // 일정생성 (개발자용)
     dispatch(addEvent(newEvent));
@@ -81,16 +97,17 @@ const EventForm: React.FC<ModalProps> = () => {
       event: {
         id: null,
         summary: title,
+        description: memo,
         colorId: null,
         start: {
-          dateTime: selectedRange.rangeStart,
+          dateTime: !allDay ? sDate+'T'+sTime+':00' : null,
           timeZone: "Asia/Seoul",
-          date: null,
+          date: allDay ? sDate : null,
         },
         end: {
-          dateTime: selectedRange.rangeEnd,
+          dateTime: !allDay ? eDate+'T'+eTime+':00' : null,
           timeZone: "Asia/Seoul",
-          date: null,
+          date: allDay ? eDate : null,
         },
       },
     };
@@ -128,9 +145,7 @@ const EventForm: React.FC<ModalProps> = () => {
         <DateBox>
           <div>날짜</div>
           <SelectDate>
-            <input type="date" value={sDate} onChange={(e) => { setSDate(e.target.value) }}
-              required
-              aria-required="true"/>
+            <input type="date" value={sDate} onChange={(e) => { setSDate(e.target.value) }}/>
             <span>~</span>
             <input type="date" value={eDate} min={sDate} onChange={(e) => { setEDate(e.target.value) }} />
           </SelectDate>
@@ -141,7 +156,7 @@ const EventForm: React.FC<ModalProps> = () => {
               id="allDay"
               checked={allDay}
               onChange={(e) => setAllDay(e.target.checked)}
-              disabled={sDate !== eDate}
+              // disabled={sDate !== eDate}
             />
             <label htmlFor="allDay">하루 종일</label>
           </CheckBox>
@@ -150,9 +165,9 @@ const EventForm: React.FC<ModalProps> = () => {
           <div>시간</div>
           {/* 하루종일이면 시간 선택 못하게 */}
           {allDay? (<SelectTime>
-            <input type="time" value={sTime} disabled />
+            <input type="time" value={""} disabled />
             <span>~</span>
-            <input type="time" value={eTime} disabled />
+            <input type="time" value={""} disabled />
           </SelectTime>) : (<SelectDate>
               {/* 하루종일이 아닐 때 */}
             <input type="time" value={sTime} step="6000"

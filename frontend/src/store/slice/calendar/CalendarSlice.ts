@@ -14,6 +14,7 @@ export interface UpdateEvent {
   allDay?: boolean;
   start: string | undefined;
   end: string | undefined;
+  memo?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resource: { event: any };
 }
@@ -45,12 +46,13 @@ const calendarSlice = createSlice({
         index !== -1 &&
         action.payload.end &&
         action.payload.start &&
-        action.payload.title
+        action.payload.title 
       ) {
         state.events[index].id = action.payload.resource.event.id;
         state.events[index].allDay = action.payload.allDay;
         state.events[index].end = action.payload.end;
         state.events[index].start = action.payload.start;
+        state.events[index].memo = action.payload.memo ?  action.payload.memo:action.payload.resource.event.memo;
         state.events[index].title = action.payload.title?.toString();
       }
     },

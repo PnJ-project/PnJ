@@ -1,6 +1,6 @@
 // ApiEventDetail.tsx api수정 모달 창
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateEvent,
@@ -36,15 +36,9 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
   const endtime = event?.end.split("T")[1]?.substr(0, 5);
   const [sTime, setSTime] = useState(starttime||"00:00");
   const [eTime, setETime] = useState(endtime||"00:00");
-  const [allDay, setAllDay] = useState(false);
+  const [allDay, setAllDay] = useState(event?.allDay);
 
 
-  // sDate와 eDate가 다르면 allDay를 체크하도록 설정
-  useEffect(() => {
-    if (sDate !== eDate) {
-      setAllDay(true);
-    }
-  }, [sDate, eDate]);
 
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -64,13 +58,13 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       setErrorMsg("일정 내용을 입력하세요");
       return;
     }
-    console.log(event);
     const updateItem = {
       id: id,
       title,
       start: sDate+'T'+sTime+':00',
-      end: eDate+'T'+eTime+':00',
-      memo,
+      end: eDate + 'T' + eTime + ':00',
+      allDay: allDay,
+      memo: memo,
       resource: { event: { id: id, memo: memo } },
     };
     // 일정수정 (개발자용)
@@ -85,23 +79,24 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       event: {
         id: id,
         summary: title,
+        description:memo,
         colorId: null,
         start: {
-          dateTime: event.start.split("T")[0]+'T'+sTime+':00',
+          dateTime: !allDay ? sDate+'T'+sTime+':00' : null,
           timeZone: "Asia/Seoul",
-          date: null,
+          date: allDay ? sDate : null,
         },
         end: {
-          dateTime: event.end.toString().split("T")[0]+'T'+eTime+':00',
+          dateTime: !allDay ? eDate+'T'+eTime+':00' : null,
           timeZone: "Asia/Seoul",
-          date: null,
+          date: allDay ? eDate : null,
         },
       },
     };
     try {
       await axios.put(`${local_back_url}/api/calendar/v2`, reqNewEvent);
       // 캘린더 다시 불러오기
-      console.log("구글 캘린더 수정 완료");
+      console.log("구글 캘린더 수정 api 완료");
     } catch (error) {
       console.error("구글 캘린더 수정 에러:", error);
       setErrorMsg("서버와 연결할 수 없습니다. 다시 시도해주세요");
@@ -124,7 +119,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
         `${local_back_url}/api/calendar/v2/${memberId}/${id}`
       );
       // 이벤트 다시 불러오기
-      console.log("캘린더 삭제 완료", res);
+      console.log("캘린더 api 삭제 완료", res);
     } catch (error) {
       setErrorMsg("일정 삭제에 실패했습니다. 다시 시도해주세요");
       console.error("캘린더 삭제 에러:", error);
@@ -164,7 +159,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
               id="allDay"
               checked={allDay}
               onChange={(e) => setAllDay(e.target.checked)}
-              disabled={sDate !== eDate}
+              // disabled={sDate !== eDate}
             />
             <label htmlFor="allDay">하루 종일</label>
           </CheckBox>
@@ -173,9 +168,9 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
           <div>시간</div>
           {/* 하루종일이면 시간 선택 못하게 */}
           {allDay? (<SelectTime>
-            <input type="time" value={sTime} disabled />
+            <input type="time" value={""} disabled />
             <span>~</span>
-            <input type="time" value={eTime} disabled />
+            <input type="time" value={""} disabled />
           </SelectTime>) : (<SelectDate>
               {/* 하루종일이 아닐 때 */}
             <input type="time" value={sTime} step="6000"
