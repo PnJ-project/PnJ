@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import heapq
 
 
 # csv 파일 로드
@@ -36,16 +37,43 @@ def save_item_similarity():
     merged_data = pd.concat(data_frames, ignore_index=True)
     # 데이터 병합
     selected_data = merged_data[['title', 'info', 'category', 'categoryName']]
+
+    # # 텍스트 벡터화
     tfidf_vectorizer = TfidfVectorizer()
-    # 텍스트 벡터화
+
     tfidf_matrix = tfidf_vectorizer.fit_transform(selected_data.apply(lambda x: ' '.join(x), axis=1))
 
+    # 새로 생성할 파일
+    result_df = pd.DataFrame()
 
-    # 아이템간 코사인 유사도 계산
-    cosine_similarities = cosine_similarity(tfidf_matrix, tfidf_matrix)
-    similarity_df = pd.DataFrame(cosine_similarities, columns=selected_data['title'].tolist(),
-                                 index=selected_data['title'].tolist())
+    for idx, row in selected_data.iterrows():
+        target_string = ''
+        target_string += row['title'] + ' ' + row['info'] + ' ' + row['category'] + ' ' + row['categoryName']
+        target_list = [target_string]
+        target_matrix = tfidf_vectorizer.transform(target_list)
 
+        cosine_similarities = cosine_similarity(target_matrix, tfidf_matrix)
+        # 자기 자신은 제외
+        cosine_similarities[0][idx] = -1
 
-    similarity_df.to_csv('./include/dataset/item_similarity_top10.csv', index=False, header=True)
+        top_10_indices = heapq.nlargest(11, range(len(cosine_similarities[0])), cosine_similarities[0].take)
+        # 상위 10개 아이템의 인덱스와 유사도 저장
+        top_10_items_with_similarity = [(index, cosine_similarities[0][index]) for index in top_10_indices]
 
+        # 인덱스를 이용하여 상위 10개 아이템 출력
+        top_10_items = selected_data.iloc[top_10_indices]
+        target_title = row['title']
+        top_titles = top_10_items['title'].tolist()
+
+        result_df = pd.concat([result_df, pd.DataFrame({'Target_Title': target_title,
+                                                        'Top_Title': top_titles,
+                                                        'Similarity': [similarity[1] for similarity in
+                                                                       top_10_items_with_similarity]})],
+                              ignore_index=True)
+
+        # print(f"Top 10 similar items for {title}:\n{top_10_items}\n")
+        # 상위 10개 아이템의 유사도 출력
+
+    print(result_df)
+    # 파일 저장
+    result_df.to_csv('top_similarity_results.csv', index=False)
