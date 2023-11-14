@@ -44,10 +44,19 @@ export default function DemoCalendar() {
   const dispatch = useDispatch();
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
   const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
-  const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
-  const [timeMin] = useState(
-    moment().endOf("month").endOf("week").toDate().toISOString()
-  );
+  const startOfFiveMonthsAgo = moment()
+    .subtract(6, "months")
+    .startOf("month")
+    .toDate()
+    .toISOString(); // 5개월 전
+  const endOfFiveMonthsAhead = moment()
+    .add(6, "months")
+    .endOf("month")
+    .endOf("week")
+    .toDate()
+    .toISOString(); // 5개월 후
+  const [timeMax] = useState(startOfFiveMonthsAgo);
+  const [timeMin] = useState(endOfFiveMonthsAhead);
   const [showServiceIntro, setShowServiceIntro] = useState(false); // 서비스 소개
 
   const handleMouseEnter = () => {
