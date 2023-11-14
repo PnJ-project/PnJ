@@ -76,4 +76,17 @@ public class MemberResponseDto {
         }
     }
 
+    @Getter
+    public static class TokenRefreshDto {
+
+        private String accessToken;
+        private String refreshToken;
+
+        @Builder
+        public TokenRefreshDto(String accessToken, String refreshToken) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+        }
+    }
+
 }

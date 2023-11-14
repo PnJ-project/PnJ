@@ -1,12 +1,18 @@
 package com.preparedhypeboys.pnj.domain.member.service;
 
+import static com.preparedhypeboys.pnj.global.error.constant.ExceptionMessage.INVALID_TOKEN;
+import static com.preparedhypeboys.pnj.global.error.constant.ExceptionMessage.NOT_FOUND_TOKEN;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.preparedhypeboys.pnj.domain.member.dao.MemberRepository;
 import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.LoginResponseDto;
 import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.OAuthMemberInfoDto;
 import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.OAuthTokenResponse;
+import com.preparedhypeboys.pnj.domain.member.dto.MemberResponseDto.TokenRefreshDto;
 import com.preparedhypeboys.pnj.domain.member.entity.Member;
+import com.preparedhypeboys.pnj.global.error.token.TokenInvalidException;
+import com.preparedhypeboys.pnj.global.error.token.TokenNotFoundException;
 import com.preparedhypeboys.pnj.global.util.JWTUtil;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,13 +91,15 @@ public class OAuth2UserServiceImpl implements
         member.get().setToken(oAuthTokenResponse.getAccessToken(),
             oAuthTokenResponse.getRefreshToken(), oAuthTokenResponse.getExpiresIn());
 
-        // TODO JWT TOKEN 암호화 + ResponseDto 변경
+        // TODO JWT Refresh Token Redis 적용
         String accessToken = jwtUtil.createToken(member.get().getId());
+        String refreshToken = jwtUtil.createRefreshToken(member.get().getId());
 
         return LoginResponseDto.builder()
             .memberEmail(member.get().getEmail())
             .memberId(member.get().getId())
             .accessToken(accessToken)
+            .refreshToken(refreshToken)
             .build();
     }
 
@@ -119,6 +127,26 @@ public class OAuth2UserServiceImpl implements
         memberRepository.save(member);
 
         return member;
+    }
+
+    @Override
+    public TokenRefreshDto reCreateJwtToken(String refreshToken) {
+
+        if (refreshToken == null) {
+            throw new TokenNotFoundException(NOT_FOUND_TOKEN.getMessage());
+        }
+
+        if (!jwtUtil.validToken(refreshToken)) {
+            throw new TokenInvalidException(INVALID_TOKEN.getMessage());
+        }
+        // TODO REFRESH 토큰 만료 시간 임박 시 재할당
+        // TODO Redis 사용 시 존재 여부 판단
+        String accessToken = jwtUtil.createToken(jwtUtil.getMemberIdOfToken(refreshToken));
+
+        return TokenRefreshDto.builder()
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .build();
     }
 
     private Gson buildGson() {
