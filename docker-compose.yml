@@ -16,51 +16,33 @@ services:
     networks:
       - mariadb_network
 
-  redis:
-    image: redis:7.2.2-alpine3.18
-    container_name: redis
-    command: redis-server /usr/local/etc/redis/redis.conf
-    volumes:
-      - redis_data:/data
-      - ./infra/redis/redis.conf:/usr/local/etc/redis/redis.conf
-    networks:
-      - redis_network
-    restart: always
-
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
     environment:
       FRONTEND_PORT: ${FRONTEND_PORT}
-      BACKEND_PORT: ${BACKEND_PORT}
-      FLASK_PORT: ${FLASK_PORT}
     volumes:
+      # docker mount
       - /usr/bin/docker:/usr/bin/docker
       - /var/run/docker.sock:/var/run/docker.sock
-      - /var/jenkins_home:/var/jenkins_home
+      # docker plugin : docker compose(v2), docker buildx mounting
+      - /usr/local/lib/docker/cli-plugins/docker-compose:/usr/local/lib/docker/cli-plugins/docker-compose
       - /usr/libexec/docker/cli-plugins/docker-buildx:/usr/libexec/docker/cli-plugins/docker-buildx
-      - ./backend/src/main/resources/application.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application.yml
-      - ./backend/src/main/resources/application-oauth-release.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application-oauth-release.yml
-      - ./backend/src/main/resources/application-release.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application-release.yml
-      - ./backend/src/main/resources/application-flask-release.yml:/var/jenkins_home/workspace/dep-be/backend/src/main/resources/application-flask-release.yml
-      - ./frontend/.env.production:/var/jenkins_home/workspace/dep-fe/frontend/.env.production
+      # jenkins data 유지
+      - /var/jenkins_home:/var/jenkins_home
+      # flask, backend 빌드 컨테이너 환경변수
+      - ./.env:/var/jenkins_home/workspace/dep-be/.env
+      - ./.env:/var/jenkins_home/workspace/dep-flask/.env
+      # backend application 환경변수
+      - ./backend/src/main/resources:/var/jenkins_home/workspace/dep-be/backend/src/main/resources
+      # frontend 배포 환경변수
+      - ./frontend/.env.production:/var/jenkins_home/workspace/djep-fe/frontend/.env.production
+      - /etc/letsencrypt:/etc/letsencrypt
     ports:
       - ${JENKINS_PORT}:8080
     privileged: true
     user: ${JENKINS_USER}
     restart: unless-stopped
-
-  nginx:
-    image: nginx
-    container_name: nginx
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./infra/nginx/conf.d:/etc/nginx/conf.d
-      - /etc/letsencrypt:/etc/letsencrypt
-    restart: unless-stopped
-
 
 volumes:
   mariadb_data:
@@ -69,7 +51,4 @@ volumes:
 networks:
   mariadb_network:
     name: mariadb_network
-    driver: bridge
-  redis_network:
-    name: redis_network
     driver: bridge

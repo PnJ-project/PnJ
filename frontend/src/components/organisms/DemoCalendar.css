@@ -31,6 +31,7 @@
   margin-right: 20px;
   display: flex;
   justify-content: end;
+  align-items: center;
   width: 300px;
 }
 .NavGoogleBtn button {
@@ -189,7 +190,7 @@ textarea {
   margin-right: 10px;
 }
 .ServiceIntro {
-  width: 50px;
+  /* width: 50px; */
   height: 30px;
   position: relative;
   display: inline-block;

@@ -1,4 +1,4 @@
-import errorP from "../../../public/image/errorP.svg";
+import errorP from "/image/errorP.svg";
 import styled from "styled-components";
 
 export default function notfound() {

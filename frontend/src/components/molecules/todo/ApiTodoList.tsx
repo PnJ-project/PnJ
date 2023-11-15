@@ -18,7 +18,7 @@ interface TodoItem {
   id: number;
   summary: string;
 }
-interface ReqTodoCreate {
+export interface ReqTodoCreate {
   memberId: number | null;
   summary: string;
 }

@@ -11,7 +11,6 @@ import { RootState } from "../store/store";
 import { useEffect, useState } from "react";
 import { scroller } from "react-scroll";
 import { useNavigate } from "react-router-dom";
-import { setTutorialStart } from "../store/slice/Tutorial";
 
 export default function Demo() {
   // 기본세팅
@@ -31,9 +30,6 @@ export default function Demo() {
   // 데모버튼 클릭시
   const handleDemo = () => {
     dispatch(setDemoTrue());
-    setTimeout(() => {
-      dispatch(setTutorialStart());
-    }, 800);
     scroller.scrollTo("calendar", {
       smooth: true,
       duration: 800,
@@ -149,7 +145,7 @@ const BackGround = styled.div`
   background-image: linear-gradient(
     176deg,
     #36513d 80%,
-    #dddddd calc(80% + 2px)
+    #ffffff calc(80% + 2px)
   );
   z-index: -1;
 `;

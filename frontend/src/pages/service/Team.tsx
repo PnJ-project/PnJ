@@ -1,12 +1,12 @@
 import { motion, AnimatePresence, useMotionValue } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import PnjLogo from "../../components/atoms/PnjLogoTeam";
-import daeyoung from "../../../public/image/daeyoung.svg";
-import haejin from "../../../public/image/haejin.svg";
-import jaew from "../../../public/image/jaew.svg";
-import junha from "../../../public/image/junha.svg";
-import shee from "../../../public/image/shee.svg";
-import sw from "../../../public/image/sw.svg";
+import daeyoung from "/image/daeyoung.svg";
+import haejin from "/image/haejin.svg";
+import jaew from "/image/jaew.svg";
+import junha from "/image/junha.svg";
+import shee from "/image/shee.svg";
+import sw from "/image/sw.svg";
 import styled from "styled-components";
 import "./Team.css";
 

@@ -2,8 +2,7 @@ package com.preparedhypeboys.pnj.domain.suggestion.api;
 
 import static com.preparedhypeboys.pnj.domain.suggestion.constant.SuggestionResponseMessage.SUGGESTION_SUCCESS;
 
-import com.google.gson.JsonObject;
-import com.preparedhypeboys.pnj.domain.suggestion.constant.SuggestionResponseMessage;
+import com.google.gson.JsonArray;
 import com.preparedhypeboys.pnj.domain.suggestion.service.SuggestionService;
 import com.preparedhypeboys.pnj.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +21,8 @@ public class SuggestionController {
     private final SuggestionService suggestionService;
 
     @GetMapping("/{memberId}/{timeMax}/{timeMin}")
-    public ResponseEntity<ResponseDto<JsonObject>> getSuggestion(
-            @PathVariable(value = "memberId") Long memberId,
+    public ResponseEntity<ResponseDto<JsonArray>> getSuggestion(
+        @PathVariable(value = "memberId") Long memberId,
         @PathVariable(value = "timeMax") String timeMax,
         @PathVariable(value = "timeMin") String timeMin
     ) {

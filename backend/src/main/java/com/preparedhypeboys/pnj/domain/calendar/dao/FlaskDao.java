@@ -1,7 +1,7 @@
 package com.preparedhypeboys.pnj.domain.calendar.dao;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
 import java.lang.reflect.Type;
@@ -53,7 +53,7 @@ public class FlaskDao {
         return list;
     }
 
-    public JsonObject getSuggestionResponse(String summaries) {
+    public JsonArray getSuggestionResponse(String summaries) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -68,6 +68,6 @@ public class FlaskDao {
             FLASK_HOST + "/trans/recom", requestEntity, String.class
         );
 
-        return gson.fromJson(response.getBody(), JsonObject.class);
+        return gson.fromJson(response.getBody(), JsonArray.class);
     }
 }

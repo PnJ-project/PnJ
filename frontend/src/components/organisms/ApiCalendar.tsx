@@ -9,7 +9,6 @@ import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
 import TeamBtn from "../atoms/TeamBtn";
-import ServiceBtn from "../atoms/ServiceBtn";
 import GoogleLogin from "../atoms/GoogleLogin";
 import TodoList from "../molecules/todo/ApiTodoList";
 import SmallCal from "../../pages/test/SmallCal";
@@ -20,6 +19,8 @@ import { IoMicCircle } from "react-icons/io5";
 import "./DemoCalendar.css";
 //stt
 import { useSpeechRecognition } from "react-speech-kit";
+import { AiFillQuestionCircle } from "react-icons/ai";
+import About from "../../pages/service/About";
 
 // 타입 선언
 export interface FlaskResType {
@@ -43,10 +44,28 @@ export default function DemoCalendar() {
   const dispatch = useDispatch();
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
   const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
-  const [timeMax] = useState(moment().startOf("month").toDate().toISOString());
-  const [timeMin] = useState(
-    moment().endOf("month").endOf("week").toDate().toISOString()
-  );
+  const startOfFiveMonthsAgo = moment()
+    .subtract(6, "months")
+    .startOf("month")
+    .toDate()
+    .toISOString(); // 5개월 전
+  const endOfFiveMonthsAhead = moment()
+    .add(6, "months")
+    .endOf("month")
+    .endOf("week")
+    .toDate()
+    .toISOString(); // 5개월 후
+  const [timeMax] = useState(startOfFiveMonthsAgo);
+  const [timeMin] = useState(endOfFiveMonthsAhead);
+  const [showServiceIntro, setShowServiceIntro] = useState(false); // 서비스 소개
+
+  const handleMouseEnter = () => {
+    setShowServiceIntro(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowServiceIntro(false);
+  };
   const { refetch: refetchCal } = useQuery(
     "calendarData",
     () => readCalendar(timeMax, timeMin),
@@ -132,13 +151,15 @@ export default function DemoCalendar() {
         <div className="DemoNavbar">
           <div className="InputContaier">
             <PnjLogo />
-            <TextareaAutosize
-              className="PnjInput"
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              placeholder="일정을 입력해보세요"
-              value={textSave}
-            />
+            <div className="PnjInput">
+              <TextareaAutosize
+                className={`PnjInputInner`}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                placeholder="일정을 입력해보세요"
+                value={textSave}
+              />
+            </div>
             <IoMicCircle
               style={{
                 verticalAlign: "middle",
@@ -156,8 +177,23 @@ export default function DemoCalendar() {
           </div>
           <div className="NavGoogleBtn">
             <TeamBtn />
-            <ServiceBtn />
             <GoogleLogin />
+            {/* 서비스 소개 */}
+            <div
+              className="ServiceIntro"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              style={{ verticalAlign: "middle", fontSize: "30px" }}
+            >
+              <AiFillQuestionCircle />
+              {showServiceIntro && (
+                <div className="ServiceIntroTooltip">
+                  <div className="ServiceIntroContent">
+                    <About />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         {/* Body */}

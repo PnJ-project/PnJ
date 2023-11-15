@@ -2,7 +2,7 @@ package com.preparedhypeboys.pnj.domain.suggestion.service;
 
 import static com.preparedhypeboys.pnj.global.error.constant.ExceptionMessage.NOT_FOUND_USER;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 import com.preparedhypeboys.pnj.domain.calendar.dao.FlaskDao;
 import com.preparedhypeboys.pnj.domain.calendar.dao.GoogleCalendarDao;
 import com.preparedhypeboys.pnj.domain.calendar.dto.EventDto;
@@ -28,7 +28,7 @@ public class SuggestionServiceImpl implements
     private final FlaskDao flaskDao;
 
     @Override
-    public JsonObject getSuggestionInfo(Long memberId, String timeMax, String timeMin) {
+    public JsonArray getSuggestionInfo(Long memberId, String timeMax, String timeMin) {
         Member member = memberRepository.findById(memberId).orElseThrow(
             () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
@@ -46,7 +46,7 @@ public class SuggestionServiceImpl implements
         StringBuilder stringBuilder = new StringBuilder();
 
         for (EventDto e : events) {
-            stringBuilder.append(e.getSummary());
+            stringBuilder.append(e.getSummary()).append(" ");
         }
 
         return stringBuilder.toString();
