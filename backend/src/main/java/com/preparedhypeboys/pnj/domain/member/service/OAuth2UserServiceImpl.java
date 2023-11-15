@@ -91,7 +91,6 @@ public class OAuth2UserServiceImpl implements
         member.get().setToken(oAuthTokenResponse.getAccessToken(),
             oAuthTokenResponse.getRefreshToken(), oAuthTokenResponse.getExpiresIn());
 
-        // TODO JWT Refresh Token Redis 적용
         String accessToken = jwtUtil.createToken(member.get().getId());
         String refreshToken = jwtUtil.createRefreshToken(member.get().getId());
 
