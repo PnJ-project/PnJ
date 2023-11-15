@@ -1,6 +1,6 @@
 // ApiEventDetail.tsx api수정 모달 창
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateEvent,
@@ -10,6 +10,7 @@ import { closeSideModal } from "../../store/slice/calendar/ModalSlice";
 import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
+import formatDateTime from "../../functions/BaseFunc";
 
 // 모달 타입
 interface ModalProps {
@@ -27,18 +28,35 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
   const event = events.find((event) => event.id === id);
   const [title, setTitle] = useState(event?.title);
   const [memo, setMemo] = useState(event?.memo);
+  const [colorId, setColorId] = useState(event?.colorId);
   const [errorMsg, setErrorMsg] = useState("");
   const startDate = event?.start.split("T")[0];
   const endDate = event?.end.split("T")[0];
-  const [sDate, setSDate] = useState(startDate);
-  const [eDate, setEDate] = useState(endDate);
+  const [sDate, setSDate] = useState(startDate || "");
+  const [eDate,setEDate] = useState(endDate || "");
   const starttime = event?.start.split("T")[1]?.substr(0, 5);
   const endtime = event?.end.split("T")[1]?.substr(0, 5);
   const [sTime, setSTime] = useState(starttime||"00:00");
   const [eTime, setETime] = useState(endtime||"00:00");
   const [allDay, setAllDay] = useState(event?.allDay);
+  const [showEDate, setShowEDate] = useState(eDate);
 
+  // sDate와 eDate가 다르면 allDay를 체크하도록 설정
+  useEffect(() => {
+    if (sDate !== showEDate && sTime == "00:00" &&  eTime == "00:00") {
+      setAllDay(true);
+    }
+  }, [sDate,showEDate]);
 
+  useEffect(() => {
+    // 하루종일이면 showEDate = eDate - 1
+    if (sDate !== showEDate && allDay && sTime == "00:00" &&  eTime == "00:00") {
+      const newEDate = new Date(eDate)
+      newEDate.setDate(newEDate.getDate() - 1);
+      const lastEDate = formatDateTime(newEDate).split('T')[0];
+      setShowEDate(lastEDate)
+    }
+  },[sDate, eDate,allDay])
 
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -63,6 +81,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       title,
       start: sDate+'T'+sTime+':00',
       end: eDate + 'T' + eTime + ':00',
+      colorId: colorId,
       allDay: allDay,
       memo: memo,
       resource: { event: { id: id, memo: memo } },
@@ -80,7 +99,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
         id: id,
         summary: title,
         description:memo,
-        colorId: null,
+        colorId: colorId,
         start: {
           dateTime: !allDay ? sDate+'T'+sTime+':00' : null,
           timeZone: "Asia/Seoul",
@@ -125,7 +144,24 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       console.error("캘린더 삭제 에러:", error);
     }
   };
-
+  // 색깔 정하기
+  const colorMap:{[key: number]: string} = {
+    1: 'red',
+    2: 'orange',
+    3: 'yellow',
+    4: 'blue',
+    5: 'green',
+    6: 'purple',
+    7: 'pink',
+    8: 'white',
+    9: 'black',
+    10: 'gray',
+  };
+  const handleBoxClick = (key:string) => {
+    console.log(key);
+    const numKey = Number(key);
+    setColorId(numKey)
+  };
   return (
     <Overlay
       onClick={(e) => {
@@ -139,6 +175,21 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
           <Title>일정 수정하기</Title>
           <CloseBtn onClick={() => {dispatch(closeSideModal())}}>✖</CloseBtn>
         </Header>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        {Object.entries(colorMap).map(([key, color]) => (
+          <div
+            key={key}
+            style={{
+              width: '30px',
+              height: '30px',
+              margin: '2px',
+              backgroundColor: color,
+              border: colorId === Number(key) ? '2px solid #000' : 'none',
+            }}
+            onClick={() => handleBoxClick(key)}
+          />
+        ))}
+      </div>
         <DateBox>
           <div>날짜</div>
           <SelectDate>
@@ -147,10 +198,22 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
                 setSDate(e.target.value);
               }} />
             <span>~</span>
-            <input type="date" value={eDate}
-            onChange={(e) => {
-              setEDate(e.target.value);
-            }}/>
+            <input type="date" value={showEDate} min={sDate}
+              onChange={(e) => {
+                setShowEDate(e.target.value);
+                // 하루 종일이면 하루 더해서 api 요청
+                if (allDay && sTime === "00:00" && eTime === "00:00") {
+                  const newEDate = new Date(e.target.value)
+                  newEDate.setDate(newEDate.getDate() + 1);
+                  const lastEDate = formatDateTime(newEDate).split('T')[0];
+                  setEDate(lastEDate)
+                }
+                // 종일 일정이 아니면 하루 빼서(showdate대로) 요청
+                else {
+                  setEDate(e.target.value)
+                }
+              }}
+            />
           </SelectDate>
           <CheckBox>
             {/* 날짜가 다르면 하루종일 체크, 변경 못하게 */}
@@ -158,7 +221,10 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
               type="checkbox"
               id="allDay"
               checked={allDay}
-              onChange={(e) => setAllDay(e.target.checked)}
+              onChange={(e) => {
+                setAllDay(e.target.checked)
+                console.log(e.target.checked)
+              }}
               // disabled={sDate !== eDate}
             />
             <label htmlFor="allDay">하루 종일</label>

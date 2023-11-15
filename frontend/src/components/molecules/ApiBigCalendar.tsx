@@ -56,6 +56,7 @@ interface FormatEvent {
   start: Date;
   end: Date;
   memo?: string;
+  colorId?: number;
 }
 interface CalendarRes {
   id: number;
@@ -63,6 +64,7 @@ interface CalendarRes {
   end: { dateTime: string, date: string };
   summary: string;
   description: string;
+  colorId?: number;
 }
 // 백엔드
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
@@ -142,6 +144,7 @@ const BigCalendarInfo = () => {
         dispatch(
           updateEvent({
             title: event.title?.toString(),
+            allDay: event.allDay,
             start: formatDateTime(start),
             end: formatDateTime(end),
             resource: { event: restEvent },
@@ -149,7 +152,7 @@ const BigCalendarInfo = () => {
         );
       }
       // 캘린더 수정 API 요청
-      if ("id" in event && "memo" in event) {
+      if ("id" in event && "memo" in event && "colorId" in event ) {
         const new_start = new Date(start);
         const new_end = new Date(end);
         const send_id = event.id;
@@ -159,7 +162,7 @@ const BigCalendarInfo = () => {
             id: send_id,
             summary: event.title,
             description: event.memo,
-            colorId: null,
+            colorId: event.colorId,
             start: {
               dateTime: !event.allDay ? formatDateTime(new_start) : null,
               timeZone: "Asia/Seoul",
@@ -217,7 +220,7 @@ const BigCalendarInfo = () => {
         );
       }
       // 캘린더 수정 API 요청
-      if ("id" in event && "memo" in event) {
+      if ("id" in event && "memo" in event && "colorId" in event) {
         const new_start = new Date(start);
         const new_end = new Date(end);
         const send_id = event.id;
@@ -227,7 +230,7 @@ const BigCalendarInfo = () => {
             id: send_id,
             summary: event.title,
             description: event.memo,
-            colorId: null,
+            colorId: event.colorId,
             start: {
               dateTime: !event.allDay ? formatDateTime(new_start) : null,
               timeZone: "Asia/Seoul",
@@ -298,6 +301,7 @@ const BigCalendarInfo = () => {
       console.log("캘린더 데이터가 갱신됩니다", calData.data);
       const formattedData = calData.data.map((item: CalendarRes) => ({
         id: item.id,
+        colorId: item.colorId || 1,
         allDay: item.start.date ? true : false,
         start: !item.start.date ? item.start.dateTime:item.start.date+'T00:00:00',
         end: !item.end.date ?item.end.dateTime:item.end.date+'T00:00:00',
@@ -317,6 +321,7 @@ const BigCalendarInfo = () => {
         end: new Date(event.end),
       }));
       setFormattedEventsJunha(formattedEvents);
+      console.log(formattedEvents)
     }
   }, [myEvents]);
   // style
@@ -337,6 +342,7 @@ const BigCalendarInfo = () => {
       const newEvent: DragEvent = {
         id: id,
         title: summary,
+        colorId: 1,
         allDay: true,
         start: formatDateTime(start),
         end: formatDateTime(end),
@@ -407,14 +413,19 @@ const BigCalendarInfo = () => {
           //보여질 화면
           view={currentView}
           //이벤트 발생할 때마다
-          //   eventPropGetter={eventPropGetter}
-          style={{ height: "100%", width: "100%" }}
+            // eventPropGetter={eventPropGetter}
+          style={{
+            height: "100%",
+            width: "100%"
+          }}
           // Todo -> Calendar DROP 밖에서 캘린더로
           onDropFromOutside={onDropFromOutside}
           // Toolbar 커스터마이징
           components={{
             toolbar: Toolbar,
           }}
+          // allDay인지에 따라서 style 변경
+
           formats={formats}
         />
       </div>
@@ -479,6 +490,7 @@ const Container = styled.div`
       align-items: end;
     }
     // 일정 적힌 박스
+
     .rbc-event.rbc-event-allday {
       width: 100%;
       background-color: #fa92a3;
