@@ -15,7 +15,7 @@ services:
     image: backend
     container_name: backend_blue1
     ports:
-      - "${BACKEND_PORT_BLUE1}:8080"
+      - ${BACKEND_PORT_BLUE1}:8080
     networks:
       - mariadb_network
     restart: unless-stopped
@@ -24,7 +24,7 @@ services:
     image: backend
     container_name: backend_blue2
     ports:
-      - "${BACKEND_PORT_BLUE2}:8080"
+      - ${BACKEND_PORT_BLUE2}:8080
     networks:
       - mariadb_network
     restart: unless-stopped

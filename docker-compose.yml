@@ -21,13 +21,12 @@ services:
     container_name: jenkins
     environment:
       FRONTEND_PORT: ${FRONTEND_PORT}
-      FLASK_PORT1: ${FLASK_PORT1}
-      FLASK_PORT2: ${FLASK_PORT2}
     volumes:
       - /usr/bin/docker:/usr/bin/docker
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/jenkins_home:/var/jenkins_home
       - ./.env:/var/jenkins_home/workspace/dep-be/.env
+      - ./.env:/var/jenkins_home/workspace/dep-flask/.env
       - /usr/libexec/docker/cli-plugins/docker-buildx:/usr/libexec/docker/cli-plugins/docker-buildx
       - ./backend/src/main/resources:/var/jenkins_home/workspace/dep-be/backend/src/main/resources
       - ./frontend/.env.production:/var/jenkins_home/workspace/dep-fe/frontend/.env.production
