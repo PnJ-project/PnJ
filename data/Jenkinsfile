@@ -31,8 +31,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'echo $FLASK_PORT'
-                sh 'docker rm -f flask'
-                sh 'docker run -d --name flask --network mariadb_network -p ${FLASK_PORT}:5000 flask:latest'
+                sh 'docker rm -f flask1'
+                sh 'docker run -d --name flask1 -p ${FLASK_PORT1}:5000 flask:latest'
+                sh 'docker rm -f flask2'
+                sh 'docker run -d --name flask1 -p ${FLASK_PORT2}:5000 flask:latest'
             }
         }
 
