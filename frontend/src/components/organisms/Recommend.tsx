@@ -14,6 +14,8 @@ import Study from "../molecules/recommend/Study";
 import Trip from "../molecules/recommend/Trip";
 import Eat from "../molecules/recommend/Eat";
 import All from "../molecules/recommend/All";
+import grid from "/image/grid.svg";
+import list from "/image/list.svg";
 
 export default function Recommend() {
   // 기본 세팅
@@ -31,8 +33,8 @@ export default function Recommend() {
     .endOf("week")
     .toDate()
     .toISOString(); // 5개월 후
-  const [timeMax] = useState(startOfFiveMonthsAgo);
-  const [timeMin] = useState(endOfFiveMonthsAhead);
+  const [timeMax] = useState(endOfFiveMonthsAhead);
+  const [timeMin] = useState(startOfFiveMonthsAgo);
   const allEvents = useSelector(selectEvents);
 
   // 쿼리관리
@@ -54,6 +56,9 @@ export default function Recommend() {
   useEffect(() => {
     if (recommendData) {
       console.log("추천 아이템을 리덕스에 저장", recommendData.data);
+      if (recommendData.data[0] == "일정을 추가해 보세요") {
+        return;
+      }
       dispatch(setRecommend(recommendData.data));
     }
   }, [recommendData]);
@@ -76,16 +81,17 @@ export default function Recommend() {
               setSortCategory(true);
             }}
           >
-            카테고리
+            <img src={list} alt="" style={{ width: "35px" }} />
           </button>
           <button
             onClick={() => {
               setSortCategory(false);
             }}
           >
-            갤러리
+            <img src={grid} alt="" style={{ width: "30px" }} />
           </button>
         </div>
+        {/* 카테고리 보기 */}
         {sortCategoey && (
           <>
             <div className="RecommendBox">
@@ -96,7 +102,8 @@ export default function Recommend() {
               <Eat />
             </div>
           </>
-        )}{" "}
+        )}
+        {/* 갤러리 보기 */}
         {!sortCategoey && (
           <>
             <div className="RecommendAllBox">

@@ -29,7 +29,6 @@ export default function TodoList() {
       return;
     }
     // 새로운 일정 폼 생성
-    console.log(todo.id, "zzzzzzzzzzzz");
     const newTodo: TodoItem = {
       id: todo.id,
       summary: todo.summary,

@@ -145,7 +145,7 @@ const BackGround = styled.div`
   background-image: linear-gradient(
     176deg,
     #36513d 80%,
-    #dddddd calc(80% + 2px)
+    #ffffff calc(80% + 2px)
   );
   z-index: -1;
 `;
