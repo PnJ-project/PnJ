@@ -23,7 +23,7 @@ def data_preprocessing():
 
     # 공부 카테고리는 따로 행 추가
     new_row = pd.DataFrame({'title': ['명언'], 'info': ['시험, 면접, 테스트, 자격증'], 'category': ['공부'],
-                            'categoryName': ['명상, 요가, 자기계발, 자기개발']})
+                            'categoryName': ['명상 요가 자기계발 자기개발 학습']})
 
     selected_data = pd.concat([selected_data, new_row], ignore_index=True)
 
