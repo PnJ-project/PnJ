@@ -1,5 +1,4 @@
 import ast
-from konlpy.tag import Okt
 from include.dataloader.dataloader import data_preprocessing, load_data
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -77,7 +76,7 @@ def calcultation_similarity(summary_list):
     top_indices = sorted(filtered_indices, key=lambda x: x[1], reverse=True)
 
     if len(top_indices) > 20:
-        top_indices = top_indices[:30]
+        top_indices = top_indices[:40]
     # json으로 반환
     original_json = transform_json(life_quotes, top_indices, selected_data, origin_data)
 
@@ -99,6 +98,4 @@ def calcultation_similarity(summary_list):
 
     # 유사한 아이템이 충분한 경우
     else:
-
         return original_json
-
