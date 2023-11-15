@@ -16,6 +16,8 @@ import Eat from "../molecules/recommend/Eat";
 import All from "../molecules/recommend/All";
 import grid from "/image/grid.svg";
 import list from "/image/list.svg";
+import RecommendJ from '/image/RecommendJ.svg';
+import styled from "styled-components";
 
 export default function Recommend() {
   // 기본 세팅
@@ -74,7 +76,9 @@ export default function Recommend() {
       <UpBtn howscroll={200} />
       {/* 본문 */}
       <div className="RecommendContainer">
-        <div className="RecommendTitle">당신을 위한 J의 일정 추천</div>
+        <Box className="RecommendTitle">당신을 위한 
+        <Img src={RecommendJ} />
+        의 일정 추천</Box>
         <div className="RecommendSortBtnBox">
           <button
             onClick={() => {
@@ -115,3 +119,14 @@ export default function Recommend() {
     </>
   );
 }
+
+const Img = styled.img`
+width: 50px;
+height: 50px;
+/* margin-top: 50px; */
+
+`
+const Box = styled.div`
+
+
+`
