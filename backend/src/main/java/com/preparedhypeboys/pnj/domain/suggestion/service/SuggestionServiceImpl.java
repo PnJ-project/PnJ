@@ -46,7 +46,7 @@ public class SuggestionServiceImpl implements
         StringBuilder stringBuilder = new StringBuilder();
 
         for (EventDto e : events) {
-            stringBuilder.append(e.getSummary());
+            stringBuilder.append(e.getSummary()).append(" ");
         }
 
         return stringBuilder.toString();
