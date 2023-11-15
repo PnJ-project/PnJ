@@ -75,24 +75,25 @@ def calcultation_similarity(summary_list):
     # 유사도 높은 순으로 정렬
     top_indices = sorted(filtered_indices, key=lambda x: x[1], reverse=True)
 
-    if len(top_indices) > 20:
+    # 유사한 아이템이 많을 경우 하나의 카테고리로 몰리지 않도록
+    if len(top_indices) > 15:
         new_top_indices = []
         category_counts = {}
 
         for idx, similarity in top_indices:
-            if len(new_top_indices) > 40:
+            if len(new_top_indices) > 30:
                 break
             category = selected_data.loc[idx, "category"]
             # 딕셔너리에 카테고리가 없으면 1로 초기화, 있으면 1 증가
             category_counts[category] = category_counts.get(category, 0) + 1
 
-            if category_counts[category] <= 10:
+            if category_counts[category] <= 8:
                 new_top_indices.append((idx, similarity))
 
         top_indices = new_top_indices
     # json으로 반환
     original_json = transform_json(life_quotes, top_indices, selected_data, origin_data)
-
+    # 명언의 경우 예외 처리
     top_indices = [item for item in top_indices if item[0] != 2487]
 
     # 유사한 아이템이 없는 경우
