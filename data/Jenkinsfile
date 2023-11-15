@@ -31,9 +31,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'echo $FLASK_PORT'
-                sh 'docker rm -f flask1'
+                sh 'docker stop flask1'
+                sh 'docker rm flask1'
                 sh 'docker run -d --name flask1 -p ${FLASK_PORT1}:5000 flask:latest'
-                sh 'docker rm -f flask2'
+                sh 'docker stop flask2'
+                sh 'docker rm flask2'
                 sh 'docker run -d --name flask1 -p ${FLASK_PORT2}:5000 flask:latest'
             }
         }
