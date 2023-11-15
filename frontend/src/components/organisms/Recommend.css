@@ -1,11 +1,11 @@
 .RecommendContainer {
   width: 100vw;
-  /* min-width: 1000px; */
-  background-color: #ffffff;
+  min-width: 1000px;
+  background-color: #e1e1e1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: SUITE-Regular;
+  /* font-family: SUITE-Regular; */
 }
 .RecommendSortBtnBox {
   display: flex;

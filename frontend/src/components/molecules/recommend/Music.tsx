@@ -8,6 +8,10 @@ import {
   selectRecommends,
 } from "../../../store/slice/RecommendSlice";
 import { useEffect, useState } from "react";
+import Recommend from './Recommend';
+import styled from "styled-components";
+import showimg from '/image/showimg.svg'
+
 
 export default function Music() {
   // 기본 세팅
@@ -44,26 +48,62 @@ export default function Music() {
   return (
     <>
       <div className="RecommendInner">
-        <div className="RecommendMuscic">
+        <Container className="RecommendMuscic">
           <div className="RecommendSubTitle">공연/전시 어때요?</div>
-          <div className="RecommendSlider">
-            <h1>Music</h1>
-            {/* items를 순회하여 각각의 item을 출력 */}
-            <div style={{ display: "flex", fontSize: "10px" }}>
+          <Recommend>
               {items.map((item, index) => (
-                <div key={index}>
-                  {/* item 내부의 키와 값을 출력 */}
-                  {Object.entries(item).map(([key, value]) => (
-                    <p key={key}>
-                      {key}: {value}
-                    </p>
-                  ))}
-                </div>
+                <SliderItem key={index}>
+                  <img 
+                    src={item.image === "false" ? showimg : item.image} 
+                    alt={item.image === "false" ? showimg : ''} 
+                  />
+                  <Name>{item.title}</Name>
+                  <Place>{item.info}</Place>
+                  <Info>{item.openDate}-{item.finalDate}</Info>
+
+                </SliderItem>
               ))}
-            </div>
-          </div>
+            </Recommend>
+      </Container>
         </div>
-      </div>
     </>
   );
 }
+
+const SliderItem = styled.div`
+  img{
+    width: 94%;
+    height: 240px;
+    object-fit: cover; 
+    margin-bottom: 20px;
+    transition: transform 0.3s ease; 
+    border: none;
+    box-shadow: none;
+
+    &:hover {
+      transform: scale(1.1); 
+    }
+  }
+  
+`;
+
+
+const Name = styled.p`
+font-size: 18px;
+width: 80%;
+`
+const Place = styled.p`
+font-size: 15px;
+margin-top: 10px;
+width: 85%;
+`
+const Info = styled.p`
+font-size: 12px;
+margin-top: 5px;
+width: 85%;
+`
+
+const Container = styled.div`
+margin-top: -30px;
+
+`

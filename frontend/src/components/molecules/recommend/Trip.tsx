@@ -8,6 +8,9 @@ import {
   selectRecommends,
 } from "../../../store/slice/RecommendSlice";
 import { useEffect, useState } from "react";
+import Recommend from './Recommend';
+import styled from "styled-components";
+import subimg from '/image/subimg.svg'
 
 export default function Trip() {
   // 기본 세팅
@@ -45,24 +48,60 @@ export default function Trip() {
       <div className="RecommendInner">
         <div className="RecommendTrip">
           <div className="RecommendSubTitle">여행 어때요?</div>
-          <div className="RecommendSlider">
-            <h1>Trip</h1>
-            {/* items를 순회하여 각각의 item을 출력 */}
-            <div style={{ display: "flex", fontSize: "10px" }}>
+
+            <Recommend>
               {items.map((item, index) => (
-                <div key={index}>
-                  {/* item 내부의 키와 값을 출력 */}
-                  {Object.entries(item).map(([key, value]) => (
-                    <p key={key}>
-                      {key}: {value}
-                    </p>
-                  ))}
-                </div>
+                <SliderItem key={index}>
+                  <img 
+                    src={item.image === "false" ? subimg : item.image} 
+                    alt={item.image === "false" ? subimg : ''} 
+                  />
+                  <Name>{item.title === "false" ? '' : item.title}</Name>
+                  <Place>{item.roadAddress === "false" ? '' : item.roadAddress}</Place>
+                  <Info>{item.info === "false" ? '' : item.info}</Info>
+
+                </SliderItem>
               ))}
-            </div>
-          </div>
+            </Recommend>
+   
         </div>
       </div>
     </>
   );
 }
+
+
+const SliderItem = styled.div`
+  
+  img{
+    width: 94%;
+    height: 240px;
+    object-fit: cover; 
+    margin-bottom: 20px;
+    transition: transform 0.3s ease; 
+    border: none;
+    box-shadow: none;
+
+    &:hover {
+      transform: scale(1.1); 
+    }
+  }
+  
+  
+`;
+
+
+const Name = styled.p`
+font-size: 18px;
+width: 85%;
+`
+const Place = styled.p`
+font-size: 15px;
+margin-top: 10px;
+width: 85%;
+`
+const Info = styled.p`
+font-size: 12px;
+margin-top: 5px;
+`
+

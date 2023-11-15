@@ -8,6 +8,9 @@ import {
   selectRecommends,
 } from "../../../store/slice/RecommendSlice";
 import { useState, useEffect } from "react";
+import Recommend from './Recommend';
+import styled from "styled-components";
+
 
 export default function Sports() {
   // 기본 세팅
@@ -45,24 +48,57 @@ export default function Sports() {
       <div className="RecommendInner">
         <div className="RecommendSports">
           <div className="RecommendSubTitle">당신이 궁금한 스포츠 일정</div>
-          <div className="RecommendSlider">
-            <h1>Sports</h1>
-            {/* items를 순회하여 각각의 item을 출력 */}
-            <div style={{ display: "flex", fontSize: "10px" }}>
+          <Recommend>
               {items.map((item, index) => (
-                <div key={index}>
-                  {/* item 내부의 키와 값을 출력 */}
-                  {Object.entries(item).map(([key, value]) => (
-                    <p key={key}>
-                      {key}: {value}
-                    </p>
-                  ))}
-                </div>
+                <SliderItem key={index}>
+                  {/* <img src={item.homeTeamEmblemUrl} alt={item.category}  /> */}
+                  <img src={item.awayTeamEmblemUrl} alt={item.category}  />
+                    <Name>{item.awayTeamName} vs {item.homeTeamName}</Name>
+                    <Info>{item.league}</Info>
+                    <When>{item.gameDate}</When>
+
+                </SliderItem>
               ))}
-            </div>
-          </div>
+            </Recommend>
         </div>
       </div>
     </>
   );
 }
+
+const SliderItem = styled.div`
+
+img{
+    width: 94%;
+    height: 240px;
+    object-fit: cover; 
+    margin-bottom: 20px;
+    transition: transform 0.3s ease; 
+    border: none;
+    box-shadow: none;
+
+    &:hover {
+      transform: scale(1.1); 
+    }
+  }
+  
+  
+`;
+
+
+const Name = styled.p`
+font-size: 18px;
+width: 80%;
+`
+
+const When = styled.p`
+font-size: 10px;
+margin-top: 5px;
+width: 85%;
+`
+const Info = styled.p`
+font-size: 12px;
+margin-top: 5px;
+width: 85%;
+`
+
