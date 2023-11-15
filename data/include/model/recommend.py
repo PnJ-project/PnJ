@@ -6,21 +6,11 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-def get_morphemes(text):
-    okt = Okt()
-    morphemes = okt.morphs(text)
-    return morphemes
-
-
-# 유사한 아이템이 없는 경우
-def handle_no_similarity():
-    return "일정을 추가해 보세요"
-
-
 # 0.1 이상 유사한 아이템이 20개 이하.
 def handle_few_similarity(top_indices):
     # 아이템 유사도 계산한 파일
     top_similarity = load_data('top_similarity_results.csv')
+
     indices_to_select = [index for index, _ in top_indices]
     # 인덱스에 해당하는 행을 선택
     selected_rows = top_similarity.loc[indices_to_select]
@@ -39,7 +29,7 @@ def handle_few_similarity(top_indices):
     return sorted_list_of_tuples
 
 
-def transform_json(life_quotes,top_similarities, selected_data, origin_data):
+def transform_json(life_quotes, top_similarities, selected_data, origin_data):
     result = []
 
     travel_keys = ['category', 'title', 'info', 'roadAddress', 'lotNumberAddress', 'categoryName', 'homepage', 'image']
@@ -60,11 +50,11 @@ def transform_json(life_quotes,top_similarities, selected_data, origin_data):
         elif selected_data.loc[idx, "category"] == "공부":
             result.append(random_study[study_keys].to_dict(orient='records')[0])
 
-
     return result
 
 
 def calcultation_similarity(summary_list):
+    original_json = []
 
     origin_data, selected_data, life_quotes = data_preprocessing()
 
@@ -82,16 +72,21 @@ def calcultation_similarity(summary_list):
 
     # 결과 출력
     similarities_with_target = list(enumerate(cosine_similarities[0]))
-    filtered_indices = [(index, similarity) for index, similarity in similarities_with_target if similarity > 0.2]
-
+    filtered_indices = [(index, similarity) for index, similarity in similarities_with_target if similarity > 0.05]
     # 유사도 높은 순으로 정렬
     top_indices = sorted(filtered_indices, key=lambda x: x[1], reverse=True)
+
+    if len(top_indices) > 20:
+        top_indices = top_indices[:30]
     # json으로 반환
     original_json = transform_json(life_quotes, top_indices, selected_data, origin_data)
 
+    top_indices = [item for item in top_indices if item[0] != 2487]
+
     # 유사한 아이템이 없는 경우
+
     if len(top_indices) == 0:
-        return handle_no_similarity()
+        return original_json
 
     # 유사한 아이템이 1개 이상 20개 미만일 경우
     elif len(top_indices) < 20:
@@ -104,7 +99,6 @@ def calcultation_similarity(summary_list):
 
     # 유사한 아이템이 충분한 경우
     else:
-        # 개수 조정
-        top_indices = top_indices[:25]
-        return transform_json(life_quotes, top_indices, selected_data, origin_data)
+
+        return original_json
 
