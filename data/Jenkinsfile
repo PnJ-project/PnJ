@@ -30,14 +30,10 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'echo $FLASK_PORT1'
-                sh 'echo $FLASK_PORT2'
-                sh 'docker stop flask1'
-                sh 'docker rm flask1'
-                sh 'docker run -d --name flask1 -p ${FLASK_PORT1}:5000 flask:latest'
-                sh 'docker stop flask2'
-                sh 'docker rm flask2'
-                sh 'docker run -d --name flask1 -p ${FLASK_PORT2}:5000 flask:latest'
+                sh 'docker-compose -f docker-compose.flask.yml down flask1'
+                sh 'docker-compose -f docker-compose.flask.yml up flask1'
+                sh 'docker-compose -f docker-compose.flask.yml down flask2'
+                sh 'docker-compose -f docker-compose.flask.yml up flask2'
             }
         }
 
