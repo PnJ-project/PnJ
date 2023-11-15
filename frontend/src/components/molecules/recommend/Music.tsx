@@ -1,6 +1,10 @@
 import { useSelector } from "react-redux";
 import {
-  RecommendState,
+  EatItemType,
+  MusicItemType,
+  SportItemType,
+  StudyItemType,
+  TripItemType,
   selectRecommends,
 } from "../../../store/slice/RecommendSlice";
 import { useEffect, useState } from "react";
@@ -8,7 +12,14 @@ import { useEffect, useState } from "react";
 export default function Music() {
   // 기본 세팅
   const recommends = useSelector(selectRecommends);
-  const [items, setItems] = useState<RecommendState[]>([]);
+  const [items, setItems] = useState<
+    | TripItemType[]
+    | StudyItemType[]
+    | EatItemType[]
+    | MusicItemType[]
+    | SportItemType[]
+    | []
+  >([]);
 
   // 정보 추리기
   useEffect(() => {

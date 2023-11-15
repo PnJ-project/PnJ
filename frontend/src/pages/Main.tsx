@@ -97,7 +97,9 @@ export default function Main() {
 
   return (
     <>
+      {/* CSS 설정 */}
       <BackGround></BackGround>
+
       {/* 메인 페이지 부 */}
       <div id="top"></div>
 
@@ -125,7 +127,7 @@ const BackGround = styled.div`
   background-image: linear-gradient(
     176deg,
     #36513d 80%,
-    #dddddd calc(80% + 2px)
+    #ffffff calc(80% + 2px)
   );
   z-index: -1;
 `;

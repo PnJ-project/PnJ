@@ -1,11 +1,29 @@
 // 추천 관련입니다
 import { createSlice } from "@reduxjs/toolkit";
 
-export interface RecommendState {
-  category: string;
+export interface TripItemType {
+  [key: string]: string;
 }
-interface RecommendsState {
-  recommends: RecommendState[];
+export interface StudyItemType {
+  [key: string]: string;
+}
+export interface MusicItemType {
+  [key: string]: string;
+}
+export interface EatItemType {
+  [key: string]: string;
+}
+export interface SportItemType {
+  [key: string]: string;
+}
+export interface RecommendsState {
+  recommends:
+    | TripItemType[]
+    | StudyItemType[]
+    | EatItemType[]
+    | MusicItemType[]
+    | SportItemType[]
+    | [];
 }
 
 const initialState: RecommendsState = {
