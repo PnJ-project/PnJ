@@ -76,7 +76,20 @@ def calcultation_similarity(summary_list):
     top_indices = sorted(filtered_indices, key=lambda x: x[1], reverse=True)
 
     if len(top_indices) > 20:
-        top_indices = top_indices[:40]
+        new_top_indices = []
+        category_counts = {}
+
+        for idx, similarity in top_indices:
+            if len(new_top_indices) > 40:
+                break
+            category = selected_data.loc[idx, "category"]
+            # 딕셔너리에 카테고리가 없으면 1로 초기화, 있으면 1 증가
+            category_counts[category] = category_counts.get(category, 0) + 1
+
+            if category_counts[category] <= 10:
+                new_top_indices.append((idx, similarity))
+
+        top_indices = new_top_indices
     # json으로 반환
     original_json = transform_json(life_quotes, top_indices, selected_data, origin_data)
 
