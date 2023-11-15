@@ -29,7 +29,7 @@ import {
   setEvents,
   addEvent,
 } from "../../store/slice/calendar/CalendarSlice";
-import { change, handleDate } from "../../store/slice/calendar/HandleSlice";
+import { change, handleDate, selectRangeDate } from "../../store/slice/calendar/HandleSlice";
 import Modal from "./ApiEventForm";
 import DetailModal from "./ApiEventDetail";
 import withDragAndDrop, {
@@ -47,6 +47,7 @@ import {
   selectDraggedTodo,
   setDraggedTodo,
 } from "../../store/slice/calendar/TodoSlice";
+import formatDateTime from "../../functions/BaseFunc";
 // 이벤트 캘린더 폼
 interface FormatEvent {
   id: number;
@@ -55,13 +56,15 @@ interface FormatEvent {
   start: Date;
   end: Date;
   memo?: string;
+  colorId?: number;
 }
 interface CalendarRes {
   id: number;
-  start: { dateTime: string };
-  end: { dateTime: string };
+  start: { dateTime: string, date: string };
+  end: { dateTime: string, date: string };
   summary: string;
-  memo: string;
+  description: string;
+  colorId?: number;
 }
 // 백엔드
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
@@ -99,7 +102,7 @@ const BigCalendarInfo = () => {
   }; //todo Refetch
 
   // 캘린더를 DragAndDrop으로 바꿉니다.
-  moment.locale("ko");
+  moment.locale("ko-KR");
   const localizer = momentLocalizer(moment);
   const DragAndDropCalendar = withDragAndDrop(Calendar);
   // 캘린더용 데이터 파싱
@@ -108,7 +111,25 @@ const BigCalendarInfo = () => {
     []
   );
   const handledate: Date = new Date(date);
-
+  // 요일,날짜 Toolbar 변경
+  const formats = {
+    dateFormat: 'D',
+    dayFormat: 'D일',
+    dayRangeHeaderFormat: ({ start, end }: { start: Date; end: Date }) => {
+      const startDate = moment(start).format('M월 D일');
+      const endDate = moment(end).format('M월 D일');
+      return `${startDate} - ${endDate}`;
+    },
+    // view가 month일 때 화살표 있는 쪽 년월
+    monthHeaderFormat: 'YYYY년 M월',
+    //view가 day일 때
+    dayHeaderFormat: 'M월 D일 ddd',
+    dayRangeFormat: ({ start, end }: { start: Date; end: Date }) => {
+      const startDate = moment(start).format('M월 D일');
+      const endDate = moment(end).format('M월 D일');
+      return `${startDate} - ${endDate}`;
+    },
+  };
   // 일정 이동 기능
   const moveEvent = useCallback(
     async ({ event, start, end }: EventInteractionArgs<BigCalendarEvent>) => {
@@ -118,17 +139,20 @@ const BigCalendarInfo = () => {
         end: undefined,
       });
       // 일정변경 (개발자용)
-      dispatch(
-        updateEvent({
-          title: event.title?.toString(),
-          allDay: event.allDay,
-          start: start.toString(),
-          end: end.toString(),
-          resource: { event: restEvent },
-        })
-      );
+      if (start instanceof Date && end instanceof Date) {
+        console.log(event, start, end)
+        dispatch(
+          updateEvent({
+            title: event.title?.toString(),
+            allDay: event.allDay,
+            start: formatDateTime(start),
+            end: formatDateTime(end),
+            resource: { event: restEvent },
+          })
+        );
+      }
       // 캘린더 수정 API 요청
-      if ("id" in event) {
+      if ("id" in event && "memo" in event && "colorId" in event ) {
         const new_start = new Date(start);
         const new_end = new Date(end);
         const send_id = event.id;
@@ -137,23 +161,24 @@ const BigCalendarInfo = () => {
           event: {
             id: send_id,
             summary: event.title,
-            colorId: null,
+            description: event.memo,
+            colorId: event.colorId,
             start: {
-              dateTime: new_start.toISOString(),
+              dateTime: !event.allDay ? formatDateTime(new_start) : null,
               timeZone: "Asia/Seoul",
-              date: null,
+              date: event.allDay ? formatDateTime(new_start).split("T")[0] : null,
             },
             end: {
-              dateTime: new_end.toISOString(),
+              dateTime: !event.allDay ? formatDateTime(new_end) : null,
               timeZone: "Asia/Seoul",
-              date: null,
+              date: event.allDay ? formatDateTime(new_end).split("T")[0] : null,
             },
           },
         };
         try {
-          await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
+          const res = await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
           // 캘린더 다시 불러오기
-          console.log("구글 캘린더 수정 완료");
+          console.log(" 일정 이동 기능 구글 캘린더 수정 api 요청 완료",res);
           // await refetchCal();
         } catch (error) {
           console.error("구글 캘린더 수정 에러:", error);
@@ -165,13 +190,13 @@ const BigCalendarInfo = () => {
   );
 
   // 일정 추가 모달 켜기
-  const [selectedRange, setSelectedRange] = useState<{
-    start: Date;
-    end: Date;
-  } | null>(null);
   const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
-    setSelectedRange({ start, end });
     dispatch(openModal());
+    const reduxselectRangeDate = {
+      rangeStart:formatDateTime(start),
+      rangeEnd:formatDateTime(end),
+    }
+    dispatch(selectRangeDate(reduxselectRangeDate))
   };
 
   // 일정 리사이즈 기능
@@ -183,17 +208,19 @@ const BigCalendarInfo = () => {
         end: undefined,
       });
       // 일정변경 (개발자용)
-      dispatch(
-        updateEvent({
-          title: event.title?.toString(),
-          allDay: event.allDay,
-          start: start.toString(),
-          end: end.toString(),
-          resource: { event: restEvent },
-        })
-      );
+      if (start instanceof Date && end instanceof Date) {
+        dispatch(
+          updateEvent({
+            title: event.title?.toString(),
+            allDay: event.allDay,
+            start: formatDateTime(start),
+            end: formatDateTime(end),
+            resource: { event: restEvent },
+          })
+        );
+      }
       // 캘린더 수정 API 요청
-      if ("id" in event) {
+      if ("id" in event && "memo" in event && "colorId" in event) {
         const new_start = new Date(start);
         const new_end = new Date(end);
         const send_id = event.id;
@@ -202,23 +229,24 @@ const BigCalendarInfo = () => {
           event: {
             id: send_id,
             summary: event.title,
-            colorId: null,
+            description: event.memo,
+            colorId: event.colorId,
             start: {
-              dateTime: new_start.toISOString(),
+              dateTime: !event.allDay ? formatDateTime(new_start) : null,
               timeZone: "Asia/Seoul",
-              date: null,
+              date: event.allDay ? formatDateTime(new_start).split("T")[0] : null,
             },
             end: {
-              dateTime: new_end.toISOString(),
+              dateTime: !event.allDay ? formatDateTime(new_end) : null,
               timeZone: "Asia/Seoul",
-              date: null,
+              date: event.allDay ? formatDateTime(new_end).split("T")[0] : null,
             },
           },
         };
         try {
           await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
           // 캘린더 다시 불러오기
-          console.log("구글 캘린더 수정 완료");
+          console.log("일정 리사이즈 기능 구글 캘린더 수정 api 완료");
           // await refetchCal();
         } catch (error) {
           console.error("구글 캘린더 수정 에러:", error);
@@ -231,9 +259,7 @@ const BigCalendarInfo = () => {
 
   // 일정 상세조회
   const openSideMenu = (event: BigCalendarEvent) => {
-    console.log("이벤트 상세조회", event);
     if ("id" in event) {
-      console.log(event.id);
       setDetailEvent(event.id);
     }
     // 상세조회할 이벤트 리덕스에 저장
@@ -255,7 +281,7 @@ const BigCalendarInfo = () => {
       .endOf("week")
       .toDate()
       .toISOString();
-    console.log(timeMax, timeMin);
+    console.log('timeMax, timeMin',timeMax, timeMin);
     // 데이터 리패치
     await setTimeMax(timeMax);
     await setTimeMin(timeMin);
@@ -275,10 +301,12 @@ const BigCalendarInfo = () => {
       console.log("캘린더 데이터가 갱신됩니다", calData.data);
       const formattedData = calData.data.map((item: CalendarRes) => ({
         id: item.id,
-        start: item.start.dateTime,
-        end: item.end.dateTime,
+        colorId: item.colorId || 1,
+        allDay: item.start.date ? true : false,
+        start: !item.start.date ? item.start.dateTime:item.start.date+'T00:00:00',
+        end: !item.end.date ?item.end.dateTime:item.end.date+'T00:00:00',
         title: item.summary,
-        memo: item.memo || "",
+        memo: item.description || "",
       }));
       dispatch(setEvents(formattedData));
     }
@@ -293,6 +321,7 @@ const BigCalendarInfo = () => {
         end: new Date(event.end),
       }));
       setFormattedEventsJunha(formattedEvents);
+      console.log(formattedEvents)
     }
   }, [myEvents]);
   // style
@@ -307,20 +336,22 @@ const BigCalendarInfo = () => {
       }
       // 드래그한 항목의 정보
       const { id, summary } = draggedTodo;
+      start = new Date(start);
+      end = new Date(end);
       // 새로운 이벤트 객체 생성 (여기에서는 월별 달력이므로 allDay는 무조건 true로 설정)
       const newEvent: DragEvent = {
         id: id,
         title: summary,
+        colorId: 1,
         allDay: true,
-        start: start.toString(),
-        end: end.toString(),
+        start: formatDateTime(start),
+        end: formatDateTime(end),
         memo: "",
       };
       // 캘린더 상태 업데이트를 위해 액션 디스패치
       dispatch(addEvent(newEvent));
       // 드래그한 항목을 Redux store에서 제거
       dispatch(setDraggedTodo(null));
-      console.log("BigCalendar의 id", id);
       dispatch(removeTodoRedux(id));
       //보낼 데이터
       const newStart = new Date(start);
@@ -329,15 +360,14 @@ const BigCalendarInfo = () => {
         memberId: memberId,
         todoId: id,
         start: {
-          dateTime: newStart.toISOString(),
+          date: formatDateTime(newStart).split("T")[0],
           timeZone: "Asia/Seoul",
         },
         end: {
-          dateTime: newEnd.toISOString(),
+          date: formatDateTime(newEnd).split("T")[0],
           timeZone: "Asia/Seoul",
         },
       };
-      console.log(formData);
       try {
         const response = await axios.post(
           `${local_back_url}/api/calendar/v2/to/event`,
@@ -383,19 +413,23 @@ const BigCalendarInfo = () => {
           //보여질 화면
           view={currentView}
           //이벤트 발생할 때마다
-          //   eventPropGetter={eventPropGetter}
-          style={{ height: "100%", width: "100%" }}
+            // eventPropGetter={eventPropGetter}
+          style={{
+            height: "100%",
+            width: "100%"
+          }}
           // Todo -> Calendar DROP 밖에서 캘린더로
           onDropFromOutside={onDropFromOutside}
           // Toolbar 커스터마이징
           components={{
             toolbar: Toolbar,
           }}
+          // allDay인지에 따라서 style 변경
+
+          formats={formats}
         />
       </div>
-      {isOpen && selectedRange && (
-        <Modal selectedRange={selectedRange} refetchCal={refetchCal} />
-      )}
+      {isOpen && (<Modal refetchCal={refetchCal} />)}
       {isSideOpen && <DetailModal id={detailEvent} />}
     </Container>
   );
@@ -456,6 +490,7 @@ const Container = styled.div`
       align-items: end;
     }
     // 일정 적힌 박스
+
     .rbc-event.rbc-event-allday {
       width: 100%;
       background-color: #fa92a3;

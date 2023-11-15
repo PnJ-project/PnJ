@@ -20,7 +20,7 @@ import {
   updateEvent,
   addEvent,
 } from "../../store/slice/calendar/CalendarSlice";
-import { change, handleDate } from "../../store/slice/calendar/HandleSlice";
+import { change, handleDate, selectRangeDate } from "../../store/slice/calendar/HandleSlice";
 import Modal from "../../components/organisms/EventForm";
 import DetailModal from "../../components/organisms/EventDetail";
 import withDragAndDrop, {
@@ -37,6 +37,7 @@ import {
   selectDraggedTodo,
   setDraggedTodo,
 } from "../../store/slice/calendar/TodoSlice";
+import formatDateTime from "../../functions/BaseFunc";
 // 이벤트 캘린더 폼
 interface FormatEvent {
   id: number;
@@ -56,15 +57,36 @@ const BigCalendarInfo = () => {
   const [detailEvent, setDetailEvent] = useState<number | string | unknown>("");
 
   // 캘린더를 DragAndDrop으로 바꿉니다.
-  moment.locale("ko");
-  const localizer = momentLocalizer(moment);
   const DragAndDropCalendar = withDragAndDrop(Calendar);
+  // 시간대를 한국으로 설정
+  moment.locale("ko-KR");
+  const localizer = momentLocalizer(moment);
   // 캘린더용 데이터 파싱
   const myEvents = useSelector(selectEvents);
   const [formattedEvents, setFormattedEventsJunha] = useState<FormatEvent[]>(
     []
   );
   const handledate: Date = new Date(date);
+
+  // 요일,날짜 Toolbar 변경
+  const formats = {
+    dateFormat: 'D',
+    dayFormat: 'D일',
+    dayRangeHeaderFormat: ({ start, end }: { start: Date; end: Date }) => {
+      const startDate = moment(start).format('M월 D일');
+      const endDate = moment(end).format('M월 D일');
+      return `${startDate} - ${endDate}`;
+    },
+    // view가 month일 때 화살표 있는 쪽 년월
+    monthHeaderFormat: 'YYYY년 M월',
+    //view가 day일 때
+    dayHeaderFormat: 'M월 D일 ddd',
+    dayRangeFormat: ({ start, end }: { start: Date; end: Date }) => {
+      const startDate = moment(start).format('M월 D일');
+      const endDate = moment(end).format('M월 D일');
+      return `${startDate} - ${endDate}`;
+    },
+  };
 
   // 이벤트 이동 기능
   const moveEvent = useCallback(
@@ -75,27 +97,31 @@ const BigCalendarInfo = () => {
         end: undefined,
       });
       // 일정변경 (개발자용)
-      dispatch(
-        updateEvent({
-          title: event.title?.toString(),
-          allDay: event.allDay,
-          start: start.toString(),
-          end: end.toString(),
-          resource: { event: restEvent },
-        })
-      );
+      if (start instanceof Date && end instanceof Date) {
+        dispatch(
+          updateEvent({
+            title: event.title?.toString(),
+            allDay: event.allDay,
+            start: formatDateTime(start),
+            end: formatDateTime(end),
+            resource: { event: restEvent },
+          })
+        );
+      }
     },
     [dispatch]
   );
 
   // 이벤트 추가 모달 켜기
-  const [selectedRange, setSelectedRange] = useState<{
-    start: Date;
-    end: Date;
-  } | null>(null);
   const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
-    setSelectedRange({ start, end });
     dispatch(openModal());
+    
+    const reduxselectRangeDate = {
+      rangeStart:formatDateTime(start),
+      rangeEnd:formatDateTime(end),
+    }
+    console.log(reduxselectRangeDate,'reduxselectRangeDate')
+    dispatch(selectRangeDate(reduxselectRangeDate))
   };
 
   // 이벤트 리사이즈 기능
@@ -107,15 +133,17 @@ const BigCalendarInfo = () => {
         end: undefined,
       });
       // 일정변경 (개발자용)
-      dispatch(
-        updateEvent({
-          title: event.title?.toString(),
-          allDay: event.allDay,
-          start: start.toString(),
-          end: end.toString(),
-          resource: { event: restEvent },
-        })
-      );
+      if (start instanceof Date && end instanceof Date) {
+        dispatch(
+          updateEvent({
+            title: event.title?.toString(),
+            allDay: event.allDay,
+            start: formatDateTime(start),
+            end: formatDateTime(end),
+            resource: { event: restEvent },
+          })
+        );
+      }
     },
     [dispatch]
   );
@@ -133,8 +161,8 @@ const BigCalendarInfo = () => {
 
   // 클릭한 날짜의 정보를 받아옴
   const handleDateChange = (date: Date) => {
-    console.log(date);
-    const formDate = date.toISOString();
+    console.log('클릭한 날짜의 정보를 받아옴',date);
+    const formDate = formatDateTime(date);
     dispatch(change(formDate));
   };
 
@@ -169,19 +197,21 @@ const BigCalendarInfo = () => {
 
       // 드래그한 항목의 정보
       const { id, summary } = draggedTodo;
-
+      start = new Date(start);
+      end = new Date(end);
       // 새로운 이벤트 객체 생성 (여기에서는 월별 달력이므로 allDay는 무조건 true로 설정)
-      const newEvent: DragEvent = {
-        id: id,
-        title: summary,
-        allDay: true,
-        start: start.toString(),
-        end: end.toString(),
-        memo: "",
-      };
-
-      // 캘린더 상태 업데이트를 위해 액션 디스패치
-      dispatch(addEvent(newEvent));
+        const newEvent: DragEvent = {
+          id: id,
+          title: summary,
+          allDay: true,
+          start: formatDateTime(start),
+          end: formatDateTime(end),
+          memo: "",
+        };
+    
+          // 캘린더 상태 업데이트를 위해 액션 디스패치
+          dispatch(addEvent(newEvent));
+        
 
       // 드래그한 항목을 Redux store에서 제거
       dispatch(setDraggedTodo(null));
@@ -233,9 +263,10 @@ const BigCalendarInfo = () => {
           components={{
             toolbar: Toolbar,
           }}
+          formats={formats}
         />
       </div>
-      {isOpen && selectedRange && <Modal selectedRange={selectedRange} />}
+      {isOpen && <Modal/>}
       {isSideOpen && <DetailModal id={detailEvent} />}
     </Container>
   );

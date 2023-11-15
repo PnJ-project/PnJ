@@ -3,7 +3,6 @@ import { ToolbarProps } from 'react-big-calendar';
 import styled from 'styled-components';
 
 const MyToolbar: React.FC<ToolbarProps> = ({
-  date,
   label,
   onNavigate,
   onView,
@@ -13,8 +12,9 @@ const MyToolbar: React.FC<ToolbarProps> = ({
     onNavigate(action);
   };
 
-  const viewnavigate = (action: 'month' | 'week' | 'day' | 'agenda') => {
+  const viewnavigate = (action: 'month' | 'week' | 'day') => {
     onView(action);
+    console.log(action)
   };
 
   return (
@@ -26,7 +26,7 @@ const MyToolbar: React.FC<ToolbarProps> = ({
         <button className="movingbtn" type="button" onClick={() => navigate('PREV')}>
           {'<'}
         </button>
-        <span className="rbc-toolbar-label">{ label }{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</span>
+        <span className="rbc-toolbar-label">{ label }</span>
         <button className="movingbtn" type="button" onClick={() => navigate('NEXT')}>
         {'>'}
         </button>
@@ -40,9 +40,6 @@ const MyToolbar: React.FC<ToolbarProps> = ({
         </button>
         <button type="button" onClick={() => viewnavigate('day')}>
           일
-        </button>
-        <button type="button" onClick={() => viewnavigate('agenda')}>
-          목록
         </button>
       </div>
 
