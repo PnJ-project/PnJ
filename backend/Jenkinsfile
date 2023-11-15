@@ -31,7 +31,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh "sh deploy.sh"
+                    sh "sh deploy_backend.sh"
                 }
             }
         }
