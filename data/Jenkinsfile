@@ -31,9 +31,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'docker compose -f docker-compose.flask.yml down flask1'
-                sh 'docker compose -f docker-compose.flask.yml up flask1'
+                sh 'docker compose -f docker-compose.flask.yml up flask1 -d'
                 sh 'docker compose -f docker-compose.flask.yml down flask2'
-                sh 'docker compose -f docker-compose.flask.yml up flask2'
+                sh 'docker compose -f docker-compose.flask.yml up flask2 -d'
             }
         }
 

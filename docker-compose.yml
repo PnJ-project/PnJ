@@ -22,14 +22,20 @@ services:
     environment:
       FRONTEND_PORT: ${FRONTEND_PORT}
     volumes:
+      # docker mount
       - /usr/bin/docker:/usr/bin/docker
-      - /usr/bin/compose:/usr/bin/compose
       - /var/run/docker.sock:/var/run/docker.sock
+      # docker plugin : docker compose(v2), docker buildx mounting
+      - /usr/local/lib/docker/cli-plugins/docker-compose:/usr/local/lib/docker/cli-plugins/docker-compose
+      - /usr/libexec/docker/cli-plugins/docker-buildx:/usr/libexec/docker/cli-plugins/docker-buildx
+      # jenkins data 유지
       - /var/jenkins_home:/var/jenkins_home
+      # flask, backend 빌드 컨테이너 환경변수
       - ./.env:/var/jenkins_home/workspace/dep-be/.env
       - ./.env:/var/jenkins_home/workspace/dep-flask/.env
-      - /usr/libexec/docker/cli-plugins/docker-buildx:/usr/libexec/docker/cli-plugins/docker-buildx
+      # backend application 환경변수
       - ./backend/src/main/resources:/var/jenkins_home/workspace/dep-be/backend/src/main/resources
+      # frontend 배포 환경변수
       - ./frontend/.env.production:/var/jenkins_home/workspace/dep-fe/frontend/.env.production
     ports:
       - ${JENKINS_PORT}:8080
