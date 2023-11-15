@@ -139,8 +139,7 @@ public class OAuth2UserServiceImpl implements
         if (!jwtUtil.validToken(refreshToken)) {
             throw new TokenInvalidException(INVALID_TOKEN.getMessage());
         }
-        // TODO REFRESH 토큰 만료 시간 임박 시 재할당
-        // TODO Redis 사용 시 존재 여부 판단
+
         String accessToken = jwtUtil.createToken(jwtUtil.getMemberIdOfToken(refreshToken));
 
         return TokenRefreshDto.builder()
