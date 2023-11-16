@@ -55,7 +55,7 @@ const calendarSlice = createSlice({
         state.events[index].end = action.payload.end;
         state.events[index].start = action.payload.start;
         state.events[index].memo = action.payload.memo ?  action.payload.memo:action.payload.resource.event.memo;
-        state.events[index].colorId = action.payload.colorId ?  action.payload.memo:action.payload.resource.event.colorId;
+        state.events[index].colorId = action.payload.colorId ?  action.payload.colorId:action.payload.resource.event.colorId;
         state.events[index].title = action.payload.title?.toString();
       }
     },

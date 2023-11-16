@@ -33,7 +33,7 @@ const EventForm: React.FC<ModalProps> = () => {
   const selectedRange = useSelector(setSelectDate);
   const [title, setTitle] = useState("");
   const [memo, setMemo] = useState("");
-  const [colorId, setColorId] = useState(1);
+  const [colorId, setColorId] = useState(6);
   const [errorMsg, setErrorMsg] = useState("");
   const starttime = selectedRange.rangeStart.split("T")[1]?.substr(0, 5);
   const endtime = selectedRange.rangeEnd.split("T")[1]?.substr(0, 5);
@@ -53,8 +53,8 @@ const EventForm: React.FC<ModalProps> = () => {
 
   useEffect(() => {
     // 하루종일이면 showEDate = eDate - 1
-    if (allDay) {
-      const newEDate = new Date(eDate);
+    if (allDay && sDate !== showEDate) {
+      const newEDate = new Date(eDate)
       newEDate.setDate(newEDate.getDate() - 1);
       const lastEDate = formatDateTime(newEDate).split("T")[0];
       setShowEDate(lastEDate);
@@ -132,23 +132,23 @@ const EventForm: React.FC<ModalProps> = () => {
     }
   };
   // 색깔 정하기
-  const colorMap: { [key: number]: string } = {
-    1: "red",
-    2: "orange",
-    3: "yellow",
-    4: "blue",
-    5: "green",
-    6: "purple",
-    7: "pink",
-    8: "white",
-    9: "black",
-    10: "gray",
+  const colorMap:{[key: number]: string} = {
+    1: '#fe4d00',
+    2: '#fa92a3',
+    3: '#fe9e14',
+    4: '#fed136',
+    5: '#d6d755',
+    6: '#a1c7a5',
+    7: '#01b391',
+    8: '#41a8f5',
+    9: '#7ea0c3',
+    10: '#ba7fd1',
   };
-  const handleBoxClick = (key: string) => {
-    console.log(key);
+  const handleBoxClick = (key:string) => {
     const numKey = Number(key);
     setColorId(numKey);
   };
+
   return (
     <Overlay
       onClick={(e) => {
@@ -160,29 +160,25 @@ const EventForm: React.FC<ModalProps> = () => {
       <Container>
         <Header>
           <Title>일정 추가하기</Title>
-          <CloseBtn
-            onClick={() => {
-              dispatch(closeModal());
-            }}
-          >
-            ✖
-          </CloseBtn>
+          <CloseBtn onClick={() => {dispatch(closeModal())}}>✖</CloseBtn>
         </Header>
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
+        <ColorBox>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems:'center' }}>
           {Object.entries(colorMap).map(([key, color]) => (
             <div
               key={key}
               style={{
-                width: "30px",
-                height: "30px",
-                margin: "2px",
+                width: colorId === Number(key) ? '38px' :'30px',
+                height: colorId === Number(key) ? '38px' :'30px',
+                margin: '3px',
                 backgroundColor: color,
-                border: colorId === Number(key) ? "2px solid #000" : "none",
+                borderRadius: 50,
               }}
               onClick={() => handleBoxClick(key)}
             />
           ))}
-        </div>
+          </div>
+        </ColorBox>
         <DateBox>
           <div>날짜</div>
           <SelectDate>
@@ -367,7 +363,12 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 10px;
-`;
+  `
+
+const ColorBox = styled.div`
+  display: flex;
+  justify-content: center;
+`
 const CloseBtn = styled.div`
   cursor: pointer;
 `;
