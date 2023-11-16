@@ -50,7 +50,7 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
             onDragStart={() => handleDragStart(todo.id, todo.summary)}
           >
             {!edit.id || edit.id != todo.id ? (
-              <div key={todo.id}>{todo.summary}</div>
+              <div className="shTodo" key={todo.id}>{todo.summary}</div>
             ) : (
               <input
                 className="todoItemInput"

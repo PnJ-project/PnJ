@@ -113,19 +113,17 @@
   justify-content: space-between;
   align-items: center;
   margin: 10px auto;
-  color: #fff;
-  background: linear-gradient(#fa92a3 0%, #fa92a3 100%);
+  color: #ffffff;
+  background: rgb(187, 187, 187);
   font-size: 12px;
   font-family: SUITE-Regular;
   font-weight: 600;
-  padding: 5px 10px;
   border-radius: 5px;
+  padding: 5px 10px;
   width: 80%;
   /* box-shadow: 1px 1px 2px black; */
 }
-.todo-row:active{
-  width: 120px;
-}
+
 .todoItem {
   width: 70%;
   overflow: hidden;
@@ -148,17 +146,6 @@
   width: calc(100% - 60px); /* 수정된 부분 */
 }
 
-.todo-row:nth-child(4n + 1) {
-  background: linear-gradient(#67c9ba 0%, #67c9ba 100%);
-}
-
-.todo-row:nth-child(4n + 2) {
-  background: linear-gradient(#ba7fd1 0%, #ba7fd1 100%);
-}
-
-.todo-row:nth-child(4n + 3) {
-  background: linear-gradient(#7ea0c3 0%, #7ea0c3 100%);
-}
 
 .icons {
   display: flex;

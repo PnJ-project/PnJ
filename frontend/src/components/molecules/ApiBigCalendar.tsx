@@ -138,7 +138,7 @@ const BigCalendarInfo = () => {
         start: undefined,
         end: undefined,
       });
-      // 일정변경 (개발자용)
+      // 일정변경 이동 (개발자용)
       if (start instanceof Date && end instanceof Date) {
         console.log(event, start, end)
         dispatch(
@@ -151,7 +151,7 @@ const BigCalendarInfo = () => {
           })
         );
       }
-      // 캘린더 수정 API 요청
+      // 캘린더 이동 수정 API 요청
       if ("id" in event && "memo" in event && "colorId" in event ) {
         const new_start = new Date(start);
         const new_end = new Date(end);
@@ -207,7 +207,7 @@ const BigCalendarInfo = () => {
         start: undefined,
         end: undefined,
       });
-      // 일정변경 (개발자용)
+      // 일정변경 리사이즈(개발자용)
       if (start instanceof Date && end instanceof Date) {
         dispatch(
           updateEvent({
@@ -219,7 +219,7 @@ const BigCalendarInfo = () => {
           })
         );
       }
-      // 캘린더 수정 API 요청
+      // 캘린더 리사이즈 수정 API 요청
       if ("id" in event && "memo" in event && "colorId" in event) {
         const new_start = new Date(start);
         const new_end = new Date(end);
@@ -301,7 +301,7 @@ const BigCalendarInfo = () => {
       console.log("캘린더 데이터가 갱신됩니다", calData.data);
       const formattedData = calData.data.map((item: CalendarRes) => ({
         id: item.id,
-        colorId: item.colorId || 1,
+        colorId: item.colorId || 6,
         allDay: item.start.date ? true : false,
         start: !item.start.date ? item.start.dateTime:item.start.date+'T00:00:00',
         end: !item.end.date ?item.end.dateTime:item.end.date+'T00:00:00',
@@ -342,7 +342,7 @@ const BigCalendarInfo = () => {
       const newEvent: DragEvent = {
         id: id,
         title: summary,
-        colorId: 1,
+        colorId: 6,
         allDay: true,
         start: formatDateTime(start),
         end: formatDateTime(end),
@@ -385,7 +385,34 @@ const BigCalendarInfo = () => {
     },
     [draggedTodo, dispatch]
   );
-
+  
+  const getEventStyle = (event: BigCalendarEvent) => {
+    if ("colorId" in event) {
+      const newColorId = Number(event.colorId)
+      const backgroundColor = colorMap[newColorId]; // 기본값 1로 설정
+      return {
+        style: {
+          backgroundColor,
+          borderRadius: '5px',
+          color: 'white',
+          border: '1px solid #ccc',
+        },
+      };
+    }
+    else {
+      const backgroundColor = colorMap[6]; // 기본값 1로 설정
+      return {
+        style: {
+          backgroundColor,
+          borderRadius: '5px',
+          color: 'white',
+          border: '1px solid #ccc',
+        },
+      };
+    }
+  
+  };
+  
   return (
     <Container>
       <div className="middleArticle">
@@ -412,8 +439,6 @@ const BigCalendarInfo = () => {
           onView={handleViewChange}
           //보여질 화면
           view={currentView}
-          //이벤트 발생할 때마다
-            // eventPropGetter={eventPropGetter}
           style={{
             height: "100%",
             width: "100%"
@@ -425,7 +450,19 @@ const BigCalendarInfo = () => {
             toolbar: Toolbar,
           }}
           // allDay인지에 따라서 style 변경
-
+          // colorId에 따른 색상 변경
+          eventPropGetter={(event: BigCalendarEvent) => getEventStyle(event)}
+          // eventPropGetter={(event: BigCalendarEvent) => {
+          //     const backgroundColor = colorMap[event.colorId ? event.colorId: 1]; // 기본값 1로 설정
+          //   return {
+          //     style: {
+          //       backgroundColor,
+          //       borderRadius: '5px', // 예시로 둥근 테두리를 추가할 수 있습니다.
+          //       color: 'white', // 이벤트 텍스트 색상 설정
+          //       border: '1px solid #ccc', // 테두리 설정
+          //     },
+          //   };
+          // }}
           formats={formats}
         />
       </div>
@@ -437,6 +474,18 @@ const BigCalendarInfo = () => {
 export default BigCalendarInfo;
 
 /** CSS */
+const colorMap:{[key: number]: string} = {
+  1: '#fe4d00',
+  2: '#fa92a3',
+  3: '#fe9e14',
+  4: '#fed136',
+  5: '#d6d755',
+  6: '#a1c7a5',
+  7: '#01b391',
+  8: '#41a8f5',
+  9: '#7ea0c3',
+  10: '#ba7fd1',
+};
 const Container = styled.div`
   display: flex;
   overflow: hidden;
@@ -493,7 +542,6 @@ const Container = styled.div`
 
     .rbc-event.rbc-event-allday {
       width: 100%;
-      background-color: #fa92a3;
     }
 
     // 오늘 클릭하면 동그라미 나타나는 거
@@ -501,7 +549,6 @@ const Container = styled.div`
       .rbc-button-link {
         width: 25px;
         border-radius: 50%;
-        /* background-color: rgba(181, 255, 63, 0.8); */
         background-color: rgba(0, 0, 0, 0.5);
         color: #ffffff;
         display: flex;
@@ -540,7 +587,7 @@ const Container = styled.div`
     .rbc-event {
       transition: opacity 150ms;
       width: 100%;
-      background-color: #fed136;
+      background-color: ${colorMap[3]};
       &:hover {
         .rbc-addons-dnd-resize-ns-icon,
         .rbc-addons-dnd-resize-ew-icon {

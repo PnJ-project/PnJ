@@ -46,6 +46,7 @@ interface FormatEvent {
   start: Date;
   end: Date;
   memo?: string;
+  colorId?: number;
 }
 
 const BigCalendarInfo = () => {
@@ -96,7 +97,7 @@ const BigCalendarInfo = () => {
         start: undefined,
         end: undefined,
       });
-      // 일정변경 (개발자용)
+      // 일정변경 이동 (개발자용)
       if (start instanceof Date && end instanceof Date) {
         dispatch(
           updateEvent({
@@ -132,7 +133,7 @@ const BigCalendarInfo = () => {
         start: undefined,
         end: undefined,
       });
-      // 일정변경 (개발자용)
+      // 일정변경 리사이즈 (개발자용)
       if (start instanceof Date && end instanceof Date) {
         dispatch(
           updateEvent({
@@ -200,22 +201,19 @@ const BigCalendarInfo = () => {
       start = new Date(start);
       end = new Date(end);
       // 새로운 이벤트 객체 생성 (여기에서는 월별 달력이므로 allDay는 무조건 true로 설정)
-        const newEvent: DragEvent = {
-          id: id,
-          title: summary,
-          allDay: true,
-          start: formatDateTime(start),
-          end: formatDateTime(end),
-          memo: "",
-        };
-    
-          // 캘린더 상태 업데이트를 위해 액션 디스패치
-          dispatch(addEvent(newEvent));
-        
-
+      const newEvent: DragEvent = {
+        id: id,
+        title: summary,
+        colorId: 6,
+        allDay: true,
+        start: formatDateTime(start),
+        end: formatDateTime(end),
+        memo: "",
+      };
+      // 캘린더 상태 업데이트를 위해 액션 디스패치
+      dispatch(addEvent(newEvent));
       // 드래그한 항목을 Redux store에서 제거
       dispatch(setDraggedTodo(null));
-      console.log("BigCalendar의 id", id);
       dispatch(removeTodoRedux(id));
     },
     [draggedTodo, dispatch]

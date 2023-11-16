@@ -56,6 +56,9 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       const lastEDate = formatDateTime(newEDate).split('T')[0];
       setShowEDate(lastEDate)
     }
+    if (!allDay && sDate === showEDate) {
+      setEDate(showEDate)
+    }
   },[sDate, eDate,allDay])
 
   // 인풋 필드에서 엔터 키 입력 시 제출
@@ -84,7 +87,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       colorId: colorId,
       allDay: allDay,
       memo: memo,
-      resource: { event: { id: id, memo: memo } },
+      resource: { event: { id: id, memo: memo,colorId: colorId } },
     };
     // 일정수정 (개발자용)
     dispatch(updateEvent(updateItem));
@@ -146,22 +149,23 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
   };
   // 색깔 정하기
   const colorMap:{[key: number]: string} = {
-    1: 'red',
-    2: 'orange',
-    3: 'yellow',
-    4: 'blue',
-    5: 'green',
-    6: 'purple',
-    7: 'pink',
-    8: 'white',
-    9: 'black',
-    10: 'gray',
+    1: '#fe4d00',
+    2: '#fa92a3',
+    3: '#fe9e14',
+    4: '#fed136',
+    5: '#d6d755',
+    6: '#a1c7a5',
+    7: '#01b391',
+    8: '#41a8f5',
+    9: '#7ea0c3',
+    10: '#ba7fd1',
   };
   const handleBoxClick = (key:string) => {
     console.log(key);
     const numKey = Number(key);
     setColorId(numKey)
   };
+
   return (
     <Overlay
       onClick={(e) => {
@@ -223,7 +227,6 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
               checked={allDay}
               onChange={(e) => {
                 setAllDay(e.target.checked)
-                console.log(e.target.checked)
               }}
               // disabled={sDate !== eDate}
             />
