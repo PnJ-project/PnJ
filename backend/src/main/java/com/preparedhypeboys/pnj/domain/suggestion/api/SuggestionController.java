@@ -8,6 +8,7 @@ import com.preparedhypeboys.pnj.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,8 @@ public class SuggestionController {
 
     @GetMapping("/{memberId}/{timeMax}/{timeMin}")
     public ResponseEntity<ResponseDto<JsonArray>> getSuggestion(
-        @PathVariable(value = "memberId") Long memberId,
+        @PathVariable(value = "memberId") Long memberd, // TODO 삭제
+        @AuthenticationPrincipal Long memberId,
         @PathVariable(value = "timeMax") String timeMax,
         @PathVariable(value = "timeMin") String timeMin
     ) {
