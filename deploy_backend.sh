@@ -13,7 +13,7 @@ else
     echo "[Up] GREEN Up"
     docker compose -f docker-compose.green.yml up -d
     docker exec nginx cp /app/nginx.green.conf /etc/nginx/conf.d/default.conf
-    docker exec nginx nginx -s reload"
+    docker exec nginx nginx -s reload
     sleep 2
     docker compose -f docker-compose.blue.yml down
 fi
