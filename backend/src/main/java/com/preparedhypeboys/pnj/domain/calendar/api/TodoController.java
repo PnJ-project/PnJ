@@ -14,6 +14,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +33,8 @@ public class TodoController {
 
     @GetMapping("/{memberId}")
     public ResponseEntity<ResponseDto<List<TodoResponseDto>>> readTodo(
-        @PathVariable(value = "memberId") Long memberId) {
+        @PathVariable(value = "memberId") Long memberd, //TODO 삭제
+        @AuthenticationPrincipal Long memberId) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(
                 READ_TODOS_SUCCESS.getMessage(),
@@ -43,11 +45,12 @@ public class TodoController {
 
     @PostMapping("")
     public ResponseEntity<ResponseDto<TodoResponseDto>> createTodo(@RequestBody
-    CreateTodoRequestDto requestDto) {
+    CreateTodoRequestDto requestDto,
+        @AuthenticationPrincipal Long memberId) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(
                 CREATE_TODO_SUCCESS.getMessage(),
-                todoService.createTodo(requestDto)
+                todoService.createTodo(requestDto, memberId)
             )
         );
     }
@@ -65,9 +68,9 @@ public class TodoController {
 
     @DeleteMapping("/{memberId}/{todoId}")
     public ResponseEntity<ResponseDto<?>> deleteTodo(
-        @PathVariable(value = "memberId") Long memberId,
+        @PathVariable(value = "memberId") Long memberd,// TODO 삭제
         @PathVariable(value = "todoId") Long todoId) {
-        todoService.deleteTodo(memberId, todoId);
+        todoService.deleteTodo(todoId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(
