@@ -123,9 +123,9 @@
   width: 80%;
   /* box-shadow: 1px 1px 2px black; */
 }
-.todo-row:active{
+/* .todo-row:active{
   width: 120px;
-}
+} */
 .todoItem {
   width: 70%;
   overflow: hidden;

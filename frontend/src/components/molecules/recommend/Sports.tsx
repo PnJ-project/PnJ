@@ -8,9 +8,8 @@ import {
   selectRecommends,
 } from "../../../store/slice/RecommendSlice";
 import { useState, useEffect } from "react";
-import Recommend from './Recommend';
+import Recommend from "./Recommend";
 import styled from "styled-components";
-
 
 export default function Sports() {
   // 기본 세팅
@@ -21,7 +20,6 @@ export default function Sports() {
     | EatItemType[]
     | MusicItemType[]
     | SportItemType[]
-    | []
   >([]);
 
   // 정보 추리기
@@ -45,60 +43,58 @@ export default function Sports() {
   }
   return (
     <>
-      <div className="RecommendInner">
-        <div className="RecommendSports">
-          <div className="RecommendSubTitle">당신이 궁금한 스포츠 일정</div>
-          <Recommend>
+      {items.length > 0 && (
+        <div className="RecommendInner">
+          <div className="RecommendSports">
+            <div className="RecommendSubTitle">당신이 궁금한 스포츠 일정</div>
+            <Recommend>
               {items.map((item, index) => (
                 <SliderItem key={index}>
                   {/* <img src={item.homeTeamEmblemUrl} alt={item.category}  /> */}
-                  <img src={item.awayTeamEmblemUrl} alt={item.category}  />
-                    <Name>{item.awayTeamName} vs {item.homeTeamName}</Name>
-                    <Info>{item.league}</Info>
-                    <When>{item.gameDate}</When>
-
+                  <img src={item.awayTeamEmblemUrl} alt={item.category} />
+                  <Name>
+                    {item.awayTeamName} vs {item.homeTeamName}
+                  </Name>
+                  <Info>{item.league}</Info>
+                  <When>{item.gameDate}</When>
                 </SliderItem>
               ))}
             </Recommend>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
 
 const SliderItem = styled.div`
-
-img{
+  img {
     width: 94%;
     height: 240px;
-    object-fit: cover; 
+    object-fit: cover;
     margin-bottom: 20px;
-    transition: transform 0.3s ease; 
+    transition: transform 0.3s ease;
     border: none;
     box-shadow: none;
 
     &:hover {
-      transform: scale(1.1); 
+      transform: scale(1.1);
     }
   }
-  
-  
 `;
 
-
 const Name = styled.p`
-font-size: 18px;
-width: 80%;
-`
+  font-size: 18px;
+  width: 80%;
+`;
 
 const When = styled.p`
-font-size: 10px;
-margin-top: 5px;
-width: 85%;
-`
+  font-size: 10px;
+  margin-top: 5px;
+  width: 85%;
+`;
 const Info = styled.p`
-font-size: 12px;
-margin-top: 5px;
-width: 85%;
-`
-
+  font-size: 12px;
+  margin-top: 5px;
+  width: 85%;
+`;

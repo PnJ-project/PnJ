@@ -1,10 +1,12 @@
 // 여행 아이템
-import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { readTodo } from "../../../api/TodoApi";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
 import { ReqTodoCreate } from "../../molecules/todo/ApiTodoList";
+import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
+import axiosInstance from "../../../functions/AxiosInstance";
+import recommendNotFound from "/image/recommendNotFound.svg";
 
 export default function TripItem({ item }: { item: TripItemType }) {
   // 기본 세팅
@@ -17,12 +19,13 @@ export default function TripItem({ item }: { item: TripItemType }) {
 
   // 할일목록 추가시
   const recommendTodo = async () => {
+    await setAuthorizationHeaderInter();
     const reqNewTodo: ReqTodoCreate = {
       memberId: memberId,
       summary: item.title + " 방문",
     };
     try {
-      await axios.post(`${local_back_url}/api/todo`, reqNewTodo);
+      await axiosInstance.post(`${local_back_url}/api/todo`, reqNewTodo);
       // 투두 다시 불러오기
       console.log("투두 생성 API 요청 완료");
       await refetchTodo();
@@ -33,14 +36,24 @@ export default function TripItem({ item }: { item: TripItemType }) {
   return (
     <>
       <>
-        <img src={item.image}></img>
+        {item.image != "false" && item.image ? (
+          <img src={item.image}></img>
+        ) : (
+          <img
+            src={recommendNotFound}
+            className="RecommendNotImg"
+            style={{ width: "50px" }}
+          ></img>
+        )}
         {/* 내용물 */}
         <div className="RecommendItemShow">
           <div className="TripTitle">{item.title}</div>
           {item.roadAddress != "false" && item.roadAddress && (
-            <div>{item.roadAddress}</div>
+            <div className="TripSub">{item.roadAddress}</div>
           )}
-          {item.info != "false" && item.info && <div>{item.info}</div>}
+          {item.info != "false" && item.info && (
+            <div className="TripSub">{item.info}</div>
+          )}
           {/* 버튼 */}
           <div className="RecommendBtnBox">
             {item.homepage != "false" && item.homepage && (

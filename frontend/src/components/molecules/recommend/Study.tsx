@@ -48,15 +48,17 @@ export default function Study() {
 
   return (
     <>
-      <div className="RecommendInner">
-        <div className="RecommendStudy">
-          <div className="RecommendSubTitle">당신을 위한 명언</div>
-          <FlexContainer>
-            <Img src={recommendP} />
-            <Name>{nameToDisplay}</Name>
-          </FlexContainer>
+      {items.length > 0 && (
+        <div className="RecommendInner">
+          <div className="RecommendStudy">
+            <div className="RecommendSubTitle">당신을 위한 명언</div>
+            <FlexContainer>
+              <Img src={recommendP} />
+              <Name>{nameToDisplay}</Name>
+            </FlexContainer>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

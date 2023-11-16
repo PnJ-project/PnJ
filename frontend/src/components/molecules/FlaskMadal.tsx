@@ -4,6 +4,7 @@ import { closeDemoModal } from "../../store/slice/calendar/ModalSlice";
 import styled, { keyframes } from "styled-components";
 import { FlaskResType } from "../organisms/DemoCalendar";
 import moment from "moment";
+import arrowTest from "/image/arrowTest.svg";
 
 // 모달 타입
 interface FlaskModalType {
@@ -16,7 +17,7 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
   const dispatch = useDispatch();
   const [itemIndex, setItemIndex] = useState<number | null>(null);
   const [beforeTxt] = useState(before);
-  const [timeWatch, setTimeWatch] = useState(100);
+  const [, setTimeWatch] = useState(100);
   // const exampledummy = [
   //   {
   //     end: { dateTime: "2023-11-15T16:02:11", timeZome: "Asia/Seoul" },
@@ -60,11 +61,11 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
         >
           ✖
         </CloseBtn>
-        <Title>간편 일정 등록 결과 조회</Title>
-        <div>음성 혹은 텍스트 속의 일정을 자동으로 추출하여 간편하게 등록!</div>
+        {/* <Title>간편 일정 등록 결과 조회</Title> */}
+        {/* <div>음성 혹은 텍스트 속의 일정을 자동으로 추출하여 간편하게 등록!</div> */}
         <FlaskReturn>
           <Before>
-            <InnerTitle>보낸 일정</InnerTitle>
+            <InnerTitle>Before</InnerTitle>
             <InnerTxtBox>
               <div>
                 {beforeTxt.split("\n").map((line, index) => (
@@ -76,24 +77,10 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
               </div>
             </InnerTxtBox>
           </Before>
-          <Arrow> ➜</Arrow>
+          <Arrow> ⇀</Arrow>
           <After>
-            <InnerTitle>정리된 일정</InnerTitle>
-            <PageSelect>
-              {/* {after &&
-                after.map((_, index) => (
-                  <div key={index}>
-                    <button
-                      onClick={() => {
-                        console.log(index);
-                        setItemIndex(index);
-                      }}
-                    >
-                      {index + 1}
-                    </button>
-                  </div>
-                ))} */}
-            </PageSelect>
+            <InnerTitle>After</InnerTitle>
+            <PageSelect></PageSelect>
             <InnerTxtBox>
               {after && after[0] && itemIndex != null ? (
                 <>
@@ -104,17 +91,27 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
                       }
                     }}
                   >
-                    {itemIndex ? <>◂</> : <>◃</>}
+                    {itemIndex ? (
+                      <img
+                        src={arrowTest}
+                        style={{
+                          width: "20px",
+                          transform: "scaleX(-1)",
+                          opacity: "0.5",
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={arrowTest}
+                        style={{
+                          width: "20px",
+                          transform: "scaleX(-1)",
+                          opacity: "0",
+                        }}
+                      />
+                    )}
                   </Arrow2>
                   <div>
-                    {/* <InnerTxt>
-                      <SubTitle>분류</SubTitle>
-                      <SmallTxt>
-                        {`${
-                          after[0].end.dateTime === null ? "투두" : "캘린더"
-                        }`}
-                      </SmallTxt>
-                    </InnerTxt> */}
                     <InnerTxt>
                       <SubTitle>날짜</SubTitle>
                       <SmallTxt>
@@ -137,7 +134,17 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
                       }
                     }}
                   >
-                    {itemIndex != after.length - 1 ? <>▸</> : <>▹</>}
+                    {itemIndex != after.length - 1 ? (
+                      <img
+                        src={arrowTest}
+                        style={{ width: "20px", opacity: "0.5" }}
+                      />
+                    ) : (
+                      <img
+                        src={arrowTest}
+                        style={{ width: "20px", opacity: "0" }}
+                      />
+                    )}
                   </Arrow2>
                 </>
               ) : (
@@ -148,7 +155,7 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
             </InnerTxtBox>
           </After>
         </FlaskReturn>
-        <CloseMent>{timeWatch}초 후 창이 닫힙니다.</CloseMent>
+        {/* <CloseMent>{timeWatch}초 후 창이 닫힙니다.</CloseMent> */}
       </InputModalContainer>
     </Overlay>
   );
@@ -167,6 +174,8 @@ const fadeIn = keyframes`
 
 const CloseBtn = styled.div`
   cursor: pointer;
+  font-size: 0px;
+  color: white;
 `;
 const PageSelect = styled.div`
   display: flex;
@@ -181,16 +190,10 @@ const PageSelect = styled.div`
     text-align: center;
   }
 `;
-const Title = styled.div`
-  font-size: 32px;
-  margin: 20px;
-`;
 const InnerTitle = styled.div`
   font-size: 24px;
   margin-top: 20px;
-`;
-const CloseMent = styled.div`
-  margin-bottom: 20px;
+  font-weight: 900;
 `;
 const FlaskReturn = styled.div`
   display: flex;
@@ -203,10 +206,11 @@ const Arrow = styled.div`
   justify-content: space-around;
   align-items: center;
   font-size: 60px;
+  color: white;
 `;
 const Arrow2 = styled.div`
   font-size: 40px;
-  font-family: KyoboHand;
+  /* font-family: KyoboHand; */
   cursor: pointer;
 `;
 const After = styled.div`
@@ -219,9 +223,10 @@ const After = styled.div`
   font-size: 20px;
   /* border: 1px solid black; */
   border-radius: 20px;
+  background-color: white;
   min-height: 300px;
-  box-shadow: 4px 4px 10px #a86c6c, -4px -4px 10px #7575b9,
-    -4px 4px 10px #75b98a, 4px -4px 10px #b8b975;
+  /* box-shadow: 5px 5px 20px #a86c6c, -5px -5px 20px #7575b9,
+    -5px 5px 20px #75b98a, 5px -5px 20px #b8b975; */
 `;
 const Before = styled.div`
   display: flex;
@@ -231,9 +236,10 @@ const Before = styled.div`
   margin: 20px;
   width: 50%;
   /* border: 1px solid black; */
+  background-color: white;
   border-radius: 20px;
   min-height: 300px;
-  box-shadow: 2px 2px 10px #878585, -2px -2px 10px #878585;
+  box-shadow: 1px 1px 4px #878585, -1px -1px 4px #878585;
 `;
 const InnerTxtBox = styled.div`
   display: flex;
@@ -263,21 +269,23 @@ const SmallTxt = styled.div`
   /* color: #6c6c6c; */
 `;
 const Overlay = styled.div`
+  font-family: GmarketSansMedium;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 4;
+  transition: background-color 0.3s ease;
 `;
 
 const InputModalContainer = styled.div`
   animation: ${fadeIn} 0.2s ease-in;
-  font-family: HSSaemaul-Regular;
+  /* font-family: HSSaemaul-Regular; */
   position: fixed;
   padding: 20px;
   top: 50%;
@@ -288,9 +296,9 @@ const InputModalContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: white;
+  /* background-color: white; */
   border-radius: 7px;
-  box-shadow: 5px 5px 20px #525252, -5px -5px 20px #525252;
+  /* box-shadow: 5px 5px 20px #525252, -5px -5px 20px #525252; */
   overflow: hidden;
   transition: 0.3s ease-out;
   button {

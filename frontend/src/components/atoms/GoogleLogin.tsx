@@ -1,8 +1,8 @@
+import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
 import { loginsuccess, logout, setUserData } from "../../store/slice/AuthSlice";
 import "./Google.css";
 import { setTodosRedux } from "../../store/slice/calendar/TodoSlice";
@@ -30,9 +30,12 @@ export default function GoogleLogin() {
       console.log(response.data);
       dispatch(loginsuccess());
       dispatch(setUserData(response.data.data));
-      // Save memberId to local storage
+      // 멤버 아이디 저장
       localStorage.setItem("memberId", response.data.data.memberId);
       setMemberId(response.data.data.memberId);
+      // 에세스 및 리프레시 토큰 저장
+      localStorage.setItem("access_token", response.data.data.accessToken);
+      localStorage.setItem("refresh_token", response.data.data.refreshToken);
       navigate("/");
     },
     onError: (errorResponse) => {
@@ -48,6 +51,8 @@ export default function GoogleLogin() {
     dispatch(setEvents([]));
     dispatch(setTodosRedux([]));
     localStorage.removeItem("memberId");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
     setMemberId(localStorage.getItem("memberId"));
     navigate("/demo");
   };

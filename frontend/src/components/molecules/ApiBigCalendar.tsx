@@ -29,7 +29,11 @@ import {
   setEvents,
   addEvent,
 } from "../../store/slice/calendar/CalendarSlice";
-import { change, handleDate, selectRangeDate } from "../../store/slice/calendar/HandleSlice";
+import {
+  change,
+  handleDate,
+  selectRangeDate,
+} from "../../store/slice/calendar/HandleSlice";
 import Modal from "./ApiEventForm";
 import DetailModal from "./ApiEventDetail";
 import withDragAndDrop, {
@@ -37,8 +41,6 @@ import withDragAndDrop, {
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import { readCalendar } from "../../api/CalendarApi";
 import styled from "styled-components";
-
-import axios from "axios";
 import Toolbar from "./Toolbar";
 
 // Drag and Drop
@@ -47,7 +49,10 @@ import {
   selectDraggedTodo,
   setDraggedTodo,
 } from "../../store/slice/calendar/TodoSlice";
-import formatDateTime from "../../functions/BaseFunc";
+import formatDateTime, {
+  setAuthorizationHeaderInter,
+} from "../../functions/BaseFunc";
+import axiosInstance from "../../functions/AxiosInstance";
 // 이벤트 캘린더 폼
 interface FormatEvent {
   id: number;
@@ -60,8 +65,8 @@ interface FormatEvent {
 }
 interface CalendarRes {
   id: number;
-  start: { dateTime: string, date: string };
-  end: { dateTime: string, date: string };
+  start: { dateTime: string; date: string };
+  end: { dateTime: string; date: string };
   summary: string;
   description: string;
   colorId?: number;
@@ -113,20 +118,20 @@ const BigCalendarInfo = () => {
   const handledate: Date = new Date(date);
   // 요일,날짜 Toolbar 변경
   const formats = {
-    dateFormat: 'D',
-    dayFormat: 'D일',
+    dateFormat: "D",
+    dayFormat: "D일",
     dayRangeHeaderFormat: ({ start, end }: { start: Date; end: Date }) => {
-      const startDate = moment(start).format('M월 D일');
-      const endDate = moment(end).format('M월 D일');
+      const startDate = moment(start).format("M월 D일");
+      const endDate = moment(end).format("M월 D일");
       return `${startDate} - ${endDate}`;
     },
     // view가 month일 때 화살표 있는 쪽 년월
-    monthHeaderFormat: 'YYYY년 M월',
+    monthHeaderFormat: "YYYY년 M월",
     //view가 day일 때
-    dayHeaderFormat: 'M월 D일 ddd',
+    dayHeaderFormat: "M월 D일 ddd",
     dayRangeFormat: ({ start, end }: { start: Date; end: Date }) => {
-      const startDate = moment(start).format('M월 D일');
-      const endDate = moment(end).format('M월 D일');
+      const startDate = moment(start).format("M월 D일");
+      const endDate = moment(end).format("M월 D일");
       return `${startDate} - ${endDate}`;
     },
   };
@@ -140,7 +145,7 @@ const BigCalendarInfo = () => {
       });
       // 일정변경 (개발자용)
       if (start instanceof Date && end instanceof Date) {
-        console.log(event, start, end)
+        console.log(event, start, end);
         dispatch(
           updateEvent({
             title: event.title?.toString(),
@@ -152,7 +157,7 @@ const BigCalendarInfo = () => {
         );
       }
       // 캘린더 수정 API 요청
-      if ("id" in event && "memo" in event && "colorId" in event ) {
+      if ("id" in event && "memo" in event && "colorId" in event) {
         const new_start = new Date(start);
         const new_end = new Date(end);
         const send_id = event.id;
@@ -166,7 +171,9 @@ const BigCalendarInfo = () => {
             start: {
               dateTime: !event.allDay ? formatDateTime(new_start) : null,
               timeZone: "Asia/Seoul",
-              date: event.allDay ? formatDateTime(new_start).split("T")[0] : null,
+              date: event.allDay
+                ? formatDateTime(new_start).split("T")[0]
+                : null,
             },
             end: {
               dateTime: !event.allDay ? formatDateTime(new_end) : null,
@@ -175,10 +182,14 @@ const BigCalendarInfo = () => {
             },
           },
         };
+        await setAuthorizationHeaderInter();
         try {
-          const res = await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
+          const res = await axiosInstance.put(
+            `${local_back_url}/api/calendar/v2`,
+            reqUpdateEvent
+          );
           // 캘린더 다시 불러오기
-          console.log(" 일정 이동 기능 구글 캘린더 수정 api 요청 완료",res);
+          console.log(" 일정 이동 기능 구글 캘린더 수정 api 요청 완료", res);
           // await refetchCal();
         } catch (error) {
           console.error("구글 캘린더 수정 에러:", error);
@@ -193,10 +204,10 @@ const BigCalendarInfo = () => {
   const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
     dispatch(openModal());
     const reduxselectRangeDate = {
-      rangeStart:formatDateTime(start),
-      rangeEnd:formatDateTime(end),
-    }
-    dispatch(selectRangeDate(reduxselectRangeDate))
+      rangeStart: formatDateTime(start),
+      rangeEnd: formatDateTime(end),
+    };
+    dispatch(selectRangeDate(reduxselectRangeDate));
   };
 
   // 일정 리사이즈 기능
@@ -234,7 +245,9 @@ const BigCalendarInfo = () => {
             start: {
               dateTime: !event.allDay ? formatDateTime(new_start) : null,
               timeZone: "Asia/Seoul",
-              date: event.allDay ? formatDateTime(new_start).split("T")[0] : null,
+              date: event.allDay
+                ? formatDateTime(new_start).split("T")[0]
+                : null,
             },
             end: {
               dateTime: !event.allDay ? formatDateTime(new_end) : null,
@@ -243,8 +256,12 @@ const BigCalendarInfo = () => {
             },
           },
         };
+        await setAuthorizationHeaderInter();
         try {
-          await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
+          await axiosInstance.put(
+            `${local_back_url}/api/calendar/v2`,
+            reqUpdateEvent
+          );
           // 캘린더 다시 불러오기
           console.log("일정 리사이즈 기능 구글 캘린더 수정 api 완료");
           // await refetchCal();
@@ -281,7 +298,7 @@ const BigCalendarInfo = () => {
       .endOf("week")
       .toDate()
       .toISOString();
-    console.log('timeMax, timeMin',timeMax, timeMin);
+    console.log("timeMax, timeMin", timeMax, timeMin);
     // 데이터 리패치
     await setTimeMax(timeMax);
     await setTimeMin(timeMin);
@@ -303,8 +320,10 @@ const BigCalendarInfo = () => {
         id: item.id,
         colorId: item.colorId || 1,
         allDay: item.start.date ? true : false,
-        start: !item.start.date ? item.start.dateTime:item.start.date+'T00:00:00',
-        end: !item.end.date ?item.end.dateTime:item.end.date+'T00:00:00',
+        start: !item.start.date
+          ? item.start.dateTime
+          : item.start.date + "T00:00:00",
+        end: !item.end.date ? item.end.dateTime : item.end.date + "T00:00:00",
         title: item.summary,
         memo: item.description || "",
       }));
@@ -321,7 +340,7 @@ const BigCalendarInfo = () => {
         end: new Date(event.end),
       }));
       setFormattedEventsJunha(formattedEvents);
-      console.log(formattedEvents)
+      console.log(formattedEvents);
     }
   }, [myEvents]);
   // style
@@ -368,8 +387,9 @@ const BigCalendarInfo = () => {
           timeZone: "Asia/Seoul",
         },
       };
+      await setAuthorizationHeaderInter();
       try {
-        const response = await axios.post(
+        const response = await axiosInstance.post(
           `${local_back_url}/api/calendar/v2/to/event`,
           formData
         );
@@ -413,10 +433,10 @@ const BigCalendarInfo = () => {
           //보여질 화면
           view={currentView}
           //이벤트 발생할 때마다
-            // eventPropGetter={eventPropGetter}
+          // eventPropGetter={eventPropGetter}
           style={{
             height: "100%",
-            width: "100%"
+            width: "100%",
           }}
           // Todo -> Calendar DROP 밖에서 캘린더로
           onDropFromOutside={onDropFromOutside}
@@ -429,7 +449,7 @@ const BigCalendarInfo = () => {
           formats={formats}
         />
       </div>
-      {isOpen && (<Modal refetchCal={refetchCal} />)}
+      {isOpen && <Modal refetchCal={refetchCal} />}
       {isSideOpen && <DetailModal id={detailEvent} />}
     </Container>
   );

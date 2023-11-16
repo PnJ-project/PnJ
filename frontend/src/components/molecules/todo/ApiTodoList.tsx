@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import TodoForm from "./ApiTodoForm";
 import Todo from "./ApiTodo";
 import { readTodo } from "../../../api/TodoApi";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import {
   TodoItems,
@@ -13,6 +12,8 @@ import {
   setTodosRedux,
   updateTodoRedux,
 } from "../../../store/slice/calendar/TodoSlice";
+import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
+import axiosInstance from "../../../functions/AxiosInstance";
 
 interface TodoItem {
   id: number;
@@ -59,8 +60,9 @@ export default function TodoList() {
     dispatch(addTodoRedux(newTodo));
 
     // 투두 생성 API 호출
+    await setAuthorizationHeaderInter();
     try {
-      await axios.post(`${local_back_url}/api/todo`, reqNewTodo);
+      await axiosInstance.post(`${local_back_url}/api/todo`, reqNewTodo);
       // 투두 다시 불러오기
       console.log("투두 생성 API 요청 완료");
       await refetchTodo();
@@ -78,8 +80,9 @@ export default function TodoList() {
     // 업데이트 적용(개발자용)
     dispatch(updateTodoRedux({ id: todoId, summary: newValue }));
     // 업데이트 요청
+    await setAuthorizationHeaderInter();
     try {
-      await axios.put(`${local_back_url}/api/todo`, {
+      await axiosInstance.put(`${local_back_url}/api/todo`, {
         memberId: memberId,
         todoId: todoId,
         summary: newValue,
@@ -97,8 +100,9 @@ export default function TodoList() {
     // 삭제 적용(개발자용)
     dispatch(removeTodoRedux(id));
     // 삭제 API요청
+    await setAuthorizationHeaderInter();
     try {
-      const res = await axios.delete(
+      const res = await axiosInstance.delete(
         `${local_back_url}/api/todo/${memberId}/${id}`
       );
       // 투두 다시 불러오기

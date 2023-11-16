@@ -8,21 +8,3 @@ export const logInPnJ = async (code: string) => {
   const response = await axios.get(`${local_back_url}/api/login?code=${code}`);
   return response.data;
 };
-
-// 로그아웃
-export const logOut = async () => {
-  const response = await axios.get(`${local_back_url}/Sample`);
-  return response.data;
-};
-
-// 토큰 리프레시
-export const tokenRefresh = async () => {
-  const response = await axios.get(`${local_back_url}/Sample`);
-  return response.data;
-};
-
-// 내정보 불러오기
-export const useFetchMyInfo = async () => {
-  const response = await axios.get(`${local_back_url}/Sample`);
-  return response.data;
-};

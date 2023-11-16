@@ -1,10 +1,11 @@
 // 맛집 아이템
 import { EatItemType } from "../../../store/slice/RecommendSlice";
-import axios from "axios";
 import { useState } from "react";
 import { ReqTodoCreate } from "../../molecules/todo/ApiTodoList";
 import { useQuery } from "react-query";
 import { readTodo } from "../../../api/TodoApi";
+import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
+import axiosInstance from "../../../functions/AxiosInstance";
 
 export default function EatItem({ item }: { item: EatItemType }) {
   // 기본 세팅
@@ -17,12 +18,13 @@ export default function EatItem({ item }: { item: EatItemType }) {
 
   // 할일목록 추가시
   const recommendTodo = async () => {
+    await setAuthorizationHeaderInter();
     const reqNewTodo: ReqTodoCreate = {
       memberId: memberId,
       summary: item.title + " 방문",
     };
     try {
-      await axios.post(`${local_back_url}/api/todo`, reqNewTodo);
+      await axiosInstance.post(`${local_back_url}/api/todo`, reqNewTodo);
       // 투두 다시 불러오기
       console.log("투두 생성 API 요청 완료");
       await refetchTodo();
@@ -36,10 +38,10 @@ export default function EatItem({ item }: { item: EatItemType }) {
       <img src={item.image}></img>
       {/* 내용물 */}
       <div className="RecommendItemShow">
+        <div className="EatTitle">{item.title}</div>
         {item.info != "false" && item.info && (
           <div className="EatInfo">{item.info}</div>
         )}
-        <div>{item.title}</div>
         {item.roadAddress != "false" && item.roadAddress && (
           <div className="EatAddress">{item.roadAddress}</div>
         )}
