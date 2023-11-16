@@ -14,18 +14,18 @@ public interface CalendarServiceV2 {
 
     List<EventDto> readEventList(Long memberId, String timeMax, String timeMin);
 
-    EventDto createEvent(EventRequestDto event);
+    EventDto createEvent(EventRequestDto event, Long memberId);
 
     void deleteEvent(Long memberId, String eventId);
 
-    EventDto updateEvent(EventRequestDto requestDto);
+    EventDto updateEvent(EventRequestDto requestDto, Long memberId);
 
     List<EventDto> updateEventList(EventDto event);
 
-    TodoResponseDto exchangeToTodo(ExchangeToTodoRequestDto requestDto);
+    TodoResponseDto exchangeToTodo(ExchangeToTodoRequestDto requestDto, Long memberId);
 
-    EventDto exchangeToEvent(ExchangeToEventRequestDto requestDto);
+    EventDto exchangeToEvent(ExchangeToEventRequestDto requestDto, Long memberId);
 
-    InputResponseDto inputProcess(InputRequestDto requestDto);
+    InputResponseDto inputProcess(InputRequestDto requestDto, Long memberId);
 
 }

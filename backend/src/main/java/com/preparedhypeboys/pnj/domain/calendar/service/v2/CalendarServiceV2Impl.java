@@ -56,8 +56,8 @@ public class CalendarServiceV2Impl implements
 
     @Override
     @Transactional
-    public EventDto createEvent(EventRequestDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+    public EventDto createEvent(EventRequestDto requestDto, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
             () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
         if (member.isTokenInvalid()) {
@@ -86,8 +86,8 @@ public class CalendarServiceV2Impl implements
 
     @Override
     @Transactional
-    public EventDto updateEvent(EventRequestDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+    public EventDto updateEvent(EventRequestDto requestDto, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
             () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
         if (member.isTokenInvalid()) {
@@ -105,8 +105,8 @@ public class CalendarServiceV2Impl implements
 
     @Override
     @Transactional
-    public TodoResponseDto exchangeToTodo(ExchangeToTodoRequestDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+    public TodoResponseDto exchangeToTodo(ExchangeToTodoRequestDto requestDto, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
             () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
         if (member.isTokenInvalid()) {
@@ -128,8 +128,8 @@ public class CalendarServiceV2Impl implements
 
     @Override
     @Transactional
-    public EventDto exchangeToEvent(ExchangeToEventRequestDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+    public EventDto exchangeToEvent(ExchangeToEventRequestDto requestDto, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
             () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
         if (member.isTokenInvalid()) {
@@ -156,8 +156,8 @@ public class CalendarServiceV2Impl implements
 
     @Override
     @Transactional
-    public InputResponseDto inputProcess(InputRequestDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+    public InputResponseDto inputProcess(InputRequestDto requestDto, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
             () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
         if (member.isTokenInvalid()) {
