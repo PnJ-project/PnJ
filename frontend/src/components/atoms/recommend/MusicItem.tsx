@@ -1,10 +1,11 @@
 // 공연 아이템
-import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
 import { readCalendar } from "../../../api/CalendarApi";
 import moment from "moment";
+import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
+import axiosInstance from "../../../functions/AxiosInstance";
 
 export default function MusicItem({ item }: { item: TripItemType }) {
   // 기본 세팅
@@ -50,8 +51,9 @@ export default function MusicItem({ item }: { item: TripItemType }) {
     },
   };
   const recommendCalendar = async () => {
+    await setAuthorizationHeaderInter();
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${local_back_url}/api/calendar/v2`,
         reqNewEvent
       );

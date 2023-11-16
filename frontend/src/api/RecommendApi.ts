@@ -1,4 +1,5 @@
-import axios from "axios";
+import { setAuthorizationHeaderInter } from "../functions/BaseFunc";
+import axiosInstance from "../functions/AxiosInstance";
 
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
 // const service_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
@@ -15,7 +16,8 @@ export const readRecommend = async ({
   timeMax,
   timeMin,
 }: RecommendRequest) => {
-  const response = await axios.get(
+  await setAuthorizationHeaderInter();
+  const response = await axiosInstance.get(
     `${local_back_url}/api/suggestion/${memberId}/${timeMax}/${timeMin}`
   );
   return response.data;

@@ -1,5 +1,16 @@
 version: '3.8'
 services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./infra/nginx/conf.d:/app
+      - /etc/letsencrypt:/etc/letsencrypt
+    restart: unless-stopped
+
   mariadb:
     image: mariadb
     container_name: mariadb
@@ -36,8 +47,10 @@ services:
       # backend application 환경변수
       - ./backend/src/main/resources:/var/jenkins_home/workspace/dep-be/backend/src/main/resources
       # frontend 배포 환경변수
-      - ./frontend/.env.production:/var/jenkins_home/workspace/djep-fe/frontend/.env.production
-      - /etc/letsencrypt:/etc/letsencrypt
+      - ./frontend/.env.production:/var/jenkins_home/workspace/dep-fe/frontend/.env.production
+      # nginx deploy conf files
+      - /etc/letsencrypt:/etc/letsencrypt:z
+      - ./infra/nginx:/var/jenkins_home/workspace/dep-be/infra/nginx:z
     ports:
       - ${JENKINS_PORT}:8080
     privileged: true
@@ -46,7 +59,6 @@ services:
 
 volumes:
   mariadb_data:
-  redis_data:
 
 networks:
   mariadb_network:

@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,9 +42,10 @@ public class CalendarControllerV2 {
 
     @GetMapping("/{memberId}/{timeMax}/{timeMin}")
     public ResponseEntity<ResponseDto<List<EventDto>>> getList(
-        @PathVariable(value = "memberId") Long memberId,
+        @PathVariable(value = "memberId") Long memberI, // TODO 삭제
         @PathVariable(value = "timeMax") String timeMax,
-        @PathVariable(value = "timeMin") String timeMin
+        @PathVariable(value = "timeMin") String timeMin,
+        @AuthenticationPrincipal Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(GET_EVENT_SUCCESS.getMessage(),
@@ -53,18 +55,20 @@ public class CalendarControllerV2 {
 
     @PostMapping(value = "")
     public ResponseEntity<ResponseDto<EventDto>> insertEvent(
-        @RequestBody EventRequestDto requestDto
+        @RequestBody EventRequestDto requestDto,
+        @AuthenticationPrincipal Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(INSERT_EVENT_SUCCESS.getMessage(),
-                calendarService.createEvent(requestDto))
+                calendarService.createEvent(requestDto, memberId))
         );
     }
 
     @DeleteMapping(value = "/{memberId}/{eventId}")
     public ResponseEntity<ResponseDto<?>> deleteEvent(
-        @PathVariable(value = "memberId") Long memberId,
-        @PathVariable(value = "eventId") String eventId
+        @PathVariable(value = "memberId") Long memberd, // TODO 삭제
+        @PathVariable(value = "eventId") String eventId,
+        @AuthenticationPrincipal Long memberId
     ) {
         calendarService.deleteEvent(memberId, eventId);
 
@@ -75,41 +79,45 @@ public class CalendarControllerV2 {
 
     @PutMapping(value = "")
     public ResponseEntity<ResponseDto<EventDto>> updateEvent(
-        @RequestBody EventRequestDto requestDto
+        @RequestBody EventRequestDto requestDto,
+        @AuthenticationPrincipal Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(UPDATE_EVENT_SUCCESS.getMessage(),
-                calendarService.updateEvent(requestDto))
+                calendarService.updateEvent(requestDto, memberId))
         );
     }
 
     @PostMapping(value = "/to/todo")
     public ResponseEntity<ResponseDto<TodoResponseDto>> exchangeToTodo(
-        @RequestBody ExchangeToTodoRequestDto requestDto
+        @RequestBody ExchangeToTodoRequestDto requestDto,
+        @AuthenticationPrincipal Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(EXCHANGE_TO_TODO_SUCCESS.getMessage(),
-                calendarService.exchangeToTodo(requestDto))
+                calendarService.exchangeToTodo(requestDto, memberId))
         );
     }
 
     @PostMapping(value = "/to/event")
     public ResponseEntity<ResponseDto<EventDto>> exchangeToEvent(
-        @RequestBody ExchangeToEventRequestDto requestDto
+        @RequestBody ExchangeToEventRequestDto requestDto,
+        @AuthenticationPrincipal Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(EXCHANGE_TO_EVENT_SUCCESS.getMessage(),
-                calendarService.exchangeToEvent(requestDto))
+                calendarService.exchangeToEvent(requestDto, memberId))
         );
     }
 
     @PostMapping(value = "/input")
     public ResponseEntity<ResponseDto<InputResponseDto>> inputProcess(
-        @RequestBody InputRequestDto requestDto
+        @RequestBody InputRequestDto requestDto,
+        @AuthenticationPrincipal Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(INPUT_EASY_SUCCESS.getMessage(),
-                calendarService.inputProcess(requestDto)
+                calendarService.inputProcess(requestDto, memberId)
             )
         );
     }

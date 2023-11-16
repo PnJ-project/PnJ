@@ -14,10 +14,10 @@ import Study from "../molecules/recommend/Study";
 import Trip from "../molecules/recommend/Trip";
 import Eat from "../molecules/recommend/Eat";
 import All from "../molecules/recommend/All";
-import grid from "/image/grid.svg";
-import list from "/image/list.svg";
 import RecommendJ from '/image/RecommendJ.svg';
 import styled from "styled-components";
+import { HiMenu } from "react-icons/hi";
+import { CgMenuGridO } from "react-icons/cg";
 
 export default function Recommend() {
   // 기본 세팅
@@ -70,31 +70,35 @@ export default function Recommend() {
     refetchRecommend();
   }, [allEvents]);
 
+
   return (
     <>
       {/* 기능 */}
       <UpBtn howscroll={200} />
       {/* 본문 */}
       <div className="RecommendContainer">
-        <Box className="RecommendTitle">당신을 위한 
+        <Container>
+        <Box  className="RecommendTitle">당신을 위한 
         <Img src={RecommendJ} />
-        의 일정 추천</Box>
+         의 일정 추천을 받아보세요</Box >
         <div className="RecommendSortBtnBox">
           <button
             onClick={() => {
               setSortCategory(true);
             }}
           >
-            <img src={list} alt="" style={{ width: "35px" }} />
+            <Icon />
           </button>
           <button
             onClick={() => {
               setSortCategory(false);
             }}
           >
-            <img src={grid} alt="" style={{ width: "30px" }} />
+            <Icon1/>
           </button>
         </div>
+
+        </Container>
         {/* 카테고리 보기 */}
         {sortCategoey && (
           <>
@@ -115,6 +119,10 @@ export default function Recommend() {
             </div>
           </>
         )}
+        {/* 푸터 */}
+        <div className="RecommendFooter">
+          <hr />
+        </div>
       </div>
     </>
   );
@@ -123,10 +131,29 @@ export default function Recommend() {
 const Img = styled.img`
 width: 50px;
 height: 50px;
-/* margin-top: 50px; */
+margin-left: 10px;
 
 `
 const Box = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 30px;
+  
 
+`;
 
+const Container = styled.div`
+  background: linear-gradient(to bottom, #f6ffe8, #ffffff);
+width: 100%;
 `
+const Icon = styled(HiMenu)`
+  font-size: 45px; 
+  color: rgba(0, 153, 3, 0.5);
+`;
+
+const Icon1 = styled(CgMenuGridO)`
+  font-size: 45px; 
+  color: rgba(0, 153, 3, 0.5);
+`;

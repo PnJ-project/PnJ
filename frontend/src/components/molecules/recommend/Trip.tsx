@@ -8,9 +8,9 @@ import {
   selectRecommends,
 } from "../../../store/slice/RecommendSlice";
 import { useEffect, useState } from "react";
-import Recommend from './Recommend';
+import Recommend from "./Recommend";
 import styled from "styled-components";
-import subimg from '/image/subimg.svg'
+import subimg from "/image/subimg.svg";
 
 export default function Trip() {
   // 기본 세팅
@@ -45,63 +45,69 @@ export default function Trip() {
   }
   return (
     <>
+    {items.length > 0 && (
       <div className="RecommendInner">
         <div className="RecommendTrip">
-          <div className="RecommendSubTitle">여행 어때요?</div>
+          <div className="RecommendSubTitle">힐링 여행 어때요?</div>
+
 
             <Recommend>
               {items.map((item, index) => (
                 <SliderItem key={index}>
-                  <img 
-                    src={item.image === "false" ? subimg : item.image} 
-                    alt={item.image === "false" ? subimg : ''} 
+                  <img
+                    src={item.image === "false" ? subimg : item.image}
+                    alt={item.image === "false" ? subimg : ''}
                   />
                   <Name>{item.title === "false" ? '' : item.title}</Name>
-                  <Place>{item.roadAddress === "false" ? '' : item.roadAddress}</Place>
+                  <Place>
+                    {item.roadAddress === "false" ? '' : item.roadAddress}
+                  </Place>
                   <Info>{item.info === "false" ? '' : item.info}</Info>
-
                 </SliderItem>
               ))}
             </Recommend>
-   
+            </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
 
-
 const SliderItem = styled.div`
-  
-  img{
+  img {
     width: 94%;
     height: 240px;
-    object-fit: cover; 
+    object-fit: cover;
     margin-bottom: 20px;
-    transition: transform 0.3s ease; 
+    transition: transform 0.3s ease;
     border: none;
     box-shadow: none;
 
     &:hover {
-      transform: scale(1.1); 
+      transform: scale(1.1);
     }
   }
-  
-  
 `;
 
-
 const Name = styled.p`
-font-size: 18px;
-width: 85%;
-`
+  font-size: 18px;
+  width: 85%;
+`;
 const Place = styled.p`
-font-size: 15px;
-margin-top: 10px;
-width: 85%;
-`
+  font-size: 15px;
+  margin-top: 10px;
+  width: 85%;
+`;
 const Info = styled.p`
 font-size: 12px;
 margin-top: 5px;
 `
+
+// const Container = styled.div`
+// display: flex;
+// flex-direction: column;
+// align-items: center;
+// justify-content: center;
+
+// `
 

@@ -1,5 +1,4 @@
 // 메인 기능 캘린더 컴포넌트
-import axios from "axios";
 import moment from "moment";
 import { useState } from "react";
 import { useQuery } from "react-query";
@@ -21,6 +20,8 @@ import "./DemoCalendar.css";
 import { useSpeechRecognition } from "react-speech-kit";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import About from "../../pages/service/About";
+import { setAuthorizationHeaderInter } from "../../functions/BaseFunc";
+import axiosInstance from "../../functions/AxiosInstance";
 
 // 타입 선언
 export interface FlaskResType {
@@ -101,8 +102,9 @@ export default function DemoCalendar() {
     const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
     const memberId = localStorage.getItem("memberId");
     const formData = { input: textSave, memberId: memberId };
+    await setAuthorizationHeaderInter();
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${backend}/api/calendar/input`,
         formData
       );
