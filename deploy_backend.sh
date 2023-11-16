@@ -2,17 +2,18 @@
 EXIST_BLUE=$(docker compose -f docker-compose.blue.yml ps | grep blue)
 
 if [ -z "$EXIST_BLUE" ]; then
-    echo "[Up] Blue Up"
-    docker compose -f docker-compose.blue.yml up -d backend_blue1 backend_blue2
-    docker compose -f docker-compose.green.yml down nginx_green
-    docker compose -f docker-compose.blue.yml up -d nginx_blue
-    sleep 5
-    docker compose -f docker-compose.green.yml down backend_green1 backend_green2
+    echo "[Up] BLUE Up"
+    docker compose -f docker-compose.blue.yml up -d
+    docker exec nginx "cp /app/nginx.blue.conf /etc/nginx/conf.d/default.conf"
+    docker exec nginx "nginx -s reload"
+    sleep 2
+    docker compose -f docker-compose.green.yml down
 else
-    echo "[Up] Green Up"
-    docker compose -f docker-compose.green.yml up -d backend_green1 backend_green2
-    docker compose -f docker-compose.blue.yml down nginx_blue
-    docker compose -f docker-compose.green.yml up -d nginx_green
-    sleep 5
-    docker compose -f docker-compose.blue.yml down backend_blue1 backend_blue2
+
+    echo "[Up] GREEN Up"
+    docker compose -f docker-compose.green.yml up -d
+    docker exec nginx "cp /app/nginx.green.conf /etc/nginx/conf.d/default.conf"
+    docker exec nginx "nginx -s reload"
+    sleep 2
+    docker compose -f docker-compose.blue.yml down
 fi
