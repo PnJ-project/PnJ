@@ -1,16 +1,5 @@
 version: '3.8'
 services:
-  nginx_green:
-    image: nginx
-    container_name: nginx_green
-    volumes:
-      - ./infra/nginx/green.conf.d:/etc/nginx/conf.d
-      - /etc/letsencrypt:/etc/letsencrypt
-    ports:
-      - 80:80
-      - 443:443
-    restart: unless-stopped
-  
   backend_green1:
     image: backend
     container_name : backend_green1
