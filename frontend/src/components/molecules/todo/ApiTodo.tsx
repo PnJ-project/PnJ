@@ -57,6 +57,11 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
                 type="text"
                 value={edit.value}
                 onChange={handleUpdateValue}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey && edit.id) {
+                    submitUpdate({ id: edit.id, summary: edit.value });
+                  }
+                }}
               />
             )}
 

@@ -17,6 +17,7 @@ import StudyItem from "../../atoms/recommend/StudyItem";
 export default function Eat() {
   // 기본 세팅
   const recommends = useSelector(selectRecommends);
+  const [innerCount, setInnerCount] = useState(3);
   const [items, setItems] = useState<
     | TripItemType[]
     | StudyItemType[]
@@ -36,6 +37,30 @@ export default function Eat() {
   // 추천 클릭시
   const handleClickRecommend = () => {};
 
+  // 반응형 설계
+  const handleResize = () => {
+    // 창의 너비에 따라 innerCount를 동적으로 조정
+    if (window.innerWidth < 768) {
+      setInnerCount(1);
+    } else if (window.innerWidth < 1024) {
+      setInnerCount(2);
+    } else {
+      setInnerCount(3);
+    }
+  };
+
+  // 리사이즈 이벤트 부여
+  useEffect(() => {
+    // 초기 로딩 시 한 번 실행
+    handleResize();
+    // resize 이벤트에 핸들러 등록
+    window.addEventListener("resize", handleResize);
+    // 컴포넌트 언마운트 시 이벤트 핸들러 제거
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   // 정보없을시
   if (!recommends) {
     return (
@@ -47,93 +72,28 @@ export default function Eat() {
   return (
     <>
       <div className="RecommendAllOuter">
-        <div className="RecommendAllInner">
-          {/* items를 순회하여 각각의 item을 출력 */}
-          {items.map((item, index) => (
-            <>
-              {index % 3 === 0 && (
-                <div
-                  key={index}
-                  className="RecommendAllItem"
-                  onClick={handleClickRecommend}
-                >
-                  <>
-                    {/* 여행 */}
+        {[...Array(innerCount)].map((_, innerIndex) => (
+          <div className="RecommendAllInner" key={innerIndex}>
+            {items.map(
+              (item, index) =>
+                index % innerCount === innerIndex && (
+                  <div
+                    key={index}
+                    className="RecommendAllItem"
+                    onClick={handleClickRecommend}
+                  >
                     {item.category == "여행" && <TripItem item={item} />}
-                    {/* 맛집 */}
                     {item.category == "맛집" && <EatItem item={item} />}
-                    {/* 공연 */}
                     {item.category.includes("공연") && (
                       <MusicItem item={item} />
                     )}
-                    {/* 공부 */}
                     {item.category == "공부" && <StudyItem item={item} />}
-                    {/* 스포츠 */}
                     {item.category == "스포츠" && <SportItem item={item} />}
-                  </>
-                </div>
-              )}
-            </>
-          ))}
-        </div>
-        <div className="RecommendAllInner">
-          {/* items를 순회하여 각각의 item을 출력 */}
-          {items.map((item, index) => (
-            <>
-              {index % 3 === 1 && (
-                <div
-                  key={index}
-                  className="RecommendAllItem"
-                  onClick={handleClickRecommend}
-                >
-                  <>
-                    {/* 여행 */}
-                    {item.category == "여행" && <TripItem item={item} />}
-                    {/* 맛집 */}
-                    {item.category == "맛집" && <EatItem item={item} />}
-                    {/* 공연 */}
-                    {item.category.includes("공연") && (
-                      <MusicItem item={item} />
-                    )}
-                    {/* 공부 */}
-                    {item.category == "공부" && <StudyItem item={item} />}
-                    {/* 스포츠 */}
-                    {item.category == "스포츠" && <SportItem item={item} />}
-                  </>
-                </div>
-              )}
-            </>
-          ))}
-        </div>
-        <div className="RecommendAllInner">
-          {/* items를 순회하여 각각의 item을 출력 */}
-          {items.map((item, index) => (
-            <>
-              {index % 3 === 2 && (
-                <div
-                  key={index}
-                  className="RecommendAllItem"
-                  onClick={handleClickRecommend}
-                >
-                  <>
-                    {/* 여행 */}
-                    {item.category == "여행" && <TripItem item={item} />}
-                    {/* 맛집 */}
-                    {item.category == "맛집" && <EatItem item={item} />}
-                    {/* 공연 */}
-                    {item.category.includes("공연") && (
-                      <MusicItem item={item} />
-                    )}
-                    {/* 공부 */}
-                    {item.category == "공부" && <StudyItem item={item} />}
-                    {/* 스포츠 */}
-                    {item.category == "스포츠" && <SportItem item={item} />}
-                  </>
-                </div>
-              )}
-            </>
-          ))}
-        </div>
+                  </div>
+                )
+            )}
+          </div>
+        ))}
       </div>
     </>
   );

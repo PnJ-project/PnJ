@@ -41,8 +41,6 @@ import withDragAndDrop, {
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import { readCalendar } from "../../api/CalendarApi";
 import styled from "styled-components";
-
-import axios from "axios";
 import Toolbar from "./Toolbar";
 
 // Drag and Drop
@@ -52,8 +50,9 @@ import {
   setDraggedTodo,
 } from "../../store/slice/calendar/TodoSlice";
 import formatDateTime, {
-  setAuthorizationHeader,
+  setAuthorizationHeaderInter,
 } from "../../functions/BaseFunc";
+import axiosInstance from "../../functions/AxiosInstance";
 // 이벤트 캘린더 폼
 interface FormatEvent {
   id: number;
@@ -183,9 +182,9 @@ const BigCalendarInfo = () => {
             },
           },
         };
-        await setAuthorizationHeader();
+        await setAuthorizationHeaderInter();
         try {
-          const res = await axios.put(
+          const res = await axiosInstance.put(
             `${local_back_url}/api/calendar/v2`,
             reqUpdateEvent
           );
@@ -257,9 +256,12 @@ const BigCalendarInfo = () => {
             },
           },
         };
-        await setAuthorizationHeader();
+        await setAuthorizationHeaderInter();
         try {
-          await axios.put(`${local_back_url}/api/calendar/v2`, reqUpdateEvent);
+          await axiosInstance.put(
+            `${local_back_url}/api/calendar/v2`,
+            reqUpdateEvent
+          );
           // 캘린더 다시 불러오기
           console.log("일정 리사이즈 기능 구글 캘린더 수정 api 완료");
           // await refetchCal();
@@ -385,9 +387,9 @@ const BigCalendarInfo = () => {
           timeZone: "Asia/Seoul",
         },
       };
-      await setAuthorizationHeader();
+      await setAuthorizationHeaderInter();
       try {
-        const response = await axios.post(
+        const response = await axiosInstance.post(
           `${local_back_url}/api/calendar/v2/to/event`,
           formData
         );

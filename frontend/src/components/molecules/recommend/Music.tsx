@@ -8,10 +8,9 @@ import {
   selectRecommends,
 } from "../../../store/slice/RecommendSlice";
 import { useEffect, useState } from "react";
-import Recommend from './Recommend';
+import Recommend from "./Recommend";
 import styled from "styled-components";
-import showimg from '/image/showimg.svg'
-
+import showimg from "/image/showimg.svg";
 
 export default function Music() {
   // 기본 세팅
@@ -47,63 +46,63 @@ export default function Music() {
 
   return (
     <>
-      <div className="RecommendInner">
-        <Container className="RecommendMuscic">
-          <div className="RecommendSubTitle">공연/전시 어때요?</div>
-          <Recommend>
+      {items.length > 0 && (
+        <div className="RecommendInner">
+          <Container className="RecommendMuscic">
+            <div className="RecommendSubTitle">공연/전시 어때요?</div>
+            <Recommend>
               {items.map((item, index) => (
                 <SliderItem key={index}>
-                  <img 
-                    src={item.image === "false" ? showimg : item.image} 
-                    alt={item.image === "false" ? showimg : ''} 
+                  <img
+                    src={item.image === "false" ? showimg : item.image}
+                    alt={item.image === "false" ? showimg : ""}
                   />
                   <Name>{item.title}</Name>
                   <Place>{item.info}</Place>
-                  <Info>{item.openDate}-{item.finalDate}</Info>
-
+                  <Info>
+                    {item.openDate}-{item.finalDate}
+                  </Info>
                 </SliderItem>
               ))}
             </Recommend>
-      </Container>
+          </Container>
         </div>
+      )}
     </>
   );
 }
 
 const SliderItem = styled.div`
-  img{
+  img {
     width: 94%;
     height: 240px;
-    object-fit: cover; 
+    object-fit: cover;
     margin-bottom: 20px;
-    transition: transform 0.3s ease; 
+    transition: transform 0.3s ease;
     border: none;
     box-shadow: none;
 
     &:hover {
-      transform: scale(1.1); 
+      transform: scale(1.1);
     }
   }
-  
 `;
 
-
 const Name = styled.p`
-font-size: 18px;
-width: 80%;
-`
+  font-size: 18px;
+  width: 80%;
+`;
 const Place = styled.p`
-font-size: 15px;
-margin-top: 10px;
-width: 85%;
-`
+  font-size: 15px;
+  margin-top: 10px;
+  width: 85%;
+`;
 const Info = styled.p`
-font-size: 12px;
-margin-top: 5px;
-width: 85%;
-`
+  font-size: 12px;
+  margin-top: 5px;
+  width: 85%;
+`;
 
 const Container = styled.div`
-margin-top: -30px;
-
-`
+  margin-top: -30px;
+`;

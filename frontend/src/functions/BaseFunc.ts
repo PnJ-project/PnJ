@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosInstance from "./AxiosInstance";
 
 // 시간을 한국 시간대로 변경
 export default function formatDateTime(inputDate: Date): string {
@@ -18,4 +19,11 @@ export default function formatDateTime(inputDate: Date): string {
 export const setAuthorizationHeader = () => {
   const accessToken = localStorage.getItem("access_token");
   axios.defaults.headers.common["Authorization"] = `${accessToken as string}`;
+};
+
+export const setAuthorizationHeaderInter = () => {
+  const accessToken = localStorage.getItem("access_token");
+  axiosInstance.defaults.headers.common["Authorization"] = `${
+    accessToken as string
+  }`;
 };

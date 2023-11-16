@@ -1,7 +1,7 @@
 .RecommendContainer {
   width: 100vw;
-  min-width: 1000px;
-  background-color: #e1e1e1;
+  /* min-width: 1000px; */
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,15 +20,25 @@
   background-color: unset;
 }
 .RecommendTitle {
-  font-size: 40px;
+  font-size: 4vw;
   margin: 20px;
   margin-top: 150px;
   margin-bottom: 70px;
   font-weight: 900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.RecommendTitle img {
+  display: flex;
+  width: 8vw;
+  height: 8vw;
+  margin-left: 10px;
 }
 .RecommendBox {
   width: 75vw;
   animation: fadeIn 0.4s ease-in; /* 등장 애니메이션 적용 */
+  min-height: 1000px;
   /* border: 2px solid red; */
 }
 .RecommendAllBox {
@@ -50,7 +60,9 @@
     transform: translateY(0);
   }
 }
-
+.RecommendNotImg {
+  width: 50px !important;
+}
 .RecommendSubTitle {
   font-size: 24px;
   margin-bottom: 24px;
@@ -87,7 +99,7 @@
 }
 .RecommendAllInner {
   justify-content: center;
-  width: 30%;
+  width: 100%;
   flex-wrap: wrap;
   margin: 7px;
 }
@@ -154,18 +166,22 @@
 
 /* Eat */
 .EatInfo {
-  font-size: 24px;
-  margin-bottom: 10px;
-  font-weight: 900;
+  font-size: 12px;
+  margin-bottom: 2px;
 }
 .EatAddress {
-  font-size: 12px;
+  font-size: 10px;
+}
+.EatTitle {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: 900;
 }
 
 /* Music */
 .MusicTitle {
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 20px;
+  margin-bottom: 5px;
   font-weight: 900;
 }
 .MusicSub {
@@ -187,7 +203,7 @@
   min-height: unset;
 }
 .SportTitle {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 10px;
   font-weight: 900;
 }
@@ -205,7 +221,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 0;
+  z-index: -1;
 }
 .RecommendAllItem .RecommendItemShowStudy {
   position: absolute;
@@ -218,13 +234,19 @@
   flex-direction: column;
   opacity: 0;
 }
-
 .RecommendAllItem:hover .RecommendItemShowStudy {
   display: flex;
   opacity: 1;
   z-index: 1;
+  /* display: ; */
 }
-
+.StudyTxt {
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.StudyAutor {
+  font-size: 10px;
+}
 .StudyImg {
   /* position: relative; */
   /* width: 10px !important; */
@@ -232,11 +254,16 @@
 
 /* Trip */
 .TripTitle {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 10px;
   font-weight: 900;
 }
 .TripSub {
   font-size: 12px;
   margin-bottom: 5px;
+}
+
+/* Footer */
+.RecommendFooter {
+  height: 100px;
 }

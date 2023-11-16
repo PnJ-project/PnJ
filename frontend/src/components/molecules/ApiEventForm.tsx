@@ -9,12 +9,12 @@ import {
 import { closeModal } from "../../store/slice/calendar/ModalSlice";
 import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
-import axios from "axios";
 import { QueryObserverResult, RefetchOptions } from "react-query";
 import { setSelectDate } from "../../store/slice/calendar/HandleSlice";
 import formatDateTime, {
-  setAuthorizationHeader,
+  setAuthorizationHeaderInter,
 } from "../../functions/BaseFunc";
+import axiosInstance from "../../functions/AxiosInstance";
 
 // 모달 타입
 interface ModalProps {
@@ -113,9 +113,9 @@ const EventForm: React.FC<ModalProps> = () => {
         },
       },
     };
-    await setAuthorizationHeader();
+    await setAuthorizationHeaderInter();
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${local_back_url}/api/calendar/v2`,
         reqNewEvent
       );

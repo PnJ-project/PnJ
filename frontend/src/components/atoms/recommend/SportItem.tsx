@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { readCalendar } from "../../../api/CalendarApi";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
-import axios from "axios";
-import { setAuthorizationHeader } from "../../../functions/BaseFunc";
+import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
+import axiosInstance from "../../../functions/AxiosInstance";
 
 export default function SportItem({ item }: { item: TripItemType }) {
   // 기본 세팅
@@ -51,9 +51,9 @@ export default function SportItem({ item }: { item: TripItemType }) {
     },
   };
   const recommendCalendar = async () => {
-    await setAuthorizationHeader();
+    await setAuthorizationHeaderInter();
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${local_back_url}/api/calendar/v2`,
         reqNewEvent
       );

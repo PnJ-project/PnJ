@@ -9,10 +9,10 @@ import {
 import { closeSideModal } from "../../store/slice/calendar/ModalSlice";
 import { RootState } from "../../store/store";
 import styled, { keyframes } from "styled-components";
-import axios from "axios";
 import formatDateTime, {
-  setAuthorizationHeader,
+  setAuthorizationHeaderInter,
 } from "../../functions/BaseFunc";
+import axiosInstance from "../../functions/AxiosInstance";
 
 // 모달 타입
 interface ModalProps {
@@ -114,9 +114,9 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
         },
       },
     };
-    await setAuthorizationHeader();
+    await setAuthorizationHeaderInter();
     try {
-      await axios.put(`${local_back_url}/api/calendar/v2`, reqNewEvent);
+      await axiosInstance.put(`${local_back_url}/api/calendar/v2`, reqNewEvent);
       // 캘린더 다시 불러오기
       console.log("구글 캘린더 수정 api 완료");
     } catch (error) {
@@ -136,9 +136,9 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     // 원복
     dispatch(closeSideModal());
     // 캘린더 삭제 API 요청
-    await setAuthorizationHeader();
+    await setAuthorizationHeaderInter();
     try {
-      const res = await axios.delete(
+      const res = await axiosInstance.delete(
         `${local_back_url}/api/calendar/v2/${memberId}/${id}`
       );
       // 이벤트 다시 불러오기
