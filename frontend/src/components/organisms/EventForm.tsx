@@ -113,21 +113,23 @@ const EventForm: React.FC = () => {
           <Title>일정 추가하기</Title>
           <CloseBtn onClick={() => {dispatch(closeModal())}}>✖</CloseBtn>
         </Header>
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        <ColorBox>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems:'center' }}>
         {Object.entries(colorMap).map(([key, color]) => (
           <div
             key={key}
             style={{
-              width: '30px',
-              height: '30px',
-              margin: '2px',
+              width: colorId === Number(key) ? '38px' :'30px',
+              height: colorId === Number(key) ? '38px' :'30px',
+              margin: '3px',
               backgroundColor: color,
-              border: colorId === Number(key) ? '2px solid #000' : 'none',
+              borderRadius: 50,
             }}
             onClick={() => handleBoxClick(key)}
           />
         ))}
       </div>
+        </ColorBox>
         <DateBox>
           <div>날짜</div>
           <SelectDate>
@@ -293,6 +295,10 @@ const Header = styled.div`
   justify-content:space-between;
   margin: 10px;
   `
+  const ColorBox = styled.div`
+  display: flex;
+  justify-content: center;
+`
 const CloseBtn = styled.div`
   cursor: pointer;
 `;
