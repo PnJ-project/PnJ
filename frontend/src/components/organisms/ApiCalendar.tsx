@@ -113,12 +113,12 @@ export default function DemoCalendar() {
       // 데이터 리패치
       await refetchTodo();
       await refetchCal();
+      // 인풋 필드 리셋
+      setTextSave("");
       return response;
     } catch (error) {
       console.error("Error flask data:", error);
     }
-    // 인풋 필드 리셋
-    setTextSave("");
   };
 
   // 인풋 필드에서 엔터 키 입력 시 제출
