@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
-import styled from 'styled-components';
-import Slider, { Settings } from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { useMemo } from "react";
+import styled from "styled-components";
+import Slider, { Settings } from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const SlideWrapper = styled.section`
   position: relative;
@@ -36,43 +36,34 @@ function SportRecommend({
       slidesToShow: 1,
       slidesToScroll: 3,
       autoplay: Boolean(autoplay),
-      autoplaySpeed: typeof autoplay === 'boolean' ? 3000 : autoplay,
+      autoplaySpeed: typeof autoplay === "boolean" ? 3000 : autoplay,
     }),
     [autoplay, loop, speed]
   );
   return (
     <Container>
-    <SlideWrapper className={className}>
-      <StyledSlider {...settings}>{children}</StyledSlider>
-    </SlideWrapper>
-
+      <SlideWrapper className={className}>
+        <StyledSlider {...settings}>{children}</StyledSlider>
+      </SlideWrapper>
     </Container>
-
   );
 }
 
-
 const Container = styled.div`
-width: 80%;
-align-items: center;
-
-`
+  width: 80%;
+  align-items: center;
+`;
 
 const StyledSlider = styled(Slider)`
-
   .click-list {
-
   }
 
   .slick-dots {
     bottom: -40px;
-
   }
 
   .slick-track {
-
   }
-
 `;
 
 export default SportRecommend;

@@ -44,21 +44,23 @@ export default function Study() {
   }
 
   // 이름 데이터가 있는지 확인하고 첫 번째 명언만 추출
-  const nameToDisplay = items.length > 0 ? items[0].maxim : '';
-  const authorToDisplay = items.length > 0 ? items[0].author : '';
+  const nameToDisplay = items.length > 0 ? items[0].maxim : "";
+  const authorToDisplay = items.length > 0 ? items[0].author : "";
 
   return (
     <>
-    {items.length > 0 && (
-      <div className="RecommendInner">
-        <div className="RecommendStudy">
-          <div className="RecommendSubTitle">당신을 위한 명언 한마디</div>
-          <Container>
-          <FlexContainer>
-            <Img src={recommendP} />
-            <Name>{nameToDisplay} <br />- {authorToDisplay} - </Name>
-          </FlexContainer>
-              </Container>
+      {items.length > 0 && (
+        <div className="RecommendInner">
+          <div className="RecommendStudy">
+            <div className="RecommendSubTitle">당신을 위한 명언 한마디</div>
+            <Container>
+              <FlexContainer>
+                <Img src={recommendP} />
+                <Name>
+                  {nameToDisplay} <br />- {authorToDisplay} -{" "}
+                </Name>
+              </FlexContainer>
+            </Container>
           </div>
         </div>
       )}
@@ -85,11 +87,9 @@ const Name = styled.p`
   font-size: 18px;
   width: 80%;
   margin-left: 10px;
-
 `;
 
 const Container = styled.div`
-background-color: #fff6fd;
-border-radius: 10px;
-
-`
+  background-color: #fff6fd;
+  border-radius: 10px;
+`;

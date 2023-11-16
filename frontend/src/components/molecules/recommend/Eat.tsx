@@ -8,7 +8,7 @@ import {
   selectRecommends,
 } from "../../../store/slice/RecommendSlice";
 import { useState, useEffect } from "react";
-import EatRecommend from './EatRecommend';
+import EatRecommend from "./EatRecommend";
 import styled from "styled-components";
 import Eatimg from "/image/Eatimg.svg";
 
@@ -45,14 +45,11 @@ export default function Eat() {
   }
   return (
     <>
-          {items.length > 0 && (
-
-
-      <div className="RecommendInner">
-        <div className="RecommendEat">
-          <div className="RecommendSubTitle">당신이 관심 있는 맛집</div>
-
-          <EatRecommend>
+      {items.length > 0 && (
+        <div className="RecommendInner">
+          <div className="RecommendEat">
+            <div className="RecommendSubTitle">당신이 관심 있는 맛집</div>
+            <EatRecommend>
               {items.map((item, index) => (
                 <SliderItem key={index}>
                   <img
@@ -67,8 +64,7 @@ export default function Eat() {
             </EatRecommend>
           </div>
         </div>
-          )}
-      
+      )}
     </>
   );
 }
@@ -77,7 +73,7 @@ const SliderItem = styled.div`
   img {
     width: 94%;
     height: 150px;
-    object-fit: cover; 
+    object-fit: cover;
     margin-bottom: 20px;
     transition: transform 0.3s ease;
     border: none;
@@ -99,9 +95,7 @@ const Place = styled.p`
   width: 85%;
 `;
 const Info = styled.p`
-font-size: 12px;
-margin-top: 5px;
-width: 85%;
-`
-
-
+  font-size: 12px;
+  margin-top: 5px;
+  width: 85%;
+`;
