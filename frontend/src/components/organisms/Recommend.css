@@ -69,7 +69,9 @@
 }
 .RecommendInner {
   margin: 20px;
+  margin-bottom: 60px;
   font-weight: 900;
+  
 }
 .RecommendMuscic {
   padding: 20px;
@@ -102,6 +104,7 @@
   width: 100%;
   flex-wrap: wrap;
   margin: 7px;
+
 }
 .RecommendAllItem {
   display: flex;
