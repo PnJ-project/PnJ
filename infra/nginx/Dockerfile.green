@@ -1,0 +1,13 @@
+FROM nginx
+
+RUN apt-get update && apt-get upgrade -y
+
+COPY /etc/letsencrypt /etc/letsencrypt
+WORKDIR ./etc/nginx/conf.d
+RUN rm default.conf
+COPY ./conf.d/nginx.green.conf .default.conf
+
+EXPOSE 80
+EXPOSE 443
+
+CMD ["nginx", "-g", "daemon off;"]
