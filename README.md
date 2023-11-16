@@ -39,7 +39,7 @@
 ![image-2.png](./image-2.png)
 
 **메인 캘린더**
-![image.png](./image.png)
+![image.png](.image.png)
 
 **일정 기반 정보 추천 - 리스트**
 
