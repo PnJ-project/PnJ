@@ -33,8 +33,8 @@ public class TodoServiceImpl implements
 
     @Override
     @Transactional
-    public TodoResponseDto createTodo(CreateTodoRequestDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
+    public TodoResponseDto createTodo(CreateTodoRequestDto requestDto, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
             () -> new MemberNotFoundException(NOT_FOUND_USER.getMessage()));
 
         Todo todo = requestDto.toTodo(member);
@@ -58,7 +58,7 @@ public class TodoServiceImpl implements
 
     @Override
     @Transactional
-    public void deleteTodo(Long memberId, Long todoId) {
+    public void deleteTodo(Long todoId) {
         Todo todo = todoRepository.findById(todoId).orElseThrow(
             () -> new TodoNotFoundException(NOT_FOUND_TODO.getMessage()));
 

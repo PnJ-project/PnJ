@@ -9,10 +9,10 @@ public interface TodoService {
 
     List<TodoResponseDto> readTodo(Long memberId);
 
-    TodoResponseDto createTodo(CreateTodoRequestDto requestDto);
+    TodoResponseDto createTodo(CreateTodoRequestDto requestDto, Long memberId);
 
     TodoResponseDto updateTodo(UpdateTodoRequestDto requestDto);
 
-    void deleteTodo(Long memberId, Long todoId);
+    void deleteTodo(Long memberId);
 
 }
