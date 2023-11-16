@@ -37,6 +37,7 @@ services:
       - ./backend/src/main/resources:/var/jenkins_home/workspace/dep-be/backend/src/main/resources
       # frontend 배포 환경변수
       - ./frontend/.env.production:/var/jenkins_home/workspace/djep-fe/frontend/.env.production
+      - /etc/letsencrypt:/etc/letsencrypt:z
     ports:
       - ${JENKINS_PORT}:8080
     privileged: true
