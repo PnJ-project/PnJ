@@ -5,12 +5,14 @@ import { useEffect, useState } from "react";
 import { scroller } from "react-scroll";
 import Recommend from "../components/organisms/Recommend";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectIsRecommend } from "../store/slice/ToggleSlice";
 
 export default function Main() {
   // 기본세팅
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [scrollIndex, setScrollIndex] = useState(0);
+  const [, setScrollIndex] = useState(0);
   const navigate = useNavigate();
+  const isRecommend = useSelector(selectIsRecommend);
   // 로그아웃시 리다이렉트
   useEffect(() => {
     if (!localStorage.getItem("memberId")) {
@@ -18,82 +20,22 @@ export default function Main() {
     }
   }, []);
 
-  // 휠 이벤트
-  const resetWheel = () => {
-    setTimeout(() => {
-      setIsScrolling(false);
-    }, 800);
-  };
-  const handleWheel = (event: WheelEvent) => {
-    if (!isScrolling) {
-      const delta = Math.sign(event.deltaY); // 마우스 휠 방향을 확인하기 위한 값
-      setIsScrolling(true);
-      if (delta > 0) {
-        // 마우스 휠을 아래로 스크롤할 때
-        const currentScrollPos = window.scrollY;
-        if (currentScrollPos < 5) {
-          scroller.scrollTo("recommand", {
-            smooth: true,
-            duration: 800,
-          });
-          setScrollIndex(1);
-        }
-      } else {
-        // 마우스 휠을 위로 스크롤할 때
-        const currentScrollPos = window.scrollY;
-        if (currentScrollPos >= 100) {
-          scroller.scrollTo("calendar", {
-            smooth: true,
-            duration: 800,
-          });
-          setScrollIndex(0);
-        }
-      }
-      resetWheel();
-    } else {
-      event.preventDefault();
-    }
-  };
-
   // 최상단 이동
   useEffect(() => {
     // 페이지가 로드될 때 스크롤 위치를 맨 위로 이동
     window.scrollTo(0, 0);
   }, []);
 
-  // 스크롤 이벤트 부여
+  // 추천 버튼 누를시
   useEffect(() => {
-    // 마우스 휠 이벤트 추가
-    if (scrollIndex == 1) {
-      return;
+    if (isRecommend) {
+      scroller.scrollTo("recommand", {
+        smooth: true,
+        duration: 800,
+      });
+      setScrollIndex(1);
     }
-    window.removeEventListener("wheel", handleWheel);
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-    };
-  }, [isScrolling]);
-
-  // 추천 페이지 진입시 이벤트 제거
-  useEffect(() => {
-    if (scrollIndex == 1) {
-      window.removeEventListener("wheel", handleWheel);
-    }
-    if (scrollIndex == 0) {
-      window.removeEventListener("wheel", handleWheel);
-      window.addEventListener("wheel", handleWheel, { passive: false });
-    }
-  }, [scrollIndex]);
-
-  // 캘린더 재진입시
-  useEffect(() => {
-    const currentScrollPos = window.scrollY;
-    const recommendationStart =
-      document.getElementById("recommand")?.getBoundingClientRect().top || 0;
-    if (currentScrollPos < recommendationStart) {
-      setScrollIndex(0);
-    }
-  }, [window.scrollY]);
+  }, [isRecommend]);
 
   return (
     <>

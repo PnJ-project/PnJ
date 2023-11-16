@@ -20,7 +20,7 @@
   background-color: unset;
 }
 .RecommendTitle {
-  font-size: 4vw;
+  font-size: 4vw !important;
   margin: 20px;
   margin-top: 150px;
   margin-bottom: 70px;
@@ -28,6 +28,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+@media (min-width: 1000px) {
+  .RecommendTitle {
+    font-size: 40px !important;
+  }
 }
 .RecommendTitle img {
   display: flex;
@@ -71,7 +76,6 @@
   margin: 20px;
   margin-bottom: 60px;
   font-weight: 900;
-  
 }
 .RecommendMuscic {
   padding: 20px;
@@ -104,7 +108,6 @@
   width: 100%;
   flex-wrap: wrap;
   margin: 7px;
-
 }
 .RecommendAllItem {
   display: flex;

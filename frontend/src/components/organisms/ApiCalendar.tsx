@@ -22,6 +22,7 @@ import { AiFillQuestionCircle } from "react-icons/ai";
 import About from "../../pages/service/About";
 import { setAuthorizationHeaderInter } from "../../functions/BaseFunc";
 import axiosInstance from "../../functions/AxiosInstance";
+import { setRecommendTrue } from "../../store/slice/ToggleSlice";
 
 // 타입 선언
 export interface FlaskResType {
@@ -168,6 +169,7 @@ export default function DemoCalendar() {
                 fontSize: "35px",
                 cursor: "pointer",
                 color: "white",
+                marginLeft: "10px",
               }}
               onClick={toggleListening}
               className={isListening ? "icon-listening" : ""}
@@ -178,6 +180,14 @@ export default function DemoCalendar() {
             </button>
           </div>
           <div className="NavGoogleBtn">
+            <button
+              className="googleLogin marginBtn"
+              onClick={() => {
+                dispatch(setRecommendTrue());
+              }}
+            >
+              추천
+            </button>
             <TeamBtn />
             <GoogleLogin />
             {/* 서비스 소개 */}
