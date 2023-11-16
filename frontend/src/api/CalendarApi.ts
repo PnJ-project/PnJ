@@ -1,10 +1,12 @@
 import axios from "axios";
+import { setAuthorizationHeader } from "../functions/BaseFunc";
 
 // const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 // 구글 캘린더 정보 불러오기
 export const readCalendar = async (timeMax: string, timeMin: string) => {
+  await setAuthorizationHeader();
   const memberId = localStorage.getItem("memberId");
   const response = await axios.get(
     `${local_back_url}/api/calendar/v2/${memberId}/${timeMin}/${timeMax}`
@@ -29,6 +31,7 @@ export interface EventData {
   };
 }
 export const addCalendar = async (formdata: EventData) => {
+  await setAuthorizationHeader();
   const response = await axios.post(
     `${local_back_url}/api/calendar/v2`,
     formdata
@@ -39,6 +42,7 @@ export const addCalendar = async (formdata: EventData) => {
 
 // 구글 캘린더 정보 수정하기
 export const updateCalendar = async (formdata: EventData) => {
+  await setAuthorizationHeader();
   const response = await axios.put(
     `${local_back_url}/api/calendar/v2`,
     formdata
@@ -48,6 +52,7 @@ export const updateCalendar = async (formdata: EventData) => {
 
 // 구글 캘린더 정보 삭제하기
 export const deleteCalendar = async (eventId: number) => {
+  await setAuthorizationHeader();
   const memberId = localStorage.getItem("memberId");
   const response = await axios.delete(
     `${local_back_url}/api/calendar/v2/${memberId}/${eventId}`

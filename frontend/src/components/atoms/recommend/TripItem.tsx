@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import { readTodo } from "../../../api/TodoApi";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
 import { ReqTodoCreate } from "../../molecules/todo/ApiTodoList";
+import { setAuthorizationHeader } from "../../../functions/BaseFunc";
 
 export default function TripItem({ item }: { item: TripItemType }) {
   // 기본 세팅
@@ -17,6 +18,7 @@ export default function TripItem({ item }: { item: TripItemType }) {
 
   // 할일목록 추가시
   const recommendTodo = async () => {
+    await setAuthorizationHeader();
     const reqNewTodo: ReqTodoCreate = {
       memberId: memberId,
       summary: item.title + " 방문",
@@ -38,9 +40,11 @@ export default function TripItem({ item }: { item: TripItemType }) {
         <div className="RecommendItemShow">
           <div className="TripTitle">{item.title}</div>
           {item.roadAddress != "false" && item.roadAddress && (
-            <div>{item.roadAddress}</div>
+            <div className="TripSub">{item.roadAddress}</div>
           )}
-          {item.info != "false" && item.info && <div>{item.info}</div>}
+          {item.info != "false" && item.info && (
+            <div className="TripSub">{item.info}</div>
+          )}
           {/* 버튼 */}
           <div className="RecommendBtnBox">
             {item.homepage != "false" && item.homepage && (

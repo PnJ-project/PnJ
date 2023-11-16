@@ -13,6 +13,7 @@ import {
   setTodosRedux,
   updateTodoRedux,
 } from "../../../store/slice/calendar/TodoSlice";
+import { setAuthorizationHeader } from "../../../functions/BaseFunc";
 
 interface TodoItem {
   id: number;
@@ -59,6 +60,7 @@ export default function TodoList() {
     dispatch(addTodoRedux(newTodo));
 
     // 투두 생성 API 호출
+    await setAuthorizationHeader();
     try {
       await axios.post(`${local_back_url}/api/todo`, reqNewTodo);
       // 투두 다시 불러오기
@@ -78,6 +80,7 @@ export default function TodoList() {
     // 업데이트 적용(개발자용)
     dispatch(updateTodoRedux({ id: todoId, summary: newValue }));
     // 업데이트 요청
+    await setAuthorizationHeader();
     try {
       await axios.put(`${local_back_url}/api/todo`, {
         memberId: memberId,
@@ -97,6 +100,7 @@ export default function TodoList() {
     // 삭제 적용(개발자용)
     dispatch(removeTodoRedux(id));
     // 삭제 API요청
+    await setAuthorizationHeader();
     try {
       const res = await axios.delete(
         `${local_back_url}/api/todo/${memberId}/${id}`

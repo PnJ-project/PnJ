@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ReqTodoCreate } from "../../molecules/todo/ApiTodoList";
 import { useQuery } from "react-query";
 import { readTodo } from "../../../api/TodoApi";
+import { setAuthorizationHeader } from "../../../functions/BaseFunc";
 
 export default function EatItem({ item }: { item: EatItemType }) {
   // 기본 세팅
@@ -17,6 +18,7 @@ export default function EatItem({ item }: { item: EatItemType }) {
 
   // 할일목록 추가시
   const recommendTodo = async () => {
+    await setAuthorizationHeader();
     const reqNewTodo: ReqTodoCreate = {
       memberId: memberId,
       summary: item.title + " 방문",

@@ -8,9 +8,8 @@ import {
   selectRecommends,
 } from "../../../store/slice/RecommendSlice";
 import { useState, useEffect } from "react";
-import Recommend from './Recommend';
 import styled from "styled-components";
-import recommendP from '/image/recommendP.svg';
+import recommendP from "/image/recommendP.svg";
 
 export default function Study() {
   // 기본 세팅
@@ -45,7 +44,7 @@ export default function Study() {
   }
 
   // 이름 데이터가 있는지 확인하고 첫 번째 명언만 추출
-  const nameToDisplay = items.length > 0 ? items[0].maxim : '';
+  const nameToDisplay = items.length > 0 ? items[0].maxim : "";
 
   return (
     <>
@@ -54,7 +53,7 @@ export default function Study() {
           <div className="RecommendSubTitle">당신을 위한 명언</div>
           <FlexContainer>
             <Img src={recommendP} />
-                <Name>{nameToDisplay}</Name>
+            <Name>{nameToDisplay}</Name>
           </FlexContainer>
         </div>
       </div>
@@ -64,11 +63,9 @@ export default function Study() {
 
 const FlexContainer = styled.div`
   display: flex;
-  align-items: center; 
+  align-items: center;
   justify-content: center;
 `;
-
-
 
 const Img = styled.img`
   width: 130px;

@@ -21,6 +21,7 @@ import "./DemoCalendar.css";
 import { useSpeechRecognition } from "react-speech-kit";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import About from "../../pages/service/About";
+import { setAuthorizationHeader } from "../../functions/BaseFunc";
 
 // 타입 선언
 export interface FlaskResType {
@@ -101,6 +102,7 @@ export default function DemoCalendar() {
     const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
     const memberId = localStorage.getItem("memberId");
     const formData = { input: textSave, memberId: memberId };
+    await setAuthorizationHeader();
     try {
       const response = await axios.post(
         `${backend}/api/calendar/input`,

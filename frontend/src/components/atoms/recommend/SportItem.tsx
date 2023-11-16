@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import { readCalendar } from "../../../api/CalendarApi";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
 import axios from "axios";
+import { setAuthorizationHeader } from "../../../functions/BaseFunc";
 
 export default function SportItem({ item }: { item: TripItemType }) {
   // 기본 세팅
@@ -50,6 +51,7 @@ export default function SportItem({ item }: { item: TripItemType }) {
     },
   };
   const recommendCalendar = async () => {
+    await setAuthorizationHeader();
     try {
       const response = await axios.post(
         `${local_back_url}/api/calendar/v2`,
