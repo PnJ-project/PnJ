@@ -42,8 +42,10 @@
 ![image.png](./images/image.png)
 
 **일정 기반 정보 추천 - 리스트**
+![추천 갤러리.gif](./images/gif-2.gif)
 
 **일정 기반 정보 추천 - 갤러리**
+![추천 카테고리.gif](./images/gif-1.gif)
 
 ## 📋기술 스택
 
