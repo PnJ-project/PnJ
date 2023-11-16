@@ -45,26 +45,28 @@ export default function Trip() {
   }
   return (
     <>
-      {items.length > 0 && (
-        <div className="RecommendInner">
-          <div className="RecommendTrip">
-            <div className="RecommendSubTitle">여행 어때요?</div>
+    {items.length > 0 && (
+      <div className="RecommendInner">
+        <div className="RecommendTrip">
+          <div className="RecommendSubTitle">힐링 여행 어때요?</div>
+
+
             <Recommend>
               {items.map((item, index) => (
                 <SliderItem key={index}>
                   <img
                     src={item.image === "false" ? subimg : item.image}
-                    alt={item.image === "false" ? subimg : ""}
+                    alt={item.image === "false" ? subimg : ''}
                   />
-                  <Name>{item.title === "false" ? "" : item.title}</Name>
+                  <Name>{item.title === "false" ? '' : item.title}</Name>
                   <Place>
-                    {item.roadAddress === "false" ? "" : item.roadAddress}
+                    {item.roadAddress === "false" ? '' : item.roadAddress}
                   </Place>
-                  <Info>{item.info === "false" ? "" : item.info}</Info>
+                  <Info>{item.info === "false" ? '' : item.info}</Info>
                 </SliderItem>
               ))}
             </Recommend>
-          </div>
+            </div>
         </div>
       )}
     </>
@@ -97,6 +99,15 @@ const Place = styled.p`
   width: 85%;
 `;
 const Info = styled.p`
-  font-size: 12px;
-  margin-top: 5px;
-`;
+font-size: 12px;
+margin-top: 5px;
+`
+
+// const Container = styled.div`
+// display: flex;
+// flex-direction: column;
+// align-items: center;
+// justify-content: center;
+
+// `
+

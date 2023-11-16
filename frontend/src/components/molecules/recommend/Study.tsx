@@ -44,18 +44,21 @@ export default function Study() {
   }
 
   // 이름 데이터가 있는지 확인하고 첫 번째 명언만 추출
-  const nameToDisplay = items.length > 0 ? items[0].maxim : "";
+  const nameToDisplay = items.length > 0 ? items[0].maxim : '';
+  const authorToDisplay = items.length > 0 ? items[0].author : '';
 
   return (
     <>
-      {items.length > 0 && (
-        <div className="RecommendInner">
-          <div className="RecommendStudy">
-            <div className="RecommendSubTitle">당신을 위한 명언</div>
-            <FlexContainer>
-              <Img src={recommendP} />
-              <Name>{nameToDisplay}</Name>
-            </FlexContainer>
+    {items.length > 0 && (
+      <div className="RecommendInner">
+        <div className="RecommendStudy">
+          <div className="RecommendSubTitle">당신을 위한 명언 한마디</div>
+          <Container>
+          <FlexContainer>
+            <Img src={recommendP} />
+            <Name>{nameToDisplay} <br />- {authorToDisplay} - </Name>
+          </FlexContainer>
+              </Container>
           </div>
         </div>
       )}
@@ -73,9 +76,20 @@ const Img = styled.img`
   width: 130px;
   height: 130px;
   margin-right: 30px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-left: 20px;
 `;
 
 const Name = styled.p`
   font-size: 18px;
-  width: 500px;
+  width: 80%;
+  margin-left: 10px;
+
 `;
+
+const Container = styled.div`
+background-color: #fff6fd;
+border-radius: 10px;
+
+`

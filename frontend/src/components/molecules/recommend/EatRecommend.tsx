@@ -23,7 +23,7 @@ interface sliderProps {
   loop?: boolean;
 }
 
-function Recommend({
+function EatRecommend({
   children,
   className,
   autoplay = false,
@@ -33,7 +33,7 @@ function Recommend({
   const settings = useMemo<Settings>(
     () => {
       const totalSlides = React.Children.count(children);
-      const visibleSlides = Math.min(totalSlides, 6); // 최대 6개까지 보여주도록
+      const visibleSlides = Math.min(totalSlides, 4); // 최대 6개까지 보여주도록
       const slidesToScroll = Math.min(visibleSlides, 3); // 스크롤할 때 몇 개씩 넘길지
 
       return {
@@ -48,7 +48,7 @@ function Recommend({
           {
             breakpoint: 1024,
             settings: {
-              slidesToShow: Math.min(visibleSlides, 4),
+              slidesToShow: Math.min(visibleSlides, 2),
               slidesToScroll: Math.min(visibleSlides, 2),
             },
           },
@@ -73,10 +73,14 @@ function Recommend({
 }
 
 const StyledSlider = styled(Slider)`
+  .slick-prev::before,
+  .slick-next::before {
+    opacity: 0.7;
+    font-size: 30px;
+  }
 
   .slick-prev {
     left: -30px;
-   
   }
 
   .slick-next {
@@ -90,9 +94,7 @@ const StyledSlider = styled(Slider)`
 
   .slick-dots {
     bottom: -40px;
-    /* margin-bottom: 20px; */
-
   }
 `;
 
-export default Recommend;
+export default EatRecommend;

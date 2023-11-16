@@ -46,11 +46,12 @@ export default function Music() {
 
   return (
     <>
-      {items.length > 0 && (
-        <div className="RecommendInner">
-          <Container className="RecommendMuscic">
-            <div className="RecommendSubTitle">공연/전시 어때요?</div>
-            <Recommend>
+          {items.length > 0 && (
+      <div className="RecommendInner">
+        <Container className="RecommendMuscic">
+          <div className="RecommendSubTitle">이런 공연/전시 어때요?</div>
+
+          <Recommend>
               {items.map((item, index) => (
                 <SliderItem key={index}>
                   <img
@@ -65,7 +66,8 @@ export default function Music() {
                 </SliderItem>
               ))}
             </Recommend>
-          </Container>
+
+      </Container>
         </div>
       )}
     </>
@@ -104,5 +106,8 @@ const Info = styled.p`
 `;
 
 const Container = styled.div`
-  margin-top: -30px;
-`;
+margin-top: -30px;
+
+`
+
+
