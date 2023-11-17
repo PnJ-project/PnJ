@@ -16,7 +16,7 @@ export default function PnjLogo() {
         <img
           src={pnjLogo}
           alt="Logo"
-          style={{ marginRight: "10px", cursor: "pointer" }}
+          style={{ marginRight: "30px", marginLeft: "20px", cursor: "pointer" }}
         />
       </div>
     </>
