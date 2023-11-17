@@ -7,16 +7,12 @@ public class CalendarRequestDto {
     @Data
     public static class EventRequestDto {
 
-        private Long memberId;
-
         private EventDto event;
 
     }
 
     @Data
     public static class ExchangeToTodoRequestDto {
-
-        private Long memberId;
 
         private String eventId;
 
@@ -26,8 +22,6 @@ public class CalendarRequestDto {
 
     @Data
     public static class ExchangeToEventRequestDto {
-
-        private Long memberId;
 
         private Long todoId;
 
@@ -39,8 +33,6 @@ public class CalendarRequestDto {
 
     @Data
     public static class InputRequestDto {
-
-        private Long memberId;
 
         private String input;
     }
