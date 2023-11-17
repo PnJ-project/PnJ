@@ -21,7 +21,7 @@ public class SuggestionController {
 
     private final SuggestionService suggestionService;
 
-    @GetMapping("/{{timeMax}/{timeMin}")
+    @GetMapping("/{timeMax}/{timeMin}")
     public ResponseEntity<ResponseDto<JsonArray>> getSuggestion(
         @AuthenticationPrincipal Long memberId,
         @PathVariable(value = "timeMax") String timeMax,
