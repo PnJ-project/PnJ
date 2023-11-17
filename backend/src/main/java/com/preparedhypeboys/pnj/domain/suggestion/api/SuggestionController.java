@@ -21,9 +21,8 @@ public class SuggestionController {
 
     private final SuggestionService suggestionService;
 
-    @GetMapping("/{memberId}/{timeMax}/{timeMin}")
+    @GetMapping("/{{timeMax}/{timeMin}")
     public ResponseEntity<ResponseDto<JsonArray>> getSuggestion(
-        @PathVariable(value = "memberId") Long memberd, // TODO 삭제
         @AuthenticationPrincipal Long memberId,
         @PathVariable(value = "timeMax") String timeMax,
         @PathVariable(value = "timeMin") String timeMin
