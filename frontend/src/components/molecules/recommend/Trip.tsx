@@ -11,6 +11,11 @@ import { useEffect, useState } from "react";
 import Recommend from "./Recommend";
 import styled from "styled-components";
 import subimg from "/image/subimg.svg";
+import { useQuery } from "react-query";
+import { readTodo } from "../../../api/TodoApi";
+import axiosInstance from "../../../functions/AxiosInstance";
+import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
+import { ReqTodoCreate } from "../todo/ApiTodoList";
 
 export default function Trip() {
   // 기본 세팅
@@ -23,6 +28,33 @@ export default function Trip() {
     | SportItemType[]
     | []
   >([]);
+  const [categoryHover, setCategoryHover] = useState({
+    boolean: false,
+    index: -1,
+  });
+  const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
+  const [memberId] = useState(Number(localStorage.getItem("memberId")));
+  const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
+    enabled: false,
+    retry: false,
+  }); // todo API
+
+  // 할일목록 추가시
+  const handleAddEvent = async (id: number) => {
+    await setAuthorizationHeaderInter();
+    const reqNewTodo: ReqTodoCreate = {
+      memberId: memberId,
+      summary: items[id].title + " 방문",
+    };
+    try {
+      await axiosInstance.post(`${local_back_url}/api/todo`, reqNewTodo);
+      // 투두 다시 불러오기
+      console.log("투두 생성 API 요청 완료");
+      await refetchTodo();
+    } catch (error) {
+      console.error("투두 생성 API 에러:", error);
+    }
+  };
 
   // 정보 추리기
   useEffect(() => {
@@ -45,28 +77,53 @@ export default function Trip() {
   }
   return (
     <>
-    {items.length > 0 && (
-      <div className="RecommendInner">
-        <div className="RecommendTrip">
-          <div className="RecommendSubTitle">힐링 여행 어때요?</div>
-
-
+      {items.length > 0 && (
+        <div className="RecommendInner">
+          <div className="RecommendTrip">
+            <div className="RecommendSubTitle">힐링 여행 어때요?</div>
             <Recommend>
               {items.map((item, index) => (
                 <SliderItem key={index}>
-                  <img
-                    src={item.image === "false" ? subimg : item.image}
-                    alt={item.image === "false" ? subimg : ''}
-                  />
-                  <Name>{item.title === "false" ? '' : item.title}</Name>
+                  <div
+                    onMouseEnter={() =>
+                      setCategoryHover({
+                        boolean: true,
+                        index: index,
+                      })
+                    }
+                    onMouseLeave={() =>
+                      setCategoryHover({
+                        boolean: false,
+                        index: -1,
+                      })
+                    }
+                  >
+                    <button
+                      className={`CategoryAdd ${
+                        categoryHover.boolean && categoryHover.index == index
+                          ? "CategoryAddActive"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        handleAddEvent(index);
+                      }}
+                    >
+                      할일 목록 추가
+                    </button>
+                    <img
+                      src={item.image === "False" ? subimg : item.image}
+                      alt={item.image === "False" ? subimg : ""}
+                    />
+                  </div>
+                  <Name>{item.title === "false" ? "" : item.title}</Name>
                   <Place>
-                    {item.roadAddress === "false" ? '' : item.roadAddress}
+                    {item.roadAddress === "false" ? "" : item.roadAddress}
                   </Place>
-                  <Info>{item.info === "false" ? '' : item.info}</Info>
+                  <Info>{item.info === "false" ? "" : item.info}</Info>
                 </SliderItem>
               ))}
             </Recommend>
-            </div>
+          </div>
         </div>
       )}
     </>
@@ -99,9 +156,9 @@ const Place = styled.p`
   width: 85%;
 `;
 const Info = styled.p`
-font-size: 12px;
-margin-top: 5px;
-`
+  font-size: 12px;
+  margin-top: 5px;
+`;
 
 // const Container = styled.div`
 // display: flex;
@@ -110,4 +167,3 @@ margin-top: 5px;
 // justify-content: center;
 
 // `
-
