@@ -34,7 +34,7 @@ function EatRecommend({
     () => {
       const totalSlides = React.Children.count(children);
       const visibleSlides = Math.min(totalSlides, 4); // 최대 6개까지 보여주도록
-      const slidesToScroll = Math.min(visibleSlides, 3); // 스크롤할 때 몇 개씩 넘길지
+      const slidesToScroll = Math.min(visibleSlides, 4); // 스크롤할 때 몇 개씩 넘길지
 
       return {
         dots: true,

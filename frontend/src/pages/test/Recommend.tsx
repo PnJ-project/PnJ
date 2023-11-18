@@ -49,7 +49,7 @@ function Recommend({
             breakpoint: 1024,
             settings: {
               slidesToShow: Math.min(visibleSlides, 4),
-              slidesToScroll: Math.min(visibleSlides, 4),
+              slidesToScroll: Math.min(visibleSlides, 2),
             },
           },
           {
