@@ -474,17 +474,6 @@ const BigCalendarInfo = () => {
           // allDay인지에 따라서 style 변경
           // colorId에 따른 색상 변경
           eventPropGetter={(event: BigCalendarEvent) => getEventStyle(event)}
-          // eventPropGetter={(event: BigCalendarEvent) => {
-          //     const backgroundColor = colorMap[event.colorId ? event.colorId: 1]; // 기본값 1로 설정
-          //   return {
-          //     style: {
-          //       backgroundColor,
-          //       borderRadius: '5px', // 예시로 둥근 테두리를 추가할 수 있습니다.
-          //       color: 'white', // 이벤트 텍스트 색상 설정
-          //       border: '1px solid #ccc', // 테두리 설정
-          //     },
-          //   };
-          // }}
           formats={formats}
         />
       </div>

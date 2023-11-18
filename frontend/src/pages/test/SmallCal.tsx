@@ -99,7 +99,7 @@ const Container = styled.div`
     }
     .rbc-row.rbc-month-header {
       // 월화수목금 그 줄
-      height: 16%;
+      height: 10%;
       font-size: 13px;
       display: flex;
       align-items: center;

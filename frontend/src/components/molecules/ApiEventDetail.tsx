@@ -190,21 +190,17 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
           </CloseBtn>
         </Header>
         <ColorBox>
-          <div style={{ display: "flex", flexWrap: "wrap" , alignItems:'center'}}>
-            {Object.entries(colorMap).map(([key, color]) => (
-              <div
-                key={key}
-                style={{
-                  width: colorId === Number(key) ? '38px' :'30px',
-                  height: colorId === Number(key) ? '38px' :'30px',
-                  margin: '3px',
-                  backgroundColor: color,
-                  borderRadius: 50,
-                }}
-                onClick={() => handleBoxClick(key)}
-              />
-            ))}
-          </div>
+        {Object.entries(colorMap).map(([key, color]) => (
+          <ColorDiv
+            key={key}
+            color = {color}
+            style={{
+              width: colorId === Number(key) ? '38px' :'30px',
+              height: colorId === Number(key) ? '38px' :'30px',
+            }}
+            onClick={() => handleBoxClick(key)}
+          />
+        ))}
         </ColorBox>
         <DateBox>
           <div>날짜</div>
@@ -391,9 +387,25 @@ const Header = styled.div`
   margin: 10px;
 `;
 const ColorBox = styled.div`
-display: flex;
-justify-content: center;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px;
 `
+const ColorDiv = styled.div`
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  background-color: ${(props) => props.color};
+  border-radius: 50%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    width: 38px;
+    height: 38px;
+  }
+`;
 const CloseBtn = styled.div`
   cursor: pointer;
 `;

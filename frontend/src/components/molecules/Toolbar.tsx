@@ -54,9 +54,15 @@ export default MyToolbar;
 
 const Container = styled.div`
   display: flex;
+  //margin 위 오른쪽 아래 왼쪽
+  margin: 4px 8px;
   justify-content: space-between;
   text-align: center;
+  font-family:insungitCutelivelyjisu;
+  font-weight: 600;
   button{
+    font-family:insungitCutelivelyjisu;
+    font-weight: 100;
     border-radius: 5px;
     border: 2px solid #EBEBF0;
     background: #FFF;
