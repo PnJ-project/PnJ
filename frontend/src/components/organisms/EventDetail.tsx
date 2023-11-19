@@ -324,7 +324,6 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 10px;
-<<<<<<< HEAD
 `
 const ColorBox = styled.div`
   height: 38px;
@@ -345,14 +344,12 @@ const ColorDiv = styled.div`
     width: 38px;
     height: 38px;
   }
-=======
->>>>>>> 71429020eca3f370323350aaef82a8fd2fa60c4f
 `;
 const CloseBtn = styled.div`
   cursor: pointer;
 `;
 const Title = styled.div`
-  font-family: insungitCutelivelyjisu;
+  font-family: SUITE-Regular;
   font-weight: 500;
   font-size: 24px;
 `;

@@ -44,7 +44,9 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   text-align: center;
+  font-family: SUITE-Regular;
   button {
+    font-family: SUITE-Regular;
     padding: 5px;
     height: 14px;
     border-radius: 5px;

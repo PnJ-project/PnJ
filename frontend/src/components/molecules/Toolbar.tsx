@@ -58,10 +58,10 @@ const Container = styled.div`
   margin: 4px 8px;
   justify-content: space-between;
   text-align: center;
-  font-family:insungitCutelivelyjisu;
+  font-family:SUITE-Regular;
   font-weight: 400;
   button{
-    font-family:insungitCutelivelyjisu;
+    font-family:SUITE-Regular;
     font-weight: 100;
     border-radius: 5px;
     border: 2px solid #EBEBF0;

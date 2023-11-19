@@ -360,7 +360,7 @@ const Container = styled.div`
       height: 6%;
       display: flex;
       align-items: center;
-      font-family:insungitCutelivelyjisu;
+      font-family:SUITE-Regular;
       font-size:20px;
       .rbc-header {
         border-bottom: none;
