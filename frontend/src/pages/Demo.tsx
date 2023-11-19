@@ -22,7 +22,7 @@ export default function Demo() {
   );
   // 로그인시 리다이렉트
   useEffect(() => {
-    if (localStorage.getItem("memberId")) {
+    if (localStorage.getItem("access_token")) {
       navigate("/");
     }
   }, []);
