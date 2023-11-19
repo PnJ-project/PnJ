@@ -127,14 +127,13 @@ export default function DemoCalendar() {
           dispatch(addEvent(newEvent));
         }
       }
+      // 인풋 필드 리셋
+      setTextSave("");
+      setIsFlaskSend(false);
       return response;
     } catch (error) {
       console.error("Error flask data:", error);
     }
-
-    // 인풋 필드 리셋
-    setTextSave("");
-    setIsFlaskSend(false);
   };
 
   // 인풋 필드에서 엔터 키 입력 시 제출
