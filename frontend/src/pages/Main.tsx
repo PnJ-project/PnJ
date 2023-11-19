@@ -48,7 +48,7 @@ export default function Main() {
   return (
     <>
       {/* CSS 설정 */}
-      <BackGround></BackGround>
+      <BackGround />
 
       {/* 메인 페이지 부 */}
       <div id="top"></div>
@@ -57,6 +57,9 @@ export default function Main() {
       <div id="calendar">
         <Calendar />
       </div>
+
+      {/* 중간띄우기 */}
+      <Middle />
 
       {/* 추천 부 */}
       <div id="recommand">
@@ -73,11 +76,11 @@ const BackGround = styled.div`
   height: 100vh;
   width: 100vw;
   top: 0;
-  background-color: white;
-  background-image: linear-gradient(
-    176deg,
-    #36513d 80%,
-    #ffffff calc(80% + 2px)
-  );
+  background-color: #36513d;
+  background-image: #36513d;
   z-index: -1;
+`;
+const Middle = styled.div`
+  height: 50vh;
+  background: linear-gradient(to bottom, #36513d, #ffffff);
 `;
