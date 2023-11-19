@@ -9,6 +9,7 @@ import Contact from "./pages/service/Contact";
 import TeamHello from "./pages/service/TeamHello";
 import PageManager from "./pages/PageManager";
 import TestManager from "./pages/test/TestManager";
+import Music from "./pages/test/Music";
 
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
         {/* 개발자용 */}
         <Route path="/pm" element={<PageManager />} />
         <Route path="/tm" element={<TestManager />} />
+        <Route path="/music" element={<Music />} />
       </Routes>
     </>
   );

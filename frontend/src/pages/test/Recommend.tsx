@@ -1,10 +1,10 @@
-import React from "react";
-import { useMemo } from "react";
-import styled from "styled-components";
-import Slider, { Settings } from "react-slick";
+import React from 'react';
+import { useMemo } from 'react';
+import styled from 'styled-components';
+import Slider, { Settings } from 'react-slick';
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const SlideWrapper = styled.section`
   position: relative;
@@ -23,7 +23,7 @@ interface sliderProps {
   loop?: boolean;
 }
 
-function Recommend({
+function SportRecommend({
   children,
   className,
   autoplay = false,
@@ -51,30 +51,41 @@ function Recommend({
             breakpoint: 1024,
             settings: {
               slidesToShow: Math.min(visibleSlides, 4),
-              slidesToScroll: Math.min(visibleSlides, 4),
-            },  
-        },
-        {
-          breakpoint: 768,
-          settings: {
-            slidesToShow: Math.min(visibleSlides, 1),
-            slidesToScroll: Math.min(visibleSlides, 1),
+              slidesToScroll: Math.min(visibleSlides, 2),
+            },
           },
-        },
-      ],
-    };
-  }, [autoplay, loop, speed, children]);
+          {
+            breakpoint: 768,
+            settings: {
+              slidesToShow: Math.min(visibleSlides, 1),
+              slidesToScroll: Math.min(visibleSlides, 1),
+            },
+          },
+        ],
+      };
+    },
+    [autoplay, loop, speed, children],
+  );
 
   return (
-    <SlideWrapper className={className}>
-      <StyledSlider {...settings}>{children}</StyledSlider>
-    </SlideWrapper>
+    <Container>
+      <SlideWrapper className={className}>
+        <StyledSlider {...settings}>{children}</StyledSlider>
+      </SlideWrapper>
+    </Container>
   );
 }
 
+const Container = styled.div`
+  width: 80%;
+  align-items: center;
+`;
+
 const StyledSlider = styled(Slider)`
+
   .slick-prev {
     left: -30px;
+   
   }
 
   .slick-next {
@@ -89,7 +100,8 @@ const StyledSlider = styled(Slider)`
   .slick-dots {
     bottom: -40px;
     /* margin-bottom: 20px; */
+
   }
 `;
 
-export default Recommend;
+export default SportRecommend;
