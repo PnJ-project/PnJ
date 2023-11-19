@@ -39,8 +39,6 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
         >
           ✖
         </CloseBtn>
-        {/* <Title>간편 일정 등록 결과 조회</Title> */}
-        {/* <div>음성 혹은 텍스트 속의 일정을 자동으로 추출하여 간편하게 등록!</div> */}
         <FlaskReturn>
           <Before>
             <InnerTitle>Before</InnerTitle>
@@ -186,7 +184,6 @@ const Arrow = styled.div`
 `;
 const Arrow2 = styled.div`
   font-size: 40px;
-  /* font-family: KyoboHand; */
   cursor: pointer;
 `;
 const After = styled.div`
@@ -256,7 +253,7 @@ const SmallTxt = styled.div`
   /* color: #6c6c6c; */
 `;
 const Overlay = styled.div`
-  font-family: GmarketSansMedium;
+  font-family: SUITE-Regular;
   position: fixed;
   top: 0;
   left: 0;
@@ -272,7 +269,6 @@ const Overlay = styled.div`
 
 const InputModalContainer = styled.div`
   animation: ${fadeIn} 0.2s ease-in;
-  /* font-family: HSSaemaul-Regular; */
   position: fixed;
   padding: 20px;
   top: 50%;

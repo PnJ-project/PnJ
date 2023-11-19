@@ -269,7 +269,7 @@ const blink = keyframes`
 `;
 const Container = styled.div`
   animation: ${fadeIn} 0.2s ease-in;
-  font-family: HSSaemaul-Regular;
+  font-family: SUITE-Regular;
   position: fixed;
   padding: 20px;
   top: 50%;
@@ -295,7 +295,7 @@ const Container = styled.div`
     margin: 0;
     border: 1px solid #9f9a9a;
     border-radius: 5px;
-    font-family: insungitCutelivelyjisu;
+    font-family: SUITE-Regular;
   }
 
   input[type="date"] {
