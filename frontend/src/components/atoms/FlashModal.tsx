@@ -10,9 +10,9 @@ export default function NoLandMessage() {
   const isModalMsgActive = useSelector(
     (state: RootState) => state.toggle.isUseDemo
   );
-  const modalMsg = useSelector(
-    (state: RootState) => state.string.flashModalMdg
-  );
+  // const modalMsg = useSelector(
+  //   (state: RootState) => state.string.flashModalMdg
+  // );
 
   useEffect(() => {
     // 선택 가능한 땅이 없을 때, 2초 동안 메시지를 보여준 후 숨김
@@ -26,6 +26,6 @@ export default function NoLandMessage() {
   }, [isModalMsgActive]);
 
   return isModalMsgActive ? (
-    <div className="noLandMessage">{modalMsg}</div>
+    <div className="noLandMessage">{"Sample"}</div>
   ) : null;
 }

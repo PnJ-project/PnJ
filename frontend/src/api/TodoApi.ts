@@ -15,10 +15,7 @@ export interface TodoType {
 // 할일목록 정보 불러오기
 export const readTodo = async () => {
   await setAuthorizationHeaderInter();
-  const memberId = localStorage.getItem("memberId");
-  const response = await axiosInstance.get(
-    `${local_back_url}/api/todo/${memberId}`
-  );
+  const response = await axiosInstance.get(`${local_back_url}/api/todo`);
   return response.data;
 };
 
@@ -45,9 +42,8 @@ export const updateTodo = async (formdata: TodoType) => {
 // 할일목록 정보 삭제하기
 export const deleteTodo = async (todoId: number) => {
   await setAuthorizationHeaderInter();
-  const memberId = localStorage.getItem("memberId");
   const response = await axiosInstance.delete(
-    `${local_back_url}/api/todo/${memberId}/${todoId}`
+    `${local_back_url}/api/todo/${todoId}`
   );
   return response.data;
 };

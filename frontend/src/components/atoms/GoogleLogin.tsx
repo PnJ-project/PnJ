@@ -12,7 +12,10 @@ export default function GoogleLogin() {
   // 기본 세팅
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [memberId, setMemberId] = useState(localStorage.getItem("memberId"));
+  const [, setMemberId] = useState(localStorage.getItem("memberId"));
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("access_token")
+  );
 
   const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
@@ -33,6 +36,7 @@ export default function GoogleLogin() {
       // 멤버 아이디 저장
       localStorage.setItem("memberId", response.data.data.memberId);
       setMemberId(response.data.data.memberId);
+      setAccessToken(response.data.data.setAccessToken);
       // 에세스 및 리프레시 토큰 저장
       localStorage.setItem("access_token", response.data.data.accessToken);
       localStorage.setItem("refresh_token", response.data.data.refreshToken);
@@ -54,12 +58,13 @@ export default function GoogleLogin() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     setMemberId(localStorage.getItem("memberId"));
+    setAccessToken(localStorage.getItem("access_token"));
     navigate("/demo");
   };
 
   return (
     <>
-      {!memberId ? (
+      {!accessToken ? (
         <>
           <button className="googleLogin" onClick={googleSocialLogin}>
             <img
