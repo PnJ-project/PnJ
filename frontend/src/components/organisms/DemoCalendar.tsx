@@ -25,6 +25,7 @@ import "./DemoCalendar.css";
 import { useSpeechRecognition } from "react-speech-kit";
 import { selectIsTutorial, setTutorialStart } from "../../store/slice/Tutorial";
 import ServiceInfoBtn from "../molecules/ServiceInfoBtn";
+import LoadingBtn from "../atoms/LoadingBtn";
 
 // 타입 선언
 export interface FlaskResType {
@@ -46,6 +47,7 @@ export interface TodoItem {
 export default function DemoCalendar() {
   // 기본 세팅
   const dispatch = useDispatch();
+  const [isFlaskSend, setIsFlaskSend] = useState(false);
   // const { textsave, listening, toggleListening } = SpeechToText();
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
   const [afterFlask, setAfterFlask] = useState<FlaskResType[]>([]); // 인풋박스 값
@@ -91,6 +93,7 @@ export default function DemoCalendar() {
     setFreeTime(freetime - 1);
 
     // 모달창 오픈
+    setIsFlaskSend(true);
     dispatch(openDemoModal());
     // 플라스크 api 연결
     const formData = new FormData();
@@ -131,6 +134,7 @@ export default function DemoCalendar() {
 
     // 인풋 필드 리셋
     setTextSave("");
+    setIsFlaskSend(false);
   };
 
   // 인풋 필드에서 엔터 키 입력 시 제출
@@ -190,14 +194,18 @@ export default function DemoCalendar() {
             </div>
             {/* 3. 등록버튼 */}
             <div>
-              <div
-                className={`submitBtn ${
-                  tutorialIndex == 4 && "TutorialSelect"
-                }`}
-                onClick={handleSubmit}
-              >
-                등록
-              </div>
+              {!isFlaskSend ? (
+                <div
+                  className={`submitBtn ${
+                    tutorialIndex == 4 && "TutorialSelect"
+                  }`}
+                  onClick={handleSubmit}
+                >
+                  등록
+                </div>
+              ) : (
+                <LoadingBtn />
+              )}
               {tutorialIndex == 4 && <DemoTutorialBox />}
             </div>
             {/* 4. 음성녹음 버튼 */}

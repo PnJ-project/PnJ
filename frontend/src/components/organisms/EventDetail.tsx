@@ -30,32 +30,30 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
   const [eDate, setEDate] = useState(endDate || "");
   const starttime = event?.start.split("T")[1]?.substr(0, 5);
   const endtime = event?.end.split("T")[1]?.substr(0, 5);
-  const [sTime, setSTime] = useState(starttime||"00:00");
-  const [eTime, setETime] = useState(endtime||"00:00");
+  const [sTime, setSTime] = useState(starttime || "00:00");
+  const [eTime, setETime] = useState(endtime || "00:00");
   const [allDay, setAllDay] = useState(event?.allDay);
   const [showEDate, setShowEDate] = useState(eDate);
 
-
   // sDate와 eDate가 다르면 allDay를 체크하도록 설정
   useEffect(() => {
-    if (sDate !== showEDate && sTime == "00:00" &&  eTime == "00:00") {
+    if (sDate !== showEDate && sTime == "00:00" && eTime == "00:00") {
       setAllDay(true);
     }
-  }, [sDate,showEDate]);
+  }, [sDate, showEDate]);
 
   useEffect(() => {
     // 하루종일이면 showEDate = eDate - 1
-    if (sDate !== showEDate && allDay && sTime == "00:00" &&  eTime == "00:00") {
-      const newEDate = new Date(eDate)
+    if (sDate !== showEDate && allDay && sTime == "00:00" && eTime == "00:00") {
+      const newEDate = new Date(eDate);
       newEDate.setDate(newEDate.getDate() - 1);
-      const lastEDate = formatDateTime(newEDate).split('T')[0];
-      setShowEDate(lastEDate)
+      const lastEDate = formatDateTime(newEDate).split("T")[0];
+      setShowEDate(lastEDate);
     }
     if (!allDay && sDate === showEDate) {
-      setEDate(showEDate)
+      setEDate(showEDate);
     }
-  },[sDate, eDate,allDay])
-
+  }, [sDate, eDate, allDay]);
 
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -78,12 +76,12 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     const updateItem = {
       id: id,
       title,
-      start: sDate+'T'+sTime+':00',
-      end: eDate + 'T' + eTime + ':00',
+      start: sDate + "T" + sTime + ":00",
+      end: eDate + "T" + eTime + ":00",
       colorId: colorId,
       allDay: allDay,
-      memo:memo,
-      resource: { event: { id: id, memo: memo,colorId: colorId} },
+      memo: memo,
+      resource: { event: { id: id, memo: memo, colorId: colorId } },
     };
     // 일정수정 (개발자용)
     dispatch(updateEvent(updateItem));
@@ -102,24 +100,24 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       dispatch(closeSideModal());
     }
   };
- // 색깔 정하기
- const colorMap:{[key: number]: string} = {
-  1: '#fe4d00',
-  2: '#fa92a3',
-  3: '#fe9e14',
-  4: '#fed136',
-  5: '#d6d755',
-  6: '#a1c7a5',
-  7: '#01b391',
-  8: '#41a8f5',
-  9: '#7ea0c3',
-  10: '#ba7fd1',
-};
-const handleBoxClick = (key:string) => {
-  console.log(key);
-  const numKey = Number(key);
-  setColorId(numKey)
-};
+  // 색깔 정하기
+  const colorMap: { [key: number]: string } = {
+    1: "#fe4d00",
+    2: "#fa92a3",
+    3: "#fe9e14",
+    4: "#fed136",
+    5: "#d6d755",
+    6: "#a1c7a5",
+    7: "#01b391",
+    8: "#41a8f5",
+    9: "#7ea0c3",
+    10: "#ba7fd1",
+  };
+  const handleBoxClick = (key: string) => {
+    console.log(key);
+    const numKey = Number(key);
+    setColorId(numKey);
+  };
   return (
     <Overlay
       onClick={(e) => {
@@ -131,44 +129,56 @@ const handleBoxClick = (key:string) => {
       <Container>
         <Header>
           <Title>일정 수정하기</Title>
-          <CloseBtn onClick={() => {dispatch(closeSideModal())}}>✖</CloseBtn>
-        </Header>
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {Object.entries(colorMap).map(([key, color]) => (
-          <div
-            key={key}
-            style={{
-              width: '30px',
-              height: '30px',
-              margin: '2px',
-              backgroundColor: color,
-              border: colorId === Number(key) ? '2px solid #000' : 'none',
+          <CloseBtn
+            onClick={() => {
+              dispatch(closeSideModal());
             }}
-            onClick={() => handleBoxClick(key)}
-          />
-        ))}
-      </div>
+          >
+            ✖
+          </CloseBtn>
+        </Header>
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {Object.entries(colorMap).map(([key, color]) => (
+            <div
+              key={key}
+              style={{
+                width: "30px",
+                height: "30px",
+                margin: "2px",
+                backgroundColor: color,
+                border: colorId === Number(key) ? "2px solid #000" : "none",
+              }}
+              onClick={() => handleBoxClick(key)}
+            />
+          ))}
+        </div>
         <DateBox>
           <div>날짜</div>
           <SelectDate>
-            <input type="date" value={sDate}
+            <input
+              type="date"
+              value={sDate}
               onChange={(e) => {
                 setSDate(e.target.value);
-              }} />
+              }}
+            />
             <span>~</span>
-            <input type="date" value={showEDate} min={sDate}
+            <input
+              type="date"
+              value={showEDate}
+              min={sDate}
               onChange={(e) => {
                 setShowEDate(e.target.value);
                 // 하루 종일이면 하루 더해서 api 요청
                 if (allDay && sTime === "00:00" && eTime === "00:00") {
-                  const newEDate = new Date(e.target.value)
+                  const newEDate = new Date(e.target.value);
                   newEDate.setDate(newEDate.getDate() + 1);
-                  const lastEDate = formatDateTime(newEDate).split('T')[0];
-                  setEDate(lastEDate)
+                  const lastEDate = formatDateTime(newEDate).split("T")[0];
+                  setEDate(lastEDate);
                 }
                 // 종일 일정이 아니면 하루 빼서(showdate대로) 요청
                 else {
-                  setEDate(e.target.value)
+                  setEDate(e.target.value);
                 }
               }}
             />
@@ -187,23 +197,37 @@ const handleBoxClick = (key:string) => {
         <TimeBox>
           <div>시간</div>
           {/* 하루종일이면 시간 선택 못하게 */}
-          {allDay? (<SelectTime>
-            <input type="time" value={""} disabled />
-            <span>~</span>
-            <input type="time" value={""} disabled />
-          </SelectTime>) : (<SelectDate>
+          {allDay ? (
+            <SelectTime>
+              <input type="time" value={""} disabled />
+              <span>~</span>
+              <input type="time" value={""} disabled />
+            </SelectTime>
+          ) : (
+            <SelectDate>
               {/* 하루종일이 아닐 때 */}
-            <input type="time" value={sTime} step="6000"
-              onChange={(e) => {setSTime(e.target.value);}}
-              />
-            <span>~</span>
-            <input type="time" value={eTime}  min={sTime} step="6000"
+              <input
+                type="time"
+                value={sTime}
+                step="6000"
                 onChange={(e) => {
-                  const newETime = e.target.value > sTime? e.target.value : sTime;
-                  setETime(newETime)
-              }}
-            />
-          </SelectDate>)}
+                  setSTime(e.target.value);
+                }}
+              />
+              <span>~</span>
+              <input
+                type="time"
+                value={eTime}
+                min={sTime}
+                step="6000"
+                onChange={(e) => {
+                  const newETime =
+                    e.target.value > sTime ? e.target.value : sTime;
+                  setETime(newETime);
+                }}
+              />
+            </SelectDate>
+          )}
         </TimeBox>
         <TitleBox>
           <div>일정</div>
@@ -256,10 +280,10 @@ const blink = keyframes`
   25%, 75% {
     opacity: 0;
   }
-`
-  const Container = styled.div`
+`;
+const Container = styled.div`
   animation: ${fadeIn} 0.2s ease-in;
-  font-family: HSSaemaul-Regular;
+  font-family: SUITE-Regular;
   position: fixed;
   padding: 20px;
   top: 50%;
@@ -285,31 +309,30 @@ const blink = keyframes`
     margin: 0;
     border: 1px solid #9f9a9a;
     border-radius: 5px;
-    font-family: insungitCutelivelyjisu;
+    font-family: SUITE-Regular;
   }
 
-  input[type='date'] {
-  position: relative; // 캘린더 아이콘을 클릭해야만 달력이 보이기 때문에 이 영역 자체를 제어하기 위해 설정 
-  text-align: center;
-}
+  input[type="date"] {
+    position: relative; // 캘린더 아이콘을 클릭해야만 달력이 보이기 때문에 이 영역 자체를 제어하기 위해 설정
+    text-align: center;
+  }
 
-// 실제 캘린더 아이콘을 클릭하는 영역을 의미하는 선택자
-// 이 영역을 확장해서 input의 어떤 곳을 클릭해도 캘린더를 클릭한 것과 같은 효과를 만들자!
-input[type='date']::-webkit-calendar-picker-indicator {
-  position: absolute; // 이를 설정하기 위해 사전에 relative를 설정한 것이다.
-  width: 100%;
-  height: 100%;
-  background: transparent; // 배경은 투명하게,
-  color: transparent; // 글자도 투명하게! 이 두 설정을 통해 캘린더 아이콘을 사라지게 만든다.
-  cursor: pointer;
-}
-
+  // 실제 캘린더 아이콘을 클릭하는 영역을 의미하는 선택자
+  // 이 영역을 확장해서 input의 어떤 곳을 클릭해도 캘린더를 클릭한 것과 같은 효과를 만들자!
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute; // 이를 설정하기 위해 사전에 relative를 설정한 것이다.
+    width: 100%;
+    height: 100%;
+    background: transparent; // 배경은 투명하게,
+    color: transparent; // 글자도 투명하게! 이 두 설정을 통해 캘린더 아이콘을 사라지게 만든다.
+    cursor: pointer;
+  }
 `;
 const Header = styled.div`
-  display:flex;
-  justify-content:space-between;
+  display: flex;
+  justify-content: space-between;
   margin: 10px;
-  `
+`;
 const CloseBtn = styled.div`
   cursor: pointer;
 `;
@@ -317,10 +340,10 @@ const Title = styled.div`
   font-size: 24px;
 `;
 const DateBox = styled.div`
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
   gap: 20px;
-`
+`;
 const SelectDate = styled.div`
   input {
     height: 20px !important;
@@ -332,23 +355,23 @@ const CheckBox = styled.div`
   height: 20px;
   padding: 0;
   margin: 0;
-  gap:5px;
+  gap: 5px;
   cursor: pointer;
-  input:checked{
-    background-color:#36513d;
+  input:checked {
+    background-color: #36513d;
   }
-  label{
+  label {
     font-size: 15px;
     justify-content: center;
     align-items: center;
     text-align: center;
   }
-`
+`;
 const TimeBox = styled.div`
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
   gap: 20px;
-`
+`;
 const SelectTime = styled.div`
   input {
     height: 20px !important;
@@ -358,28 +381,26 @@ const TitleBox = styled.div`
   display: flex;
   gap: 20px;
   /* justify-content:center; */
-  align-items:center;
+  align-items: center;
   input {
     height: 20px;
-    width: 80%
+    width: 80%;
   }
-`
+`;
 const MemoBox = styled.div`
-display: flex;
-gap: 20px;
-input {
+  display: flex;
+  gap: 20px;
+  input {
     height: 120px;
-    width: 80%
+    width: 80%;
   }
-
-`
+`;
 const ErrorMsg = styled.div`
   animation: ${blink} 1.5s 3;
   font-size: 18px;
   margin: 10px;
   color: #a73131;
 `;
-
 
 const Overlay = styled.div`
   position: fixed;
@@ -396,21 +417,18 @@ const Overlay = styled.div`
 const ButtonDiv = styled.div`
   display: flex;
   justify-content: center;
-
-`
+`;
 const EditButton = styled.button`
   background-color: #36513d;
   color: #ffffff;
   width: 80px;
   padding: 5px;
   justify-content: center;
-
-`
+`;
 const DeleteButton = styled.button`
   background-color: #36513d;
   color: #ffffff;
   width: 80px;
   padding: 5px;
   justify-content: center;
-
-`
+`;

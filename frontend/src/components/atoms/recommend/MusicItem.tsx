@@ -1,5 +1,5 @@
 // 공연 아이템
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
 import { readCalendar } from "../../../api/CalendarApi";
@@ -11,6 +11,7 @@ export default function MusicItem({ item }: { item: TripItemType }) {
   // 기본 세팅
   const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
+  const [isClick, setIsClick] = useState(false);
   const startOfFiveMonthsAgo = moment()
     .subtract(6, "months")
     .startOf("month")
@@ -60,12 +61,18 @@ export default function MusicItem({ item }: { item: TripItemType }) {
       );
       // 캘린더 다시 불러오기
       console.log("구글 캘린더 생성 완료", response);
+      setIsClick(true);
       await refetchCal();
     } catch (error) {
       console.error("구글 캘린더 생성 에러:", error);
       return;
     }
   };
+
+  // 재렌더링시 선택여부 초기화
+  useEffect(() => {
+    setIsClick(false);
+  }, [item]);
 
   return (
     <>
@@ -83,7 +90,7 @@ export default function MusicItem({ item }: { item: TripItemType }) {
         {/* 버튼 */}
         <div className="RecommendBtnBox">
           <button className="RecommendAddBtn" onClick={recommendCalendar}>
-            캘린더 추가
+            {!isClick ? "캘린더 추가" : "✔"}
           </button>
         </div>
       </div>

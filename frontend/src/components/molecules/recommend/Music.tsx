@@ -20,6 +20,10 @@ import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
 export default function Music() {
   // 기본 세팅
   const recommends = useSelector(selectRecommends);
+  const [isClick, setIsClick] = useState({
+    boolean: false,
+    index: -1,
+  });
   const [categoryHover, setCategoryHover] = useState({
     boolean: false,
     index: -1,
@@ -85,6 +89,7 @@ export default function Music() {
         reqNewEvent
       );
       // 캘린더 다시 불러오기
+      setIsClick({ boolean: true, index: id });
       console.log("구글 캘린더 생성 완료", response);
       await refetchCal();
     } catch (error) {
@@ -95,6 +100,7 @@ export default function Music() {
 
   // 정보 추리기
   useEffect(() => {
+    setIsClick({ boolean: false, index: -1 });
     if (recommends) {
       // "category": "공연, 뮤지컬, 콘서트"를 만족하는 아이템 필터링
       const filteredItems = recommends.filter((item) =>
@@ -146,7 +152,7 @@ export default function Music() {
                         handleAddEvent(index);
                       }}
                     >
-                      캘린더 추가
+                      {isClick && isClick.index == index ? "✔" : "캘린더 추가"}
                     </button>
                     <img
                       src={item.image === "false" ? showimg : item.image}

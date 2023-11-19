@@ -1,6 +1,6 @@
 // 맛집 아이템
 import { EatItemType } from "../../../store/slice/RecommendSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ReqTodoCreate } from "../../molecules/todo/ApiTodoList";
 import { useQuery } from "react-query";
 import { readTodo } from "../../../api/TodoApi";
@@ -11,6 +11,7 @@ export default function EatItem({ item }: { item: EatItemType }) {
   // 기본 세팅
   const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
+  const [isClick, setIsClick] = useState(false);
   const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
     enabled: false,
     retry: false,
@@ -26,12 +27,18 @@ export default function EatItem({ item }: { item: EatItemType }) {
     try {
       await axiosInstance.post(`${local_back_url}/api/todo`, reqNewTodo);
       // 투두 다시 불러오기
+      setIsClick(true);
       console.log("투두 생성 API 요청 완료");
       await refetchTodo();
     } catch (error) {
       console.error("투두 생성 API 에러:", error);
     }
   };
+
+  // 재렌더링시 선택여부 초기화
+  useEffect(() => {
+    setIsClick(false);
+  }, [item]);
 
   return (
     <>
@@ -57,7 +64,7 @@ export default function EatItem({ item }: { item: EatItemType }) {
             </button>
           )}
           <button className="RecommendAddBtn" onClick={recommendTodo}>
-            할일 목록 추가
+            {!isClick ? "할일 목록 추가" : "✔"}
           </button>
         </div>
       </div>
