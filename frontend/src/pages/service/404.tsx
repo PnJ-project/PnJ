@@ -24,7 +24,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  /* font-family: MYYeongnamnu; */
 `;
 
 const ImgP = styled.img`
