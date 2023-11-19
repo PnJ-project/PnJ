@@ -141,7 +141,7 @@ const Box = styled.div`
 `;
 
 const Container = styled.div`
-  background: linear-gradient(to bottom, #f6ffe8, #ffffff);
+  /* background: linear-gradient(to bottom, #36513d, #ffffff); */
   width: 100%;
 `;
 const Icon = styled(HiMenu)`
