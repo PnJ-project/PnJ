@@ -52,6 +52,7 @@ function Recommend({
             settings: {
               slidesToShow: Math.min(visibleSlides, 4),
               slidesToScroll: Math.min(visibleSlides, 4),
+<<<<<<< HEAD
             },  
         },
         {
@@ -59,6 +60,9 @@ function Recommend({
           settings: {
             slidesToShow: Math.min(visibleSlides, 1),
             slidesToScroll: Math.min(visibleSlides, 1),
+=======
+            },
+>>>>>>> 3174f9f489cdd19e9e56cc75edc2b8bdf2a64654
           },
         },
       ],
