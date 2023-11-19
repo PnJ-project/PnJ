@@ -185,7 +185,7 @@ export default function DemoCalendar() {
                 dispatch(setRecommendTrue());
               }}
             >
-              추천받기
+              일정 추천
             </button>
             {/* <TeamBtn /> */}
             <GoogleLogin />
