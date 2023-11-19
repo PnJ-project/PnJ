@@ -33,7 +33,6 @@ export default function Music() {
     | []
   >([]);
   const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const startOfFiveMonthsAgo = moment()
     .subtract(6, "months")
     .startOf("month")
@@ -57,7 +56,6 @@ export default function Music() {
   // 캘린더 추가
   const handleAddEvent = async (id: number) => {
     const reqNewEvent = {
-      memberId: memberId,
       event: {
         id: null,
         summary: items[id].title,

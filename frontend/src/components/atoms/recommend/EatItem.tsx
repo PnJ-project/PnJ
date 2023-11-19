@@ -1,6 +1,5 @@
 // 맛집 아이템
 import { EatItemType } from "../../../store/slice/RecommendSlice";
-import { useState } from "react";
 import { ReqTodoCreate } from "../../molecules/todo/ApiTodoList";
 import { useQuery } from "react-query";
 import { readTodo } from "../../../api/TodoApi";
@@ -10,7 +9,6 @@ import axiosInstance from "../../../functions/AxiosInstance";
 export default function EatItem({ item }: { item: EatItemType }) {
   // 기본 세팅
   const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
     enabled: false,
     retry: false,
@@ -20,7 +18,6 @@ export default function EatItem({ item }: { item: EatItemType }) {
   const recommendTodo = async () => {
     await setAuthorizationHeaderInter();
     const reqNewTodo: ReqTodoCreate = {
-      memberId: memberId,
       summary: item.title + " 방문",
     };
     try {

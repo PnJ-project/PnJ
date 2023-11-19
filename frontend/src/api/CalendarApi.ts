@@ -20,7 +20,6 @@ export interface EventStartEnd {
   date: null | string;
 }
 export interface EventData {
-  memberId: number;
   event: {
     id: null | string;
     summary: string;

@@ -9,7 +9,6 @@ import axiosInstance from "../../../functions/AxiosInstance";
 
 export default function SportItem({ item }: { item: TripItemType }) {
   // 기본 세팅
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
   const startOfFiveMonthsAgo = moment()
     .subtract(6, "months")
@@ -33,7 +32,6 @@ export default function SportItem({ item }: { item: TripItemType }) {
 
   // 캘린더 추가시
   const reqNewEvent = {
-    memberId: memberId,
     event: {
       id: null,
       summary: `${item.awayTeamName} vs ${item.homeTeamName}`,

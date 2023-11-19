@@ -17,6 +17,7 @@ PREFIX = "/trans"
 # 일정 등록
 @app.route(PREFIX + '/date', methods=['POST'])
 def trans_date():
+    print("들어옴")
     text = request.form['input']
     date = transform_date(text)
     return jsonify(date)

@@ -23,7 +23,6 @@ export default function Recommend() {
   // 기본 세팅
   const dispatch = useDispatch();
   const [sortCategoey, setSortCategory] = useState(true);
-  const memberId = localStorage.getItem("memberId");
   const startOfFiveMonthsAgo = moment()
     .subtract(6, "months")
     .startOf("month")
@@ -44,7 +43,6 @@ export default function Recommend() {
     "recommendData",
     () =>
       readRecommend({
-        memberId: memberId ? memberId : "",
         timeMax: timeMax,
         timeMin: timeMin,
       }),
