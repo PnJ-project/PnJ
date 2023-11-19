@@ -6,12 +6,17 @@ import { scroller } from "react-scroll";
 import Recommend from "../components/organisms/Recommend";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectIsRecommend } from "../store/slice/ToggleSlice";
+import {
+  selectIsRecommend,
+  setRecommendFalse,
+} from "../store/slice/ToggleSlice";
+import { useDispatch } from "react-redux";
 
 export default function Main() {
   // 기본세팅
   const [, setScrollIndex] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isRecommend = useSelector(selectIsRecommend);
   // 로그아웃시 리다이렉트
   useEffect(() => {
@@ -34,6 +39,9 @@ export default function Main() {
         duration: 800,
       });
       setScrollIndex(1);
+      setTimeout(() => {
+        dispatch(setRecommendFalse());
+      }, 200);
     }
   }, [isRecommend]);
 

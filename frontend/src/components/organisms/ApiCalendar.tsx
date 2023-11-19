@@ -8,7 +8,7 @@ import { readCalendar } from "../../api/CalendarApi";
 import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
-import TeamBtn from "../atoms/TeamBtn";
+// import TeamBtn from "../atoms/TeamBtn";
 import GoogleLogin from "../atoms/GoogleLogin";
 import TodoList from "../molecules/todo/ApiTodoList";
 import SmallCal from "../../pages/test/SmallCal";
@@ -176,9 +176,9 @@ export default function DemoCalendar() {
                 dispatch(setRecommendTrue());
               }}
             >
-              추천
+              추천받기
             </button>
-            <TeamBtn />
+            {/* <TeamBtn /> */}
             <GoogleLogin />
             {/* 서비스 소개 */}
             <ServiceInfoBtn />
