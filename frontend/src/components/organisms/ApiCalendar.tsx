@@ -110,11 +110,11 @@ export default function DemoCalendar() {
       await refetchCal();
       // 인풋 필드 리셋
       setTextSave("");
+      setIsFlaskSend(false);
       return response;
     } catch (error) {
       console.error("Error flask data:", error);
     }
-    setIsFlaskSend(false);
   };
 
   // 인풋 필드에서 엔터 키 입력 시 제출
