@@ -9,8 +9,6 @@ public class TodoRequestDto {
     @Data
     public static class CreateTodoRequestDto {
 
-        private Long memberId;
-
         private String summary;
 
         public Todo toTodo(Member member) {
@@ -23,8 +21,6 @@ public class TodoRequestDto {
 
     @Data
     public static class UpdateTodoRequestDto {
-
-        private Long memberId;
 
         private Long todoId;
 

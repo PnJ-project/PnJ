@@ -40,9 +40,8 @@ public class CalendarControllerV2 {
 
     private final CalendarServiceV2 calendarService;
 
-    @GetMapping("/{memberId}/{timeMax}/{timeMin}")
+    @GetMapping("/{timeMax}/{timeMin}")
     public ResponseEntity<ResponseDto<List<EventDto>>> getList(
-        @PathVariable(value = "memberId") Long memberI, // TODO 삭제
         @PathVariable(value = "timeMax") String timeMax,
         @PathVariable(value = "timeMin") String timeMin,
         @AuthenticationPrincipal Long memberId
@@ -64,9 +63,8 @@ public class CalendarControllerV2 {
         );
     }
 
-    @DeleteMapping(value = "/{memberId}/{eventId}")
+    @DeleteMapping(value = "/{eventId}")
     public ResponseEntity<ResponseDto<?>> deleteEvent(
-        @PathVariable(value = "memberId") Long memberd, // TODO 삭제
         @PathVariable(value = "eventId") String eventId,
         @AuthenticationPrincipal Long memberId
     ) {
