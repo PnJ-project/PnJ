@@ -59,8 +59,9 @@ function Recommend({
           settings: {
             slidesToShow: Math.min(visibleSlides, 1),
             slidesToScroll: Math.min(visibleSlides, 1),
+            },
           },
-        },
+        
       ],
     };
   }, [autoplay, loop, speed, children]);
