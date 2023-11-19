@@ -25,7 +25,6 @@ const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 const EventForm: React.FC<ModalProps> = ({ id }) => {
   // 기본 세팅
   const dispatch = useDispatch();
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const events = useSelector((state: RootState) => state.calendar.events);
   const event = events.find((event) => event.id === id);
   const [title, setTitle] = useState(event?.title);
@@ -99,7 +98,6 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     setMemo("");
     // 캘린더 업데이트 API 요청
     const reqNewEvent = {
-      memberId: memberId,
       event: {
         id: id,
         summary: title,

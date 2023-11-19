@@ -95,9 +95,10 @@ export default function DemoCalendar() {
     const memberId = localStorage.getItem("memberId");
     const formData = { input: textSave, memberId: memberId };
     await setAuthorizationHeaderInter();
+    console.log(formData);
     try {
       const response = await axiosInstance.post(
-        `${backend}/api/calendar/input`,
+        `${backend}/api/calendar/v2/input`,
         formData
       );
       // 전달 데이터

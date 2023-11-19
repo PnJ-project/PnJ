@@ -80,7 +80,6 @@ const BigCalendarInfo = () => {
   const isOpen = useSelector(selectIsModalOpen);
   const isSideOpen = useSelector(selectIsSideModalOpen);
   const date: string = useSelector(handleDate);
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const startOfFiveMonthsAgo = moment()
     .subtract(6, "months")
     .startOf("month")
@@ -162,7 +161,6 @@ const BigCalendarInfo = () => {
         const new_end = new Date(end);
         const send_id = event.id;
         const reqUpdateEvent = {
-          memberId: memberId,
           event: {
             id: send_id,
             summary: event.title,
@@ -236,7 +234,6 @@ const BigCalendarInfo = () => {
         const new_end = new Date(end);
         const send_id = event.id;
         const reqUpdateEvent = {
-          memberId: memberId,
           event: {
             id: send_id,
             summary: event.title,
@@ -375,7 +372,6 @@ const BigCalendarInfo = () => {
       const newStart = new Date(start);
       const newEnd = new Date(end);
       const formData = {
-        memberId: memberId,
         todoId: id,
         start: {
           date: formatDateTime(newStart).split("T")[0],

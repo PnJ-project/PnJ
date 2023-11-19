@@ -33,7 +33,6 @@ export default function Trip() {
     index: -1,
   });
   const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
     enabled: false,
     retry: false,
@@ -43,7 +42,6 @@ export default function Trip() {
   const handleAddEvent = async (id: number) => {
     await setAuthorizationHeaderInter();
     const reqNewTodo: ReqTodoCreate = {
-      memberId: memberId,
       summary: items[id].title + " 방문",
     };
     try {

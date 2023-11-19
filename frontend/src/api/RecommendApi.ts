@@ -5,7 +5,6 @@ const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
 // const service_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 interface RecommendRequest {
-  memberId: string;
   timeMax: string;
   timeMin: string;
 }

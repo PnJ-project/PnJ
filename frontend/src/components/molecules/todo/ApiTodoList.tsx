@@ -20,7 +20,6 @@ interface TodoItem {
   summary: string;
 }
 export interface ReqTodoCreate {
-  memberId: number | null;
   summary: string;
 }
 // const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
@@ -31,7 +30,6 @@ export default function TodoList() {
   const dispatch = useDispatch();
   const reduxtodo = useSelector(TodoItems);
   const [todos, setTodos] = useState<TodoItem[]>(reduxtodo);
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const { data: todoData, refetch: refetchTodo } = useQuery(
     "todoData",
     readTodo,
@@ -53,7 +51,6 @@ export default function TodoList() {
       summary: todo.summary,
     };
     const reqNewTodo: ReqTodoCreate = {
-      memberId: memberId,
       summary: todo.summary,
     };
     // 새로운 일정 적용 (개발자용)
@@ -83,7 +80,6 @@ export default function TodoList() {
     await setAuthorizationHeaderInter();
     try {
       await axiosInstance.put(`${local_back_url}/api/todo`, {
-        memberId: memberId,
         todoId: todoId,
         summary: newValue,
       });
