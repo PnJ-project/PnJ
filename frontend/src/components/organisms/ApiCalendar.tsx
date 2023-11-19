@@ -162,9 +162,9 @@ export default function DemoCalendar() {
             </div>
             {/* 3. 등록버튼 */}
             {!isFlaskSend ? (
-              <button className="submitBtn" onClick={handleSubmit}>
+              <div className="submitBtn" onClick={handleSubmit}>
                 등록
-              </button>
+              </div>
             ) : (
               <LoadingBtn />
             )}
