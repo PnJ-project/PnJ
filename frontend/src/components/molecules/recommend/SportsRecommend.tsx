@@ -34,7 +34,7 @@ function SportRecommend({
       infinite: loop,
       speed: speed,
       slidesToShow: 1,
-      slidesToScroll: 3,
+      slidesToScroll: 1,
       autoplay: Boolean(autoplay),
       autoplaySpeed: typeof autoplay === "boolean" ? 3000 : autoplay,
     }),

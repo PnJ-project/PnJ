@@ -1,6 +1,6 @@
 // 스포츠 아이템
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { readCalendar } from "../../../api/CalendarApi";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
@@ -11,6 +11,7 @@ export default function SportItem({ item }: { item: TripItemType }) {
   // 기본 세팅
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
+  const [isClick, setIsClick] = useState(false);
   const startOfFiveMonthsAgo = moment()
     .subtract(6, "months")
     .startOf("month")
@@ -59,12 +60,18 @@ export default function SportItem({ item }: { item: TripItemType }) {
       );
       // 캘린더 다시 불러오기
       console.log("구글 캘린더 생성 완료", response);
+      setIsClick(true);
       await refetchCal();
     } catch (error) {
       console.error("구글 캘린더 생성 에러:", error);
       return;
     }
   };
+
+  // 재렌더링시 선택여부 초기화
+  useEffect(() => {
+    setIsClick(false);
+  }, [item]);
 
   return (
     <>
@@ -109,7 +116,7 @@ export default function SportItem({ item }: { item: TripItemType }) {
         {item.statusCode != "RESULT" && (
           <div className="RecommendBtnBox">
             <button className="RecommendAddBtn" onClick={recommendCalendar}>
-              캘린더 추가
+              {!isClick ? "캘린더 추가" : "✔"}
             </button>
           </div>
         )}

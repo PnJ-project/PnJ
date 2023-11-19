@@ -56,7 +56,11 @@
 }
 .todoTitle {
   margin: 20px 20px 10px 20px;
+<<<<<<< HEAD
   font-family: insungitCutelivelyjisu;
+=======
+  font-family: SUITE-Regular;
+>>>>>>> 71429020eca3f370323350aaef82a8fd2fa60c4f
   font-size: 24px;
   font-weight: 500;
 }
@@ -144,7 +148,6 @@
   border-radius: 4px;
   width: calc(100% - 60px); /* 수정된 부분 */
 }
-
 
 .icons {
   display: flex;

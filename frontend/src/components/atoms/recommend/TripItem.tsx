@@ -1,5 +1,5 @@
 // 여행 아이템
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { readTodo } from "../../../api/TodoApi";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
@@ -11,6 +11,7 @@ import recommendNotFound from "/image/recommendNotFound.svg";
 export default function TripItem({ item }: { item: TripItemType }) {
   // 기본 세팅
   const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
+  const [isClick, setIsClick] = useState(false);
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
   const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
     enabled: false,
@@ -27,12 +28,19 @@ export default function TripItem({ item }: { item: TripItemType }) {
     try {
       await axiosInstance.post(`${local_back_url}/api/todo`, reqNewTodo);
       // 투두 다시 불러오기
+      setIsClick(true);
       console.log("투두 생성 API 요청 완료");
       await refetchTodo();
     } catch (error) {
       console.error("투두 생성 API 에러:", error);
     }
   };
+
+  // 재렌더링시 선택여부 초기화
+  useEffect(() => {
+    setIsClick(false);
+  }, [item]);
+
   return (
     <>
       <>
@@ -66,7 +74,7 @@ export default function TripItem({ item }: { item: TripItemType }) {
               </button>
             )}
             <button className="RecommendAddBtn" onClick={recommendTodo}>
-              할일 목록 추가
+              {!isClick ? "할일 목록 추가" : "✔"}
             </button>
           </div>
         </div>

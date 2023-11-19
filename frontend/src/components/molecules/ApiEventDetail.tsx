@@ -59,9 +59,9 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       setShowEDate(lastEDate);
     }
     if (!allDay && sDate === showEDate) {
-      setEDate(showEDate)
+      setEDate(showEDate);
     }
-  },[sDate, eDate,allDay])
+  }, [sDate, eDate, allDay]);
 
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -89,7 +89,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       colorId: colorId,
       allDay: allDay,
       memo: memo,
-      resource: { event: { id: id, memo: memo,colorId: colorId } },
+      resource: { event: { id: id, memo: memo, colorId: colorId } },
     };
     // 일정수정 (개발자용)
     dispatch(updateEvent(updateItem));
@@ -152,17 +152,17 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     }
   };
   // 색깔 정하기
-  const colorMap:{[key: number]: string} = {
-    1: '#fe4d00',
-    2: '#fa92a3',
-    3: '#fe9e14',
-    4: '#fed136',
-    5: '#d6d755',
-    6: '#a1c7a5',
-    7: '#01b391',
-    8: '#41a8f5',
-    9: '#7ea0c3',
-    10: '#ba7fd1',
+  const colorMap: { [key: number]: string } = {
+    1: "#fe4d00",
+    2: "#fa92a3",
+    3: "#fe9e14",
+    4: "#fed136",
+    5: "#d6d755",
+    6: "#a1c7a5",
+    7: "#01b391",
+    8: "#41a8f5",
+    9: "#7ea0c3",
+    10: "#ba7fd1",
   };
   const handleBoxClick = (key: string) => {
     console.log(key);
@@ -240,7 +240,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
               id="allDay"
               checked={allDay}
               onChange={(e) => {
-                setAllDay(e.target.checked)
+                setAllDay(e.target.checked);
               }}
               // disabled={sDate !== eDate}
             />
@@ -336,7 +336,8 @@ const blink = keyframes`
 `;
 const Container = styled.div`
   animation: ${fadeIn} 0.2s ease-in;
-  font-family: HSSaemaul-Regular;
+  font-family: SUITE-Regular;
+  font-weight: 900;
   position: fixed;
   padding: 20px;
   top: 50%;
@@ -362,7 +363,7 @@ const Container = styled.div`
     margin: 0;
     border: 1px solid #9f9a9a;
     border-radius: 5px;
-    font-family: insungitCutelivelyjisu;
+    font-family: SUITE-Regular;
   }
 
   input[type="date"] {

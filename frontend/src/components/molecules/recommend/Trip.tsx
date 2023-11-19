@@ -20,6 +20,10 @@ import { ReqTodoCreate } from "../todo/ApiTodoList";
 export default function Trip() {
   // 기본 세팅
   const recommends = useSelector(selectRecommends);
+  const [isClick, setIsClick] = useState({
+    boolean: false,
+    index: -1,
+  });
   const [items, setItems] = useState<
     | TripItemType[]
     | StudyItemType[]
@@ -49,6 +53,7 @@ export default function Trip() {
     try {
       await axiosInstance.post(`${local_back_url}/api/todo`, reqNewTodo);
       // 투두 다시 불러오기
+      setIsClick({ boolean: true, index: id });
       console.log("투두 생성 API 요청 완료");
       await refetchTodo();
     } catch (error) {
@@ -58,6 +63,7 @@ export default function Trip() {
 
   // 정보 추리기
   useEffect(() => {
+    setIsClick({ boolean: false, index: -1 });
     if (recommends) {
       // "category": "여행"를 만족하는 아이템 필터링
       const filteredItems = recommends.filter((item) =>
@@ -108,7 +114,9 @@ export default function Trip() {
                         handleAddEvent(index);
                       }}
                     >
-                      할일 목록 추가
+                      {isClick && isClick.index == index
+                        ? "✔"
+                        : "할일 목록 추가"}
                     </button>
                     <img
                       src={item.image === "False" ? subimg : item.image}

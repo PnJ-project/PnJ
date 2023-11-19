@@ -54,7 +54,7 @@ const EventForm: React.FC<ModalProps> = () => {
   useEffect(() => {
     // 하루종일이면 showEDate = eDate - 1
     if (allDay && sDate !== showEDate) {
-      const newEDate = new Date(eDate)
+      const newEDate = new Date(eDate);
       newEDate.setDate(newEDate.getDate() - 1);
       const lastEDate = formatDateTime(newEDate).split("T")[0];
       setShowEDate(lastEDate);
@@ -132,19 +132,19 @@ const EventForm: React.FC<ModalProps> = () => {
     }
   };
   // 색깔 정하기
-  const colorMap:{[key: number]: string} = {
-    1: '#fe4d00',
-    2: '#fa92a3',
-    3: '#fe9e14',
-    4: '#fed136',
-    5: '#d6d755',
-    6: '#a1c7a5',
-    7: '#01b391',
-    8: '#41a8f5',
-    9: '#7ea0c3',
-    10: '#ba7fd1',
+  const colorMap: { [key: number]: string } = {
+    1: "#fe4d00",
+    2: "#fa92a3",
+    3: "#fe9e14",
+    4: "#fed136",
+    5: "#d6d755",
+    6: "#a1c7a5",
+    7: "#01b391",
+    8: "#41a8f5",
+    9: "#7ea0c3",
+    10: "#ba7fd1",
   };
-  const handleBoxClick = (key:string) => {
+  const handleBoxClick = (key: string) => {
     const numKey = Number(key);
     setColorId(numKey);
   };
@@ -160,7 +160,13 @@ const EventForm: React.FC<ModalProps> = () => {
       <Container>
         <Header>
           <Title>일정 추가하기</Title>
-          <CloseBtn onClick={() => {dispatch(closeModal())}}>✖</CloseBtn>
+          <CloseBtn
+            onClick={() => {
+              dispatch(closeModal());
+            }}
+          >
+            ✖
+          </CloseBtn>
         </Header>
         <ColorBox>
         {Object.entries(colorMap).map(([key, color]) => (
@@ -310,7 +316,8 @@ const blink = keyframes`
 `;
 const Container = styled.div`
   animation: ${fadeIn} 0.2s ease-in;
-  font-family: HSSaemaul-Regular;
+  font-family: SUITE-Regular;
+  font-weight: 900;
   position: fixed;
   padding: 20px;
   top: 50%;
@@ -336,7 +343,7 @@ const Container = styled.div`
     margin: 0;
     border: 1px solid #9f9a9a;
     border-radius: 5px;
-    font-family: insungitCutelivelyjisu;
+    font-family: SUITE-Regular;
   }
 
   input[type="date"] {
@@ -359,7 +366,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 10px;
-  `
+`;
 
   const ColorBox = styled.div`
   height: 38px;
@@ -380,6 +387,7 @@ const ColorDiv = styled.div`
     width: 38px;
     height: 38px;
   }
+  justify-content: center;
 `;
 const CloseBtn = styled.div`
   cursor: pointer;

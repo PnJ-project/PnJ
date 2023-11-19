@@ -81,22 +81,24 @@ export default function Recommend() {
             당신을 위한
             <Img src={RecommendJ} />의 일정 추천을 받아보세요
           </Box>
-          <div className="RecommendSortBtnBox">
-            <button
-              onClick={() => {
-                setSortCategory(true);
-              }}
-            >
-              <Icon />
-            </button>
-            <button
-              onClick={() => {
-                setSortCategory(false);
-              }}
-            >
-              <Icon1 />
-            </button>
-          </div>
+          {recommendData && String(recommendData.data) != "" && (
+            <div className="RecommendSortBtnBox">
+              <button
+                onClick={() => {
+                  setSortCategory(true);
+                }}
+              >
+                <Icon />
+              </button>
+              <button
+                onClick={() => {
+                  setSortCategory(false);
+                }}
+              >
+                <Icon1 />
+              </button>
+            </div>
+          )}
         </Container>
         {/* 카테고리 보기 */}
         {sortCategoey && (
@@ -107,6 +109,23 @@ export default function Recommend() {
               <Study />
               <Trip />
               <Eat />
+              {recommendData && String(recommendData.data) == "" && (
+                <>
+                  <div className="NoneRecommend">
+                    <div>일정을 추가하면 J의 추천을 받을 수 있습니다!</div>
+                    <button
+                      onClick={() => {
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                    >
+                      일정 추가하러 가기
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </>
         )}
