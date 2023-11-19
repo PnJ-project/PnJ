@@ -70,8 +70,8 @@ def check(text):
 
     # passportkey, callback 직접 가져옴
     payload = {
-        'passportKey': 'a897d1bde7104cffcc62c9bd91d25a775ffd6f32',
-        '_callback': 'jQuery1124020973630793012643_1700202353130',
+        'passportKey': 'd1ea6f09380e4db4b4cbdb28c4b91e4e97ea99ff',
+        '_callback': 'jQuery1124022965657612834467_1700367548398',
         'q': text,
         'color_blindness': '0'}
 
