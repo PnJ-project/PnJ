@@ -23,15 +23,13 @@ interface sliderProps {
   loop?: boolean;
 }
 
-function SportRecommend({
+function Recommend({
   children,
   className,
   autoplay = false,
   speed = 300,
   loop = true,
 }: sliderProps) {
-
-
   const settings = useMemo<Settings>(
     () => {
       const totalSlides = React.Children.count(children);
@@ -68,18 +66,11 @@ function SportRecommend({
   );
 
   return (
-    <Container>
-      <SlideWrapper className={className}>
-        <StyledSlider {...settings}>{children}</StyledSlider>
-      </SlideWrapper>
-    </Container>
+    <SlideWrapper className={className}>
+      <StyledSlider {...settings}>{children}</StyledSlider>
+    </SlideWrapper>
   );
 }
-
-const Container = styled.div`
-  width: 80%;
-  align-items: center;
-`;
 
 const StyledSlider = styled(Slider)`
 
@@ -104,4 +95,4 @@ const StyledSlider = styled(Slider)`
   }
 `;
 
-export default SportRecommend;
+export default Recommend;

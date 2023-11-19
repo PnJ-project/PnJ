@@ -52,6 +52,7 @@ function Recommend({
             settings: {
               slidesToShow: Math.min(visibleSlides, 4),
               slidesToScroll: Math.min(visibleSlides, 4),
+
             },  
         },
         {
