@@ -291,6 +291,9 @@ const Container = styled.div`
     border-radius: 5px;
     font-family: SUITE-Regular;
   }
+  div {
+    font-weight: 600;
+  }
 
   input[type="date"] {
     position: relative; // 캘린더 아이콘을 클릭해야만 달력이 보이기 때문에 이 영역 자체를 제어하기 위해 설정
@@ -339,7 +342,7 @@ const CloseBtn = styled.div`
 `;
 const Title = styled.div`
   font-family: SUITE-Regular;
-  font-weight: 500;
+  font-weight: 900;
   font-size: 24px;
 `;
 const DateBox = styled.div`

@@ -295,6 +295,9 @@ const Container = styled.div`
   & > :first-child {
     margin-bottom: 30px;
   }
+  div {
+    font-weight: 600;
+  }
   input {
     /* border-color: #36513d !important; */
     padding: 5px;
@@ -350,7 +353,7 @@ const CloseBtn = styled.div`
 `;
 const Title = styled.div`
   font-family: SUITE-Regular;
-  font-weight: 500;
+  font-weight: 900;
   font-size: 24px;
 `;
 const DateBox = styled.div`

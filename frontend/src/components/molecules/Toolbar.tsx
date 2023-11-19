@@ -59,10 +59,10 @@ const Container = styled.div`
   justify-content: space-between;
   text-align: center;
   font-family:SUITE-Regular;
-  font-weight: 400;
+  font-weight: 900;
   button{
     font-family:SUITE-Regular;
-    font-weight: 100;
+    font-weight: 900;
     border-radius: 5px;
     border: 2px solid #EBEBF0;
     background: #FFF;
