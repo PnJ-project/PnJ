@@ -195,14 +195,14 @@ export default function DemoCalendar() {
             {/* 3. 등록버튼 */}
             <div>
               {!isFlaskSend ? (
-                <button
+                <div
                   className={`submitBtn ${
                     tutorialIndex == 4 && "TutorialSelect"
                   }`}
                   onClick={handleSubmit}
                 >
                   등록
-                </button>
+                </div>
               ) : (
                 <LoadingBtn />
               )}

@@ -186,7 +186,7 @@
   border: 1px solid white;
   color: rgb(56, 56, 56);
   text-align: center;
-  width: 40px;
+  width: 26px !important;
   font-size: 14px;
   align-items: center;
   justify-content: center;
@@ -194,9 +194,9 @@
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 .submitBtn:hover {
-  background-color: rgb(203, 255, 213);
+  /* background-color: rgb(203, 255, 213); */
   /* color: white; */
-  border-color: rgb(203, 255, 213);
+  /* border-color: rgb(203, 255, 213); */
 }
 
 .icon-listening {
