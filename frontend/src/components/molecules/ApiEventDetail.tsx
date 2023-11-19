@@ -59,9 +59,9 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       setShowEDate(lastEDate);
     }
     if (!allDay && sDate === showEDate) {
-      setEDate(showEDate)
+      setEDate(showEDate);
     }
-  },[sDate, eDate,allDay])
+  }, [sDate, eDate, allDay]);
 
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -89,7 +89,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       colorId: colorId,
       allDay: allDay,
       memo: memo,
-      resource: { event: { id: id, memo: memo,colorId: colorId } },
+      resource: { event: { id: id, memo: memo, colorId: colorId } },
     };
     // 일정수정 (개발자용)
     dispatch(updateEvent(updateItem));
@@ -142,7 +142,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     await setAuthorizationHeaderInter();
     try {
       const res = await axiosInstance.delete(
-        `${local_back_url}/api/calendar/v2/${memberId}/${id}`
+        `${local_back_url}/api/calendar/v2/${id}`
       );
       // 이벤트 다시 불러오기
       console.log("캘린더 api 삭제 완료", res);
@@ -152,17 +152,17 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     }
   };
   // 색깔 정하기
-  const colorMap:{[key: number]: string} = {
-    1: '#fe4d00',
-    2: '#fa92a3',
-    3: '#fe9e14',
-    4: '#fed136',
-    5: '#d6d755',
-    6: '#a1c7a5',
-    7: '#01b391',
-    8: '#41a8f5',
-    9: '#7ea0c3',
-    10: '#ba7fd1',
+  const colorMap: { [key: number]: string } = {
+    1: "#fe4d00",
+    2: "#fa92a3",
+    3: "#fe9e14",
+    4: "#fed136",
+    5: "#d6d755",
+    6: "#a1c7a5",
+    7: "#01b391",
+    8: "#41a8f5",
+    9: "#7ea0c3",
+    10: "#ba7fd1",
   };
   const handleBoxClick = (key: string) => {
     console.log(key);
@@ -242,7 +242,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
               id="allDay"
               checked={allDay}
               onChange={(e) => {
-                setAllDay(e.target.checked)
+                setAllDay(e.target.checked);
               }}
               // disabled={sDate !== eDate}
             />

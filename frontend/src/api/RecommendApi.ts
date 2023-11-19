@@ -11,14 +11,10 @@ interface RecommendRequest {
 }
 
 // J솔루션 리스트 불러오기
-export const readRecommend = async ({
-  memberId,
-  timeMax,
-  timeMin,
-}: RecommendRequest) => {
+export const readRecommend = async ({ timeMax, timeMin }: RecommendRequest) => {
   await setAuthorizationHeaderInter();
   const response = await axiosInstance.get(
-    `${local_back_url}/api/suggestion/${memberId}/${timeMax}/${timeMin}`
+    `${local_back_url}/api/suggestion/${timeMax}/${timeMin}`
   );
   return response.data;
 };

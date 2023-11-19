@@ -103,12 +103,12 @@ export default function TodoList() {
     await setAuthorizationHeaderInter();
     try {
       const res = await axiosInstance.delete(
-        `${local_back_url}/api/todo/${memberId}/${id}`
+        `${local_back_url}/api/todo/${id}`
       );
       // 투두 다시 불러오기
       console.log(
         "투두 삭제 API 완료",
-        `${local_back_url}/api/todo/${memberId}/${id}`,
+        `${local_back_url}/api/todo/${id}`,
         res
       );
       await refetchTodo();
