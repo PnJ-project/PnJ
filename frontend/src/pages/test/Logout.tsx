@@ -1,5 +1,6 @@
 import GoogleLogout from "../..//components/atoms/GoogleLogout";
 import { useEffect } from "react";
+import LoadingBtn from "../../components/atoms/LoadingBtn";
 
 // import React from 'react';
 export default function Logout() {
@@ -8,6 +9,7 @@ export default function Logout() {
     <>
       <h1>login</h1>
       <GoogleLogout />
+      <LoadingBtn />
     </>
   );
 }

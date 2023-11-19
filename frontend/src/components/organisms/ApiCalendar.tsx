@@ -22,6 +22,7 @@ import "./DemoCalendar.css";
 //stt
 import { useSpeechRecognition } from "react-speech-kit";
 import { setAuthorizationHeaderInter } from "../../functions/BaseFunc";
+import LoadingBtn from "../atoms/LoadingBtn";
 
 // 타입 선언
 export interface FlaskResType {
@@ -44,6 +45,7 @@ export default function DemoCalendar() {
   // 기본 세팅
   const dispatch = useDispatch();
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
+  const [isFlaskSend, setIsFlaskSend] = useState(false);
   const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
   const startOfFiveMonthsAgo = moment()
     .subtract(6, "months")
@@ -89,6 +91,7 @@ export default function DemoCalendar() {
       return;
     }
     // 모달창 오픈
+    setIsFlaskSend(true);
     dispatch(openDemoModal());
     // 플라스크 api 연결
     const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
@@ -111,6 +114,7 @@ export default function DemoCalendar() {
     } catch (error) {
       console.error("Error flask data:", error);
     }
+    setIsFlaskSend(false);
   };
 
   // 인풋 필드에서 엔터 키 입력 시 제출
@@ -157,9 +161,14 @@ export default function DemoCalendar() {
               />
             </div>
             {/* 3. 등록버튼 */}
-            <button className="submitBtn" onClick={handleSubmit}>
-              등록
-            </button>
+            {!isFlaskSend ? (
+              <button className="submitBtn" onClick={handleSubmit}>
+                등록
+              </button>
+            ) : (
+              <LoadingBtn />
+            )}
+
             {/* 4. 음성녹음 버튼 */}
             <IoMicCircle
               onClick={toggleListening}
