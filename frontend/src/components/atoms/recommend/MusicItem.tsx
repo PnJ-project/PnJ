@@ -39,18 +39,19 @@ export default function MusicItem({ item }: { item: TripItemType }) {
       summary: item.title,
       colorId: null,
       start: {
-        dateTime: moment(item.openDate).toDate().toISOString(),
+        dateTime: moment(item.openDate, "YYYY.MM.DD").toDate().toISOString(),
         timeZone: "Asia/Seoul",
         date: null,
       },
       end: {
-        dateTime: moment(item.finalDate).toDate().toISOString(),
+        dateTime: moment(item.finalDate, "YYYY.MM.DD").toDate().toISOString(),
         timeZone: "Asia/Seoul",
         date: null,
       },
     },
   };
   const recommendCalendar = async () => {
+    console.log(reqNewEvent);
     await setAuthorizationHeaderInter();
     try {
       const response = await axiosInstance.post(

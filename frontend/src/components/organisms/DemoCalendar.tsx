@@ -24,8 +24,7 @@ import "./DemoCalendar.css";
 //stt
 import { useSpeechRecognition } from "react-speech-kit";
 import { selectIsTutorial, setTutorialStart } from "../../store/slice/Tutorial";
-import { AiFillQuestionCircle } from "react-icons/ai";
-import About from "../../pages/service/About";
+import ServiceInfoBtn from "../molecules/ServiceInfoBtn";
 
 // 타입 선언
 export interface FlaskResType {
@@ -64,15 +63,6 @@ export default function DemoCalendar() {
   ); // 튜토리얼 인덱스
   // 쿼리 세팅
   const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
-  const [showServiceIntro, setShowServiceIntro] = useState(false); // 서비스 소개
-
-  const handleMouseEnter = () => {
-    setShowServiceIntro(true);
-  };
-
-  const handleMouseLeave = () => {
-    setShowServiceIntro(false);
-  };
 
   // 붙여넣기
   const handlePaste = () => {
@@ -105,7 +95,6 @@ export default function DemoCalendar() {
     // 플라스크 api 연결
     const formData = new FormData();
     formData.append("input", textSave);
-    // formData.append("input", textSave);
     try {
       const response = await axios.post(`${flask}/trans/date`, formData);
       // 전달 데이터
@@ -183,7 +172,9 @@ export default function DemoCalendar() {
         {/* Nav Bar */}
         <div className="DemoNavbar">
           <div className="InputContaier">
+            {/* 1. 로고 */}
             <PnjLogo />
+            {/* 2. 인풋박스 */}
             <div
               className={`PnjInput ${
                 isTutorial && tutorialIndex == 1 && "TutorialSelect"
@@ -197,21 +188,29 @@ export default function DemoCalendar() {
                 value={textSave}
               />
             </div>
+            {/* 3. 등록버튼 */}
+            <div>
+              <div
+                className={`submitBtn ${
+                  tutorialIndex == 4 && "TutorialSelect"
+                }`}
+                onClick={handleSubmit}
+              >
+                등록
+              </div>
+              {tutorialIndex == 4 && <DemoTutorialBox />}
+            </div>
+            {/* 4. 음성녹음 버튼 */}
             <div className={` ${tutorialIndex == 2 && "TutorialSelect"}`}>
               {isTutorial && tutorialIndex == 1 && <DemoTutorialBox />}
               <IoMicCircle
-                style={{
-                  verticalAlign: "middle",
-                  fontSize: "35px",
-                  cursor: "pointer",
-                  color: "white",
-                }}
                 onClick={toggleListening}
-                className={`${isListening ? "icon-listening" : ""} `}
+                className={`SoundIcon ${isListening ? "icon-listening" : ""} `}
               />
               {tutorialIndex == 2 && <DemoTutorialBox />}
               {tutorialIndex == 3 && <DemoTutorialBox />}
             </div>
+            {/* 5. 붙여넣기 버튼 */}
             <div
               className={`pasteImgBox ${
                 tutorialIndex == 3 && "TutorialSelect"
@@ -219,45 +218,22 @@ export default function DemoCalendar() {
             >
               <img src={Paste} className={`pasteImg`} onClick={handlePaste} />
             </div>
-            <div>
-              <button
-                className={`submitBtn ${
-                  tutorialIndex == 4 && "TutorialSelect"
-                }`}
-                onClick={handleSubmit}
-              >
-                등록
-              </button>
-              {tutorialIndex == 4 && <DemoTutorialBox />}
-            </div>
+            {/* etc. 무료이용 */}
             <div className="FreeTxt">
-              <div className="LimitTxt">횟수제한 : </div>
+              <div className="LimitTxt">횟수제한 &nbsp;: &nbsp;</div>
               <div className={`LimitTxt ${freetime === 0 ? "NotFree" : ""}`}>
                 {freetime}
               </div>
             </div>
           </div>
+          {/* 우측 버튼 */}
           <div className={`NavGoogleBtn`}>
             <div className={`${tutorialIndex == 7 && "TutorialSelect"}`}>
               <GoogleLogin />
               {tutorialIndex == 7 && <DemoTutorialBox />}
             </div>
             {/* 서비스 소개 */}
-            <div
-              className="ServiceIntro"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              style={{ verticalAlign: "middle", fontSize: "30px" }}
-            >
-              <AiFillQuestionCircle />
-              {showServiceIntro && (
-                <div className="ServiceIntroTooltip">
-                  <div className="ServiceIntroContent">
-                    <About />
-                  </div>
-                </div>
-              )}
-            </div>
+            <ServiceInfoBtn />
           </div>
         </div>
         {/* Body */}
@@ -267,7 +243,6 @@ export default function DemoCalendar() {
             <div className="SmallCalendar">
               <SmallCal />
             </div>
-            {tutorialIndex == 5 && <DemoTutorialBox />}
             <div
               className={`Todo-Container ${
                 tutorialIndex == 6 && "TutorialSelect"
@@ -275,17 +250,18 @@ export default function DemoCalendar() {
               draggable="true"
             >
               <TodoList />
+              {tutorialIndex == 6 && <DemoTutorialBox />}
             </div>
           </div>
           {/* 오른쪽 사이드 - 큰 캘린더 */}
           <div className="RightSideContainer">
+            {tutorialIndex == 5 && <DemoTutorialBox />}
             <div
               className={`Calendar ${tutorialIndex == 5 && "TutorialSelect"}`}
             >
               <BigCalendar />
             </div>
           </div>
-          {tutorialIndex == 6 && <DemoTutorialBox />}
         </div>
       </div>
       {/* 기타 */}

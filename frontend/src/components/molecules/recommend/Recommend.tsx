@@ -1,10 +1,10 @@
-import React from 'react';
-import { useMemo } from 'react';
-import styled from 'styled-components';
-import Slider, { Settings } from 'react-slick';
+import React from "react";
+import { useMemo } from "react";
+import styled from "styled-components";
+import Slider, { Settings } from "react-slick";
 
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const SlideWrapper = styled.section`
   position: relative;
@@ -30,40 +30,37 @@ function Recommend({
   speed = 300,
   loop = true,
 }: sliderProps) {
-  const settings = useMemo<Settings>(
-    () => {
-      const totalSlides = React.Children.count(children);
-      const visibleSlides = Math.min(totalSlides, 6); // 최대 6개까지 보여주도록
-      const slidesToScroll = Math.min(visibleSlides, 3); // 스크롤할 때 몇 개씩 넘길지
+  const settings = useMemo<Settings>(() => {
+    const totalSlides = React.Children.count(children);
+    const visibleSlides = Math.min(totalSlides, 6); // 최대 6개까지 보여주도록
+    const slidesToScroll = Math.min(visibleSlides, 3); // 스크롤할 때 몇 개씩 넘길지
 
-      return {
-        dots: true,
-        infinite: loop,
-        speed: speed,
-        slidesToShow: visibleSlides,
-        slidesToScroll: slidesToScroll,
-        autoplay: Boolean(autoplay),
-        autoplaySpeed: typeof autoplay === 'boolean' ? 3000 : autoplay,
-        responsive: [
-          {
-            breakpoint: 1024,
-            settings: {
-              slidesToShow: Math.min(visibleSlides, 4),
-              slidesToScroll: Math.min(visibleSlides, 2),
-            },
+    return {
+      dots: true,
+      infinite: loop,
+      speed: speed,
+      slidesToShow: visibleSlides,
+      slidesToScroll: slidesToScroll,
+      autoplay: Boolean(autoplay),
+      autoplaySpeed: typeof autoplay === "boolean" ? 3000 : autoplay,
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: Math.min(visibleSlides, 4),
+            slidesToScroll: Math.min(visibleSlides, 2),
           },
-          {
-            breakpoint: 768,
-            settings: {
-              slidesToShow: Math.min(visibleSlides, 1),
-              slidesToScroll: Math.min(visibleSlides, 1),
-            },
+        },
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: Math.min(visibleSlides, 1),
+            slidesToScroll: Math.min(visibleSlides, 1),
           },
-        ],
-      };
-    },
-    [autoplay, loop, speed, children],
-  );
+        },
+      ],
+    };
+  }, [autoplay, loop, speed, children]);
 
   return (
     <SlideWrapper className={className}>
@@ -73,10 +70,8 @@ function Recommend({
 }
 
 const StyledSlider = styled(Slider)`
-
   .slick-prev {
     left: -30px;
-   
   }
 
   .slick-next {
@@ -91,7 +86,6 @@ const StyledSlider = styled(Slider)`
   .slick-dots {
     bottom: -40px;
     /* margin-bottom: 20px; */
-
   }
 `;
 

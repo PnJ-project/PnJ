@@ -5,7 +5,7 @@ export default function TeamBtn() {
   return (
     <>
       <button
-        className="googleLogin"
+        className="googleLogin marginBtn"
         onClick={() => {
           navigate("/team");
         }}
