@@ -25,6 +25,7 @@ import "./DemoCalendar.css";
 import { useSpeechRecognition } from "react-speech-kit";
 import { selectIsTutorial, setTutorialStart } from "../../store/slice/Tutorial";
 import ServiceInfoBtn from "../molecules/ServiceInfoBtn";
+import styled from "styled-components";
 
 // 타입 선언
 export interface FlaskResType {
@@ -166,7 +167,7 @@ export default function DemoCalendar() {
   }, []);
 
   return (
-    <>
+    <Container>
       {/* 본내용 */}
       <div className="MainContainer">
         {/* Nav Bar */}
@@ -267,6 +268,10 @@ export default function DemoCalendar() {
       {isDemoOpen && <DemoMadal before={textSave} after={afterFlask} />}
       {/* 튜토리얼 */}
       {useDemoVisible && tutorialIndex < 8 && <DemoTutorial />}
-    </>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  width: 100%;
+`

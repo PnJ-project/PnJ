@@ -59,7 +59,7 @@ const Container = styled.div`
   justify-content: space-between;
   text-align: center;
   font-family:insungitCutelivelyjisu;
-  font-weight: 600;
+  font-weight: 400;
   button{
     font-family:insungitCutelivelyjisu;
     font-weight: 100;

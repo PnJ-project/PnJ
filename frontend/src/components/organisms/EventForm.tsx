@@ -112,7 +112,6 @@ const EventForm: React.FC = () => {
       <Container>
         <Header>
           <Title>일정 추가하기</Title>
-<<<<<<< HEAD
           <CloseBtn onClick={() => {dispatch(closeModal())}}>✖</CloseBtn>
         </Header>
         <ColorBox>
@@ -128,31 +127,6 @@ const EventForm: React.FC = () => {
           />
         ))}
         </ColorBox>
-=======
-          <CloseBtn
-            onClick={() => {
-              dispatch(closeModal());
-            }}
-          >
-            ✖
-          </CloseBtn>
-        </Header>
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {Object.entries(colorMap).map(([key, color]) => (
-            <div
-              key={key}
-              style={{
-                width: "30px",
-                height: "30px",
-                margin: "2px",
-                backgroundColor: color,
-                border: colorId === Number(key) ? "2px solid #000" : "none",
-              }}
-              onClick={() => handleBoxClick(key)}
-            />
-          ))}
-        </div>
->>>>>>> fafd7209d965bdba994b670c0b6a200d49fb30ca
         <DateBox>
           <div>날짜</div>
           <SelectDate>
@@ -338,7 +312,6 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 10px;
-<<<<<<< HEAD
   `
 const ColorBox = styled.div`
   height: 38px;
@@ -361,13 +334,12 @@ const ColorDiv = styled.div`
   }
 `;
 
-=======
-`;
->>>>>>> fafd7209d965bdba994b670c0b6a200d49fb30ca
 const CloseBtn = styled.div`
   cursor: pointer;
 `;
 const Title = styled.div`
+  font-family: insungitCutelivelyjisu;
+  font-weight: 500;
   font-size: 24px;
 `;
 const DateBox = styled.div`
