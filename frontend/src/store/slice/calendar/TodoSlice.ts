@@ -33,19 +33,29 @@ const todoSlice = createSlice({
       }
     },
     removeTodoRedux: (state, action: PayloadAction<number>) => {
-      console.log('payload', action.payload, state.todos)
+      console.log("투두 리덕스 삭제", action.payload, state.todos);
       state.todos = state.todos.filter((todo) => todo.id !== action.payload);
     },
     setTodosRedux: (state, action: PayloadAction<TodoItem[]>) => {
       state.todos = action.payload;
     },
-    setDraggedTodo: (state, action: PayloadAction<{ id: number; summary: string } | null>) => {
+    setDraggedTodo: (
+      state,
+      action: PayloadAction<{ id: number; summary: string } | null>
+    ) => {
       state.draggedTodo = action.payload;
     },
   },
 });
 
-export const { addTodoRedux, updateTodoRedux, removeTodoRedux, setTodosRedux,setDraggedTodo } = todoSlice.actions;
+export const {
+  addTodoRedux,
+  updateTodoRedux,
+  removeTodoRedux,
+  setTodosRedux,
+  setDraggedTodo,
+} = todoSlice.actions;
 export default todoSlice.reducer;
 export const TodoItems = (state: { todo: TodoState }) => state.todo.todos;
-export const selectDraggedTodo = (state: { todo: TodoState }) => state.todo.draggedTodo;
+export const selectDraggedTodo = (state: { todo: TodoState }) =>
+  state.todo.draggedTodo;

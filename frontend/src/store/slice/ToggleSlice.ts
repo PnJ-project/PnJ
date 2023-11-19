@@ -4,11 +4,13 @@ import { createSlice } from "@reduxjs/toolkit";
 interface ToggleState {
   isUseDemo: boolean;
   isFlashModal: boolean;
+  isRecommend: boolean;
 }
 
 const initialState: ToggleState = {
   isUseDemo: false,
   isFlashModal: false,
+  isRecommend: false,
 };
 
 const toggleSlice = createSlice({
@@ -27,6 +29,12 @@ const toggleSlice = createSlice({
     setFlashModalFalse: (state) => {
       state.isFlashModal = false;
     },
+    setRecommendTrue: (state) => {
+      state.isRecommend = true;
+    },
+    setRecommendFalse: (state) => {
+      state.isRecommend = false;
+    },
   },
 });
 
@@ -35,7 +43,11 @@ export const {
   setDemoFalse,
   setFlashModalTrue,
   setFlashModalFalse,
+  setRecommendTrue,
+  setRecommendFalse,
 } = toggleSlice.actions;
 export const selectIsDemo = (state: { toggle: ToggleState }) =>
   state.toggle.isUseDemo;
+export const selectIsRecommend = (state: { toggle: ToggleState }) =>
+  state.toggle.isRecommend;
 export default toggleSlice.reducer;

@@ -20,9 +20,13 @@ import {
   updateEvent,
   addEvent,
 } from "../../store/slice/calendar/CalendarSlice";
-import { change, handleDate, selectRangeDate } from "../../store/slice/calendar/HandleSlice";
-import Modal from "../organisms/EventForm";
-import DetailModal from "../organisms/EventDetail";
+import {
+  change,
+  handleDate,
+  selectRangeDate,
+} from "../../store/slice/calendar/HandleSlice";
+import Modal from "../../components/organisms/EventForm";
+import DetailModal from "../../components/organisms/EventDetail";
 import withDragAndDrop, {
   EventInteractionArgs,
 } from "react-big-calendar/lib/addons/dragAndDrop";
@@ -71,20 +75,20 @@ const BigCalendarInfo = () => {
 
   // 요일,날짜 Toolbar 변경
   const formats = {
-    dateFormat: 'D',
-    dayFormat: 'D일',
+    dateFormat: "D",
+    dayFormat: "D일",
     dayRangeHeaderFormat: ({ start, end }: { start: Date; end: Date }) => {
-      const startDate = moment(start).format('M월 D일');
-      const endDate = moment(end).format('M월 D일');
+      const startDate = moment(start).format("M월 D일");
+      const endDate = moment(end).format("M월 D일");
       return `${startDate} - ${endDate}`;
     },
     // view가 month일 때 화살표 있는 쪽 년월
-    monthHeaderFormat: 'YYYY년 M월',
+    monthHeaderFormat: "YYYY년 M월",
     //view가 day일 때
-    dayHeaderFormat: 'M월 D일 ddd',
+    dayHeaderFormat: "M월 D일 ddd",
     dayRangeFormat: ({ start, end }: { start: Date; end: Date }) => {
-      const startDate = moment(start).format('M월 D일');
-      const endDate = moment(end).format('M월 D일');
+      const startDate = moment(start).format("M월 D일");
+      const endDate = moment(end).format("M월 D일");
       return `${startDate} - ${endDate}`;
     },
   };
@@ -116,13 +120,13 @@ const BigCalendarInfo = () => {
   // 이벤트 추가 모달 켜기
   const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
     dispatch(openModal());
-    
+
     const reduxselectRangeDate = {
-      rangeStart:formatDateTime(start),
-      rangeEnd:formatDateTime(end),
-    }
-    console.log(reduxselectRangeDate,'reduxselectRangeDate')
-    dispatch(selectRangeDate(reduxselectRangeDate))
+      rangeStart: formatDateTime(start),
+      rangeEnd: formatDateTime(end),
+    };
+    console.log(reduxselectRangeDate, "reduxselectRangeDate");
+    dispatch(selectRangeDate(reduxselectRangeDate));
   };
 
   // 이벤트 리사이즈 기능
@@ -162,7 +166,7 @@ const BigCalendarInfo = () => {
 
   // 클릭한 날짜의 정보를 받아옴
   const handleDateChange = (date: Date) => {
-    console.log('클릭한 날짜의 정보를 받아옴',date);
+    console.log("클릭한 날짜의 정보", date);
     const formDate = formatDateTime(date);
     dispatch(change(formDate));
   };
@@ -291,7 +295,7 @@ const BigCalendarInfo = () => {
           formats={formats}
         />
       </div>
-      {isOpen && <Modal/>}
+      {isOpen && <Modal />}
       {isSideOpen && <DetailModal id={detailEvent} />}
     </Container>
   );

@@ -1,5 +1,6 @@
 // 메인 기능 캘린더 컴포넌트
 import moment from "moment";
+import axiosInstance from "../../functions/AxiosInstance";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useDispatch } from "react-redux";
@@ -7,21 +8,20 @@ import { readCalendar } from "../../api/CalendarApi";
 import { readTodo } from "../../api/TodoApi";
 import TextareaAutosize from "react-textarea-autosize";
 import PnjLogo from "../atoms/PnjLogo";
-import TeamBtn from "../atoms/TeamBtn";
+// import TeamBtn from "../atoms/TeamBtn";
 import GoogleLogin from "../atoms/GoogleLogin";
 import TodoList from "../molecules/todo/ApiTodoList";
 import SmallCal from "../../pages/test/SmallCal";
+import ServiceInfoBtn from "../molecules/ServiceInfoBtn";
 import BigCalendar from "../molecules/ApiBigCalendar";
+import { setRecommendTrue } from "../../store/slice/ToggleSlice";
 import { openDemoModal } from "../../store/slice/calendar/ModalSlice";
 import Paste from "/image/paste.svg";
 import { IoMicCircle } from "react-icons/io5";
 import "./DemoCalendar.css";
 //stt
 import { useSpeechRecognition } from "react-speech-kit";
-import { AiFillQuestionCircle } from "react-icons/ai";
-import About from "../../pages/service/About";
 import { setAuthorizationHeaderInter } from "../../functions/BaseFunc";
-import axiosInstance from "../../functions/AxiosInstance";
 
 // 타입 선언
 export interface FlaskResType {
@@ -58,15 +58,7 @@ export default function DemoCalendar() {
     .toISOString(); // 5개월 후
   const [timeMax] = useState(startOfFiveMonthsAgo);
   const [timeMin] = useState(endOfFiveMonthsAhead);
-  const [showServiceIntro, setShowServiceIntro] = useState(false); // 서비스 소개
 
-  const handleMouseEnter = () => {
-    setShowServiceIntro(true);
-  };
-
-  const handleMouseLeave = () => {
-    setShowServiceIntro(false);
-  };
   const { refetch: refetchCal } = useQuery(
     "calendarData",
     () => readCalendar(timeMax, timeMin),
@@ -113,12 +105,12 @@ export default function DemoCalendar() {
       // 데이터 리패치
       await refetchTodo();
       await refetchCal();
+      // 인풋 필드 리셋
+      setTextSave("");
       return response;
     } catch (error) {
       console.error("Error flask data:", error);
     }
-    // 인풋 필드 리셋
-    setTextSave("");
   };
 
   // 인풋 필드에서 엔터 키 입력 시 제출
@@ -152,7 +144,9 @@ export default function DemoCalendar() {
         {/* Nav Bar */}
         <div className="DemoNavbar">
           <div className="InputContaier">
+            {/* 1. 로고 */}
             <PnjLogo />
+            {/* 2. 인풋박스 */}
             <div className="PnjInput">
               <TextareaAutosize
                 className={`PnjInputInner`}
@@ -162,40 +156,32 @@ export default function DemoCalendar() {
                 value={textSave}
               />
             </div>
-            <IoMicCircle
-              style={{
-                verticalAlign: "middle",
-                fontSize: "35px",
-                cursor: "pointer",
-                color: "white",
-              }}
-              onClick={toggleListening}
-              className={isListening ? "icon-listening" : ""}
-            />
-            <img src={Paste} className="pasteImg" onClick={handlePaste} />
+            {/* 3. 등록버튼 */}
             <button className="submitBtn" onClick={handleSubmit}>
               등록
             </button>
+            {/* 4. 음성녹음 버튼 */}
+            <IoMicCircle
+              onClick={toggleListening}
+              className={`SoundIcon ${isListening ? "icon-listening" : ""}`}
+            />
+            {/* 5. 붙여넣기 버튼 */}
+            <img src={Paste} className="pasteImg" onClick={handlePaste} />
           </div>
+          {/* 우측 버튼 */}
           <div className="NavGoogleBtn">
-            <TeamBtn />
+            <button
+              className="googleLogin marginBtn"
+              onClick={() => {
+                dispatch(setRecommendTrue());
+              }}
+            >
+              추천받기
+            </button>
+            {/* <TeamBtn /> */}
             <GoogleLogin />
             {/* 서비스 소개 */}
-            <div
-              className="ServiceIntro"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              style={{ verticalAlign: "middle", fontSize: "30px" }}
-            >
-              <AiFillQuestionCircle />
-              {showServiceIntro && (
-                <div className="ServiceIntroTooltip">
-                  <div className="ServiceIntroContent">
-                    <About />
-                  </div>
-                </div>
-              )}
-            </div>
+            <ServiceInfoBtn />
           </div>
         </div>
         {/* Body */}

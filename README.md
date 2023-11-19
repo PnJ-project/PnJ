@@ -33,17 +33,19 @@
 ### 서비스 화면
 
 **초기 화면**
-![image-1.png](./image-1.png)
+![image-1.png](./images/image-1.png)
 
 **기능 안내 튜토리얼**
-![image-2.png](./image-2.png)
+![image-2.png](./images/image-2.png)
 
 **메인 캘린더**
-![image.png](./image.png)
+![image.png](./images/image.png)
 
 **일정 기반 정보 추천 - 리스트**
+![추천 갤러리.gif](./images/gif-2.gif)
 
 **일정 기반 정보 추천 - 갤러리**
+![추천 카테고리.gif](./images/gif-1.gif)
 
 ## 📋기술 스택
 

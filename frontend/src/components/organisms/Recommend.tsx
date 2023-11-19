@@ -14,7 +14,7 @@ import Study from "../molecules/recommend/Study";
 import Trip from "../molecules/recommend/Trip";
 import Eat from "../molecules/recommend/Eat";
 import All from "../molecules/recommend/All";
-import RecommendJ from '/image/RecommendJ.svg';
+import RecommendJ from "/image/RecommendJ.svg";
 import styled from "styled-components";
 import { HiMenu } from "react-icons/hi";
 import { CgMenuGridO } from "react-icons/cg";
@@ -70,7 +70,6 @@ export default function Recommend() {
     refetchRecommend();
   }, [allEvents]);
 
-
   return (
     <>
       {/* 기능 */}
@@ -78,26 +77,26 @@ export default function Recommend() {
       {/* 본문 */}
       <div className="RecommendContainer">
         <Container>
-        <Box  className="RecommendTitle">당신을 위한 
-        <Img src={RecommendJ} />
-         의 일정 추천을 받아보세요</Box >
-        <div className="RecommendSortBtnBox">
-          <button
-            onClick={() => {
-              setSortCategory(true);
-            }}
-          >
-            <Icon />
-          </button>
-          <button
-            onClick={() => {
-              setSortCategory(false);
-            }}
-          >
-            <Icon1/>
-          </button>
-        </div>
-
+          <Box className="RecommendTitle">
+            당신을 위한
+            <Img src={RecommendJ} />의 일정 추천을 받아보세요
+          </Box>
+          <div className="RecommendSortBtnBox">
+            <button
+              onClick={() => {
+                setSortCategory(true);
+              }}
+            >
+              <Icon />
+            </button>
+            <button
+              onClick={() => {
+                setSortCategory(false);
+              }}
+            >
+              <Icon1 />
+            </button>
+          </div>
         </Container>
         {/* 카테고리 보기 */}
         {sortCategoey && (
@@ -129,31 +128,28 @@ export default function Recommend() {
 }
 
 const Img = styled.img`
-width: 50px;
-height: 50px;
-margin-left: 10px;
-
-`
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
+`;
 const Box = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   font-size: 30px;
-  
-
 `;
 
 const Container = styled.div`
-  background: linear-gradient(to bottom, #f6ffe8, #ffffff);
-width: 100%;
-`
+  /* background: linear-gradient(to bottom, #36513d, #ffffff); */
+  width: 100%;
+`;
 const Icon = styled(HiMenu)`
-  font-size: 45px; 
+  font-size: 45px;
   color: rgba(0, 153, 3, 0.5);
 `;
 
 const Icon1 = styled(CgMenuGridO)`
-  font-size: 45px; 
+  font-size: 45px;
   color: rgba(0, 153, 3, 0.5);
 `;

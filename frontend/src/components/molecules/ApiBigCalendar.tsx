@@ -157,7 +157,7 @@ const BigCalendarInfo = () => {
         );
       }
       // 캘린더 이동 수정 API 요청
-      if ("id" in event && "memo" in event && "colorId" in event ) {
+      if ("id" in event && "memo" in event && "colorId" in event) {
         const new_start = new Date(start);
         const new_end = new Date(end);
         const send_id = event.id;
@@ -340,7 +340,6 @@ const BigCalendarInfo = () => {
         end: new Date(event.end),
       }));
       setFormattedEventsJunha(formattedEvents);
-      console.log(formattedEvents);
     }
   }, [myEvents]);
   // style
@@ -405,34 +404,32 @@ const BigCalendarInfo = () => {
     },
     [draggedTodo, dispatch]
   );
-  
+
   const getEventStyle = (event: BigCalendarEvent) => {
     if ("colorId" in event) {
-      const newColorId = Number(event.colorId)
+      const newColorId = Number(event.colorId);
       const backgroundColor = colorMap[newColorId]; // 기본값 1로 설정
       return {
         style: {
           backgroundColor,
-          borderRadius: '5px',
-          color: 'white',
-          border: '1px solid #ccc',
+          borderRadius: "5px",
+          color: "white",
+          border: "1px solid #ccc",
         },
       };
-    }
-    else {
+    } else {
       const backgroundColor = colorMap[6]; // 기본값 1로 설정
       return {
         style: {
           backgroundColor,
-          borderRadius: '5px',
-          color: 'white',
-          border: '1px solid #ccc',
+          borderRadius: "5px",
+          color: "white",
+          border: "1px solid #ccc",
         },
       };
     }
-  
   };
-  
+
   return (
     <Container>
       <div className="middleArticle">
@@ -485,17 +482,17 @@ const BigCalendarInfo = () => {
 export default BigCalendarInfo;
 
 /** CSS */
-const colorMap:{[key: number]: string} = {
-  1: '#fe4d00',
-  2: '#fa92a3',
-  3: '#fe9e14',
-  4: '#fed136',
-  5: '#d6d755',
-  6: '#a1c7a5',
-  7: '#01b391',
-  8: '#41a8f5',
-  9: '#7ea0c3',
-  10: '#ba7fd1',
+const colorMap: { [key: number]: string } = {
+  1: "#fe4d00",
+  2: "#fa92a3",
+  3: "#fe9e14",
+  4: "#fed136",
+  5: "#d6d755",
+  6: "#a1c7a5",
+  7: "#01b391",
+  8: "#41a8f5",
+  9: "#7ea0c3",
+  10: "#ba7fd1",
 };
 const Container = styled.div`
   display: flex;

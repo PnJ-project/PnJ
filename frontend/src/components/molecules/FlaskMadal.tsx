@@ -17,30 +17,8 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
   const dispatch = useDispatch();
   const [itemIndex, setItemIndex] = useState<number | null>(null);
   const [beforeTxt] = useState(before);
-  const [, setTimeWatch] = useState(100);
-  // const exampledummy = [
-  //   {
-  //     end: { dateTime: "2023-11-15T16:02:11", timeZome: "Asia/Seoul" },
-  //     start: { dateTime: "2023-11-15T15:02:11", timeZome: "Asia/Seoul" },
-  //     summary: "나저녁약속",
-  //   },
-  // ];
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeWatch((prevTime) => prevTime - 1);
-    }, 1000);
-
-    const timeout = setTimeout(() => {
-      dispatch(closeDemoModal());
-    }, 100000);
-
-    return () => {
-      clearInterval(timer);
-      clearTimeout(timeout);
-    };
-  }, [dispatch]);
-
+  // 시작인덱스 설정
   useEffect(() => {
     if (after.length != 0) setItemIndex(0);
   }, [after]);
@@ -66,15 +44,13 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
         <FlaskReturn>
           <Before>
             <InnerTitle>Before</InnerTitle>
-            <InnerTxtBox>
-              <div>
-                {beforeTxt.split("\n").map((line, index) => (
-                  <span key={index}>
-                    {line}
-                    <br />
-                  </span>
-                ))}
-              </div>
+            <InnerTxtBox style={{ justifyContent: "unset" }}>
+              {beforeTxt.split("\n").map((line, index) => (
+                <span key={index}>
+                  {line}
+                  <br />
+                </span>
+              ))}
             </InnerTxtBox>
           </Before>
           <Arrow> ⇀</Arrow>
@@ -240,21 +216,32 @@ const Before = styled.div`
   border-radius: 20px;
   min-height: 300px;
   box-shadow: 1px 1px 4px #878585, -1px -1px 4px #878585;
+  max-height: 400px;
 `;
 const InnerTxtBox = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  /* margin: 20px; */
-  /* padding: 20px; */
-  width: 90%;
-  /* height: 50%; */
-  /* border: 1px solid black; */
+  width: 60%;
   border-radius: 20px;
   /* box-shadow: inset 2px 2px 5px #878585, inset -2px -2px 5px #878585; */
+  font-size: 17px;
   text-align: center;
   margin: auto;
+  height: 70%;
+  overflow: hidden;
+  overflow-wrap: ellipsis;
+
+  span {
+    height: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2px !important;
+    padding: 2px;
+  }
 `;
 const InnerTxt = styled.div`
   margin: 10px;

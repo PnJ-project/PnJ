@@ -6,9 +6,10 @@ from include.dataloader.dataloader import save_item_similarity
 
 
 app = Flask(__name__)
+app.config['CORS_HEADERS'] = 'Content-Type'  # CORS 헤더 설정
 stream = None
 
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
 
 PREFIX = "/trans"
 
