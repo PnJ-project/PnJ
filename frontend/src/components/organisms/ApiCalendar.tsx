@@ -91,7 +91,7 @@ export default function DemoCalendar() {
       return;
     }
     // 모달창 오픈
-    // setIsFlaskSend(true);
+    setIsFlaskSend(true);
     // dispatch(openDemoModal());
     // 플라스크 api 연결
     const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
