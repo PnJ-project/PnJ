@@ -10,7 +10,7 @@ import TodoList from "../molecules/TodoList";
 import DemoMadal from "../molecules/FlaskMadal";
 import DemoTutorial from "../molecules/DemoTutorial";
 import SmallCal from "../../pages/test/SmallCal";
-import BigCalendar from "../../pages/test/BigCalendar";
+import BigCalendar from "../molecules/BigCalendar";
 import { IoMicCircle } from "react-icons/io5";
 import Paste from "/image/paste.svg";
 import {
@@ -25,6 +25,7 @@ import "./DemoCalendar.css";
 import { useSpeechRecognition } from "react-speech-kit";
 import { selectIsTutorial, setTutorialStart } from "../../store/slice/Tutorial";
 import ServiceInfoBtn from "../molecules/ServiceInfoBtn";
+import styled from "styled-components";
 import LoadingBtn from "../atoms/LoadingBtn";
 
 // 타입 선언
@@ -169,7 +170,7 @@ export default function DemoCalendar() {
   }, []);
 
   return (
-    <>
+    <Container>
       {/* 본내용 */}
       <div className="MainContainer">
         {/* Nav Bar */}
@@ -254,7 +255,6 @@ export default function DemoCalendar() {
               className={`Todo-Container ${
                 tutorialIndex == 6 && "TutorialSelect"
               }`}
-              draggable="true"
             >
               <TodoList />
               {tutorialIndex == 6 && <DemoTutorialBox />}
@@ -275,6 +275,10 @@ export default function DemoCalendar() {
       {isDemoOpen && <DemoMadal before={textSave} after={afterFlask} />}
       {/* 튜토리얼 */}
       {useDemoVisible && tutorialIndex < 8 && <DemoTutorial />}
-    </>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  width: 100%;
+`

@@ -50,7 +50,7 @@ function SportRecommend({
 }
 
 const Container = styled.div`
-  width: 80%;
+  width: 100%;
   align-items: center;
 `;
 

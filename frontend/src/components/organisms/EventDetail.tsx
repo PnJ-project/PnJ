@@ -129,29 +129,21 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
       <Container>
         <Header>
           <Title>일정 수정하기</Title>
-          <CloseBtn
-            onClick={() => {
-              dispatch(closeSideModal());
-            }}
-          >
-            ✖
-          </CloseBtn>
+          <CloseBtn onClick={() => {dispatch(closeSideModal())}}>✖</CloseBtn>
         </Header>
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {Object.entries(colorMap).map(([key, color]) => (
-            <div
-              key={key}
-              style={{
-                width: "30px",
-                height: "30px",
-                margin: "2px",
-                backgroundColor: color,
-                border: colorId === Number(key) ? "2px solid #000" : "none",
-              }}
-              onClick={() => handleBoxClick(key)}
-            />
-          ))}
-        </div>
+        <ColorBox>
+        {Object.entries(colorMap).map(([key, color]) => (
+          <ColorDiv
+            key={key}
+            color = {color}
+            style={{
+              width: colorId === Number(key) ? '38px' :'30px',
+              height: colorId === Number(key) ? '38px' :'30px',
+            }}
+            onClick={() => handleBoxClick(key)}
+          />
+        ))}
+        </ColorBox>
         <DateBox>
           <div>날짜</div>
           <SelectDate>
@@ -303,6 +295,9 @@ const Container = styled.div`
   & > :first-child {
     margin-bottom: 30px;
   }
+  div {
+    font-weight: 600;
+  }
   input {
     /* border-color: #36513d !important; */
     padding: 5px;
@@ -332,11 +327,33 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 10px;
+`
+const ColorBox = styled.div`
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px;
+`
+const ColorDiv = styled.div`
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  background-color: ${(props) => props.color};
+  border-radius: 50%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    width: 38px;
+    height: 38px;
+  }
 `;
 const CloseBtn = styled.div`
   cursor: pointer;
 `;
 const Title = styled.div`
+  font-family: SUITE-Regular;
+  font-weight: 900;
   font-size: 24px;
 `;
 const DateBox = styled.div`

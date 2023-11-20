@@ -471,17 +471,6 @@ const BigCalendarInfo = () => {
           // allDay인지에 따라서 style 변경
           // colorId에 따른 색상 변경
           eventPropGetter={(event: BigCalendarEvent) => getEventStyle(event)}
-          // eventPropGetter={(event: BigCalendarEvent) => {
-          //     const backgroundColor = colorMap[event.colorId ? event.colorId: 1]; // 기본값 1로 설정
-          //   return {
-          //     style: {
-          //       backgroundColor,
-          //       borderRadius: '5px', // 예시로 둥근 테두리를 추가할 수 있습니다.
-          //       color: 'white', // 이벤트 텍스트 색상 설정
-          //       border: '1px solid #ccc', // 테두리 설정
-          //     },
-          //   };
-          // }}
           formats={formats}
         />
       </div>
@@ -492,31 +481,39 @@ const BigCalendarInfo = () => {
 };
 export default BigCalendarInfo;
 
-/** CSS */
-const colorMap: { [key: number]: string } = {
-  1: "#fe4d00",
-  2: "#fa92a3",
-  3: "#fe9e14",
-  4: "#fed136",
-  5: "#d6d755",
-  6: "#a1c7a5",
-  7: "#01b391",
-  8: "#41a8f5",
-  9: "#7ea0c3",
-  10: "#ba7fd1",
+const colorMap:{[key: number]: string} = {
+  1: '#fe4d00',
+  2: '#fa92a3',
+  3: '#fe9e14',
+  4: '#fed136',
+  5: '#d6d755',
+  6: '#a1c7a5',
+  7: '#01b391',
+  8: '#41a8f5',
+  9: '#7ea0c3',
+  10: '#ba7fd1',
 };
+/** CSS */
 const Container = styled.div`
   display: flex;
   overflow: hidden;
   height: 100%;
+  //+more라고 보이는 부분
+  .rbc-row-segment{
+    display: flex;
+    text-align: center;
+  }
+  .rbc-show-more {
+    color: black;
+  }
   /* 일정 항목 */
   .rbc-event-content {
+    font-size: 12px;
     margin: auto;
     width: 95%;
-    font-size: 12px;
     font-family: SUITE-Regular;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6),
-      -2px -2px 2px rgba(73, 73, 73, 0.2) !important;
+    text-shadow: 1px 1px 2px rgba(73, 73, 73, 0.6),
+      -1px -1px 1px rgba(73, 73, 73, 0.2) !important;
   }
   // 일(일주일) 전체
   .rbc-date-cell {
@@ -531,7 +528,6 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     .rbc-month-view {
-      margin: auto;
       height: 100%;
       flex: unset;
     }
@@ -539,11 +535,14 @@ const Container = styled.div`
       height: 10%;
       margin-bottom: 0;
     }
+    // 요일 있는 가로 한줄
     .rbc-row.rbc-month-header {
-      height: 8%;
+      height: 7%;
       display: flex;
       align-items: center;
-      border-bottom: 0.1px solid #e6e6e6;
+      font-family:SUITE-Regular;
+      font-size:20px;
+      font-weight: 900;
       .rbc-header {
         border-bottom: none;
       }
@@ -558,9 +557,9 @@ const Container = styled.div`
       align-items: end;
     }
     // 일정 적힌 박스
-
     .rbc-event.rbc-event-allday {
       width: 100%;
+      background-color: #fa92a3;
     }
 
     // 오늘 클릭하면 동그라미 나타나는 거
@@ -568,12 +567,12 @@ const Container = styled.div`
       .rbc-button-link {
         width: 25px;
         border-radius: 50%;
+        /* background-color: rgba(181, 255, 63, 0.8); */
         background-color: rgba(0, 0, 0, 0.5);
         color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: auto;
       }
     }
   }
@@ -581,7 +580,6 @@ const Container = styled.div`
   .rbc-addons-dnd {
     .rbc-addons-dnd-row-body {
       position: relative;
-      margin-top: 10px;
     }
     .rbc-addons-dnd-drag-row {
       position: absolute;
@@ -606,7 +604,7 @@ const Container = styled.div`
     .rbc-event {
       transition: opacity 150ms;
       width: 100%;
-      background-color: ${colorMap[3]};
+      background-color: #fed136;
       &:hover {
         .rbc-addons-dnd-resize-ns-icon,
         .rbc-addons-dnd-resize-ew-icon {

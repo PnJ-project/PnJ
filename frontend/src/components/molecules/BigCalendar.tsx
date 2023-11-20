@@ -31,7 +31,7 @@ import withDragAndDrop, {
   EventInteractionArgs,
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import styled from "styled-components";
-import Toolbar from "../../components/molecules/Toolbar";
+import Toolbar from "./Toolbar";
 
 // Drag and Drop
 // import { useDrop } from 'react-dnd';
@@ -227,7 +227,32 @@ const BigCalendarInfo = () => {
   const handleDragOver = (event: React.DragEvent) => {
     event.preventDefault();
   };
-
+  const getEventStyle = (event: BigCalendarEvent) => {
+    if ("colorId" in event) {
+      const newColorId = Number(event.colorId)
+      const backgroundColor = colorMap[newColorId]; // 기본값 1로 설정
+      return {
+        style: {
+          backgroundColor,
+          borderRadius: '5px',
+          color: 'white',
+          border: '1px solid #ccc',
+        },
+      };
+    }
+    else {
+      const backgroundColor = colorMap[6]; // 기본값 1로 설정
+      return {
+        style: {
+          backgroundColor,
+          borderRadius: '5px',
+          color: 'white',
+          border: '1px solid #ccc',
+        },
+      };
+    }
+  
+  };
   return (
     <Container>
       <div className="middleArticle">
@@ -265,6 +290,8 @@ const BigCalendarInfo = () => {
           components={{
             toolbar: Toolbar,
           }}
+          // colorId에 따른 색상 변경
+          eventPropGetter={(event: BigCalendarEvent) => getEventStyle(event)}
           formats={formats}
         />
       </div>
@@ -274,17 +301,36 @@ const BigCalendarInfo = () => {
   );
 };
 export default BigCalendarInfo;
-
+const colorMap:{[key: number]: string} = {
+  1: '#fe4d00',
+  2: '#fa92a3',
+  3: '#fe9e14',
+  4: '#fed136',
+  5: '#d6d755',
+  6: '#a1c7a5',
+  7: '#01b391',
+  8: '#41a8f5',
+  9: '#7ea0c3',
+  10: '#ba7fd1',
+};
 /** CSS */
 const Container = styled.div`
   display: flex;
   overflow: hidden;
   height: 100%;
+  //+more라고 보이는 부분
+  .rbc-row-segment{
+    display: flex;
+    text-align: center;
+  }
+  .rbc-show-more {
+    color: black;
+  }
   /* 일정 항목 */
   .rbc-event-content {
+    font-size: 12px;
     margin: auto;
     width: 95%;
-    font-size: 10px;
     font-family: SUITE-Regular;
     text-shadow: 1px 1px 2px rgba(73, 73, 73, 0.6),
       -1px -1px 1px rgba(73, 73, 73, 0.2) !important;
@@ -309,10 +355,14 @@ const Container = styled.div`
       height: 10%;
       margin-bottom: 0;
     }
+    // 요일 있는 가로 한줄
     .rbc-row.rbc-month-header {
-      height: 8%;
+      height: 7%;
       display: flex;
       align-items: center;
+      font-family:SUITE-Regular;
+      font-size:20px;
+      font-weight: 900;
       .rbc-header {
         border-bottom: none;
       }
@@ -343,7 +393,6 @@ const Container = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: auto;
       }
     }
   }
@@ -351,7 +400,6 @@ const Container = styled.div`
   .rbc-addons-dnd {
     .rbc-addons-dnd-row-body {
       position: relative;
-      margin-top: 10px;
     }
     .rbc-addons-dnd-drag-row {
       position: absolute;
