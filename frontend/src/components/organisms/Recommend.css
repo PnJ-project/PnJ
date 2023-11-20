@@ -11,7 +11,7 @@
   justify-content: right;
   width: 90%;
   margin: auto;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 .RecommendSortBtnBox button {
   padding: 0px;
@@ -22,7 +22,7 @@
   font-size: 4vw !important;
   margin: 20px;
   margin-top: 150px;
-  margin-bottom: 70px;
+  margin-bottom: 50px;
   font-weight: 900;
   display: flex;
   justify-content: center;

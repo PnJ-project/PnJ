@@ -81,6 +81,6 @@ const BackGround = styled.div`
   z-index: -1;
 `;
 const Middle = styled.div`
-  height: 50vh;
+  height: 0vh;
   background: linear-gradient(to bottom, #36513d, #ffffff);
 `;

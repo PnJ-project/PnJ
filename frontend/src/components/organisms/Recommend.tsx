@@ -79,7 +79,7 @@ export default function Recommend() {
         <Container>
           <Box className="RecommendTitle">
             당신을 위한
-            <Img src={RecommendJ} />의 일정 추천을 받아보세요
+            <Img src={RecommendJ} />의 추천을 받아보세요
           </Box>
           {recommendData && String(recommendData.data) != "" && (
             <div className="RecommendSortBtnBox">

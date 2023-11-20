@@ -57,7 +57,8 @@ export default function Study() {
               <FlexContainer>
                 <Img src={recommendP} />
                 <Name>
-                  {nameToDisplay} <br />- {authorToDisplay} -{" "}
+                  <Maxim>{nameToDisplay}</Maxim>
+                  <Author>- {authorToDisplay} - </Author>
                 </Name>
               </FlexContainer>
             </Container>
@@ -76,20 +77,31 @@ const FlexContainer = styled.div`
 
 const Img = styled.img`
   width: 130px;
-  height: 130px;
+  width: 20%;
+  /* height: 130px; */
   margin-right: 30px;
   margin-bottom: 20px;
   margin-top: 20px;
   margin-left: 20px;
 `;
 
-const Name = styled.p`
+const Name = styled.div`
   font-size: 18px;
-  width: 80%;
-  margin-left: 10px;
+  width: 50%;
+  margin-left: 20px;
+  font-family: Hahmlet-Regular;
 `;
 
 const Container = styled.div`
   background-color: #fff6fd;
   border-radius: 10px;
+`;
+
+const Maxim = styled.div`
+  font-size: 15px;
+`;
+
+const Author = styled.div`
+  font-size: 12px;
+  margin: 10px;
 `;
