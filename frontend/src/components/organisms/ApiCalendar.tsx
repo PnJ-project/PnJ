@@ -15,7 +15,7 @@ import SmallCal from "../../pages/test/SmallCal";
 import ServiceInfoBtn from "../molecules/ServiceInfoBtn";
 import BigCalendar from "../molecules/ApiBigCalendar";
 import { setRecommendTrue } from "../../store/slice/ToggleSlice";
-import { openDemoModal } from "../../store/slice/calendar/ModalSlice";
+// import { openDemoModal } from "../../store/slice/calendar/ModalSlice";
 import Paste from "/image/paste.svg";
 import { IoMicCircle } from "react-icons/io5";
 import "./DemoCalendar.css";
@@ -91,8 +91,8 @@ export default function DemoCalendar() {
       return;
     }
     // 모달창 오픈
-    setIsFlaskSend(true);
-    dispatch(openDemoModal());
+    // setIsFlaskSend(true);
+    // dispatch(openDemoModal());
     // 플라스크 api 연결
     const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
     const memberId = localStorage.getItem("memberId");
