@@ -118,7 +118,7 @@ export default function DemoCalendar() {
         } else {
           // 2. 캘린더
           const newEvent: Event = {
-            id: index,
+            id: Math.floor(Math.random() * 1000000000000000000000000) - 0.01,
             title: dataItem.summary,
             start: dataItem.start.dateTime,
             end: dataItem.end.dateTime,
