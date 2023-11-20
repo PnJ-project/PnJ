@@ -1,120 +1,120 @@
-import React from "react";
+// import React from "react";
 import Recommend from "./Recommend";
 import styled from "styled-components";
 
 export default function Sports() {
   const items = [
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     {
-      league: '프리미어 리그1',
-      awayTeamName: '맨체스터 유나이티드',
-      homeTeamName: '리버풀 FC',
-      gameDate: '2023-12-01 18:30',
-      awayTeamEmblemUrl: '맨체스터 유나이티드 로고 URL',
-      homeTeamEmblemUrl: '리버풀 FC 로고 URL',
+      league: "프리미어 리그1",
+      awayTeamName: "맨체스터 유나이티드",
+      homeTeamName: "리버풀 FC",
+      gameDate: "2023-12-01 18:30",
+      awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
+      homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
     // ... (다른 더미 데이터 항목들)
   ];
@@ -130,7 +130,10 @@ export default function Sports() {
                 {items.map((item, index) => (
                   <SliderItem key={index}>
                     <ImageContainer>
-                      <TeamImage src={item.awayTeamEmblemUrl} alt={item.awayTeamName} />
+                      <TeamImage
+                        src={item.awayTeamEmblemUrl}
+                        alt={item.awayTeamName}
+                      />
                       <DetailContainer>
                         <Name>{item.league}</Name>
                         <Info>
@@ -138,7 +141,10 @@ export default function Sports() {
                         </Info>
                         <When>{item.gameDate}</When>
                       </DetailContainer>
-                      <TeamImage src={item.homeTeamEmblemUrl} alt={item.homeTeamName} />
+                      <TeamImage
+                        src={item.homeTeamEmblemUrl}
+                        alt={item.homeTeamName}
+                      />
                     </ImageContainer>
                   </SliderItem>
                 ))}

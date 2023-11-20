@@ -27,3 +27,11 @@ export const setAuthorizationHeaderInter = () => {
     accessToken as string
   }`;
 };
+
+// 이미지 URL을 HTTPS로 변경하는 함수
+export const convertToHttps = (url: string) => {
+  if (url && url.startsWith("http://")) {
+    return url.replace("http://", "https://");
+  }
+  return url;
+};

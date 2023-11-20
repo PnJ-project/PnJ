@@ -4,7 +4,10 @@ import { useQuery } from "react-query";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
 import { readCalendar } from "../../../api/CalendarApi";
 import moment from "moment";
-import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
+import {
+  convertToHttps,
+  setAuthorizationHeaderInter,
+} from "../../../functions/BaseFunc";
 import axiosInstance from "../../../functions/AxiosInstance";
 
 export default function MusicItem({ item }: { item: TripItemType }) {
@@ -76,7 +79,7 @@ export default function MusicItem({ item }: { item: TripItemType }) {
 
   return (
     <>
-      <img src={item.image}></img>
+      <img src={convertToHttps(item.image)}></img>
       {/* 내용물 */}
       <div className="RecommendItemShow">
         <div className="MusicTitle">{item.title}</div>

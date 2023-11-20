@@ -15,7 +15,10 @@ import moment from "moment";
 import { useQuery } from "react-query";
 import { readCalendar } from "../../../api/CalendarApi";
 import axiosInstance from "../../../functions/AxiosInstance";
-import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
+import {
+  convertToHttps,
+  setAuthorizationHeaderInter,
+} from "../../../functions/BaseFunc";
 
 export default function Music() {
   // 기본 세팅
@@ -155,7 +158,11 @@ export default function Music() {
                       {isClick && isClick.index == index ? "✔" : "캘린더 추가"}
                     </button>
                     <img
-                      src={item.image === "false" ? showimg : item.image}
+                      src={
+                        item.image === "false"
+                          ? showimg
+                          : convertToHttps(item.image)
+                      }
                       alt={item.image === "false" ? showimg : ""}
                     />
                   </div>
