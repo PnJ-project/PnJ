@@ -27,6 +27,7 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
     <Overlay
       onClick={(e) => {
         if (e.target === e.currentTarget) {
+          setItemIndex(null);
           dispatch(closeDemoModal());
         }
       }}
