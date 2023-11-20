@@ -94,7 +94,7 @@ def calcultation_similarity(summary_list):
     # json으로 반환
     original_json = transform_json(life_quotes, top_indices, selected_data, origin_data)
     # 명언의 경우 예외 처리
-    top_indices = [item for item in top_indices if item[0] != 2487]
+    top_indices = [item for item in top_indices if item[0] != 2461]
 
     # 유사한 아이템이 없는 경우
 
