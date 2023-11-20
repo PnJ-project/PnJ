@@ -91,7 +91,7 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
                       <SmallTxt>
                         {after[itemIndex].end.dateTime
                           ? moment(after[itemIndex].end.dateTime).format(
-                              "YYYY-MM-DD hh:mm"
+                              "YYYY-MM-DD"
                             )
                           : "없음"}
                       </SmallTxt>
