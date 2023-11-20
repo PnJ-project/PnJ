@@ -57,7 +57,7 @@ export default function DemoCalendar() {
   const useDemoVisible = useSelector(
     (state: RootState) => state.toggle.isUseDemo
   );
-  const events = useSelector((state: RootState) => state.calendar.events);
+  // const events = useSelector((state: RootState) => state.calendar.events);
   const todoList = useSelector((state: RootState) => state.todo.todos); // 리스트 상태 가져오기
   const flask = import.meta.env.VITE_APP_FLASK_SERVER;
   const isTutorial = useSelector(selectIsTutorial);
@@ -118,7 +118,7 @@ export default function DemoCalendar() {
         } else {
           // 2. 캘린더
           const newEvent: Event = {
-            id: events.length,
+            id: index,
             title: dataItem.summary,
             start: dataItem.start.dateTime,
             end: dataItem.end.dateTime,
@@ -281,4 +281,4 @@ export default function DemoCalendar() {
 
 const Container = styled.div`
   width: 100%;
-`
+`;

@@ -55,7 +55,7 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
           <After>
             <InnerTitle>After</InnerTitle>
             <PageSelect></PageSelect>
-            <InnerTxtBox>
+            <InnerTxtBox2>
               {after && after[0] && itemIndex != null ? (
                 <>
                   <Arrow2
@@ -126,7 +126,7 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
                   <div>변환중 입니다</div>
                 </>
               )}
-            </InnerTxtBox>
+            </InnerTxtBox2>
           </After>
         </FlaskReturn>
         {/* <CloseMent>{timeWatch}초 후 창이 닫힙니다.</CloseMent> */}
@@ -218,6 +218,31 @@ const Before = styled.div`
 const InnerTxtBox = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 60%;
+  border-radius: 20px;
+  /* box-shadow: inset 2px 2px 5px #878585, inset -2px -2px 5px #878585; */
+  font-size: 17px;
+  text-align: center;
+  margin: auto;
+  height: 70%;
+  overflow: hidden;
+  overflow-wrap: ellipsis;
+
+  span {
+    height: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2px !important;
+    padding: 2px;
+  }
+`;
+const InnerTxtBox2 = styled.div`
+  display: flex;
+  flex-direction: row !important;
   align-items: center;
   justify-content: space-around;
   width: 60%;
