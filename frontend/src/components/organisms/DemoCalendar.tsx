@@ -123,6 +123,7 @@ export default function DemoCalendar() {
             start: dataItem.start.dateTime,
             end: dataItem.end.dateTime,
             memo: "",
+            colorId: 6,
           };
           // 일정생성 (개발자용)
           dispatch(addEvent(newEvent));
