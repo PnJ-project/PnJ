@@ -357,11 +357,12 @@ const Container = styled.div`
     }
     // 요일 있는 가로 한줄
     .rbc-row.rbc-month-header {
-      height: 6%;
+      height: 7%;
       display: flex;
       align-items: center;
       font-family:SUITE-Regular;
       font-size:20px;
+      font-weight: 900;
       .rbc-header {
         border-bottom: none;
       }

@@ -45,6 +45,7 @@ const Container = styled.div`
   justify-content: space-between;
   text-align: center;
   font-family: SUITE-Regular;
+  font-weight: 700;
   button {
     font-family: SUITE-Regular;
     padding: 5px;

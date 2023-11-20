@@ -166,7 +166,7 @@ const TextDiv = styled.div`
   color: white;
 `;
 const Title = styled.div`
-  font-family: SUITE-Regular;
+  font-family: TheJamsil5;
   font-size: 40px;
   font-style: normal;
   font-weight: 400;
@@ -189,7 +189,7 @@ const Span = styled.span`
 `;
 const Content = styled.div`
   color: #fbfbfb;
-  font-family: SUITE-Regular;
+  font-family: TheJamsil5;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -202,7 +202,7 @@ const Btns = styled.div`
   gap: 10px;
   border-radius: 4px;
   div {
-    font-family: SUITE-Regular;
+    font-family: TheJamsil5;
   }
 `;
 const DownBtn = styled.div`
