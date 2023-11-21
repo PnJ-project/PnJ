@@ -1,3 +1,4 @@
+// 404 Not Found 페이지입니다
 import errorP from "/image/errorP.svg";
 import styled from "styled-components";
 
@@ -19,6 +20,7 @@ export default function Notfound() {
   );
 }
 
+/** CSS */
 const Container = styled.div`
   display: flex;
   align-items: center;

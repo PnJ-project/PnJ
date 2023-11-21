@@ -1,38 +1,48 @@
-// EventDetail.tsx
+// API캘린더 - 일정 추가하는 모달
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  updateEvent,
-  deleteEvent,
-  selectEvents,
-} from "../../store/slice/calendar/CalendarSlice";
-import { closeSideModal } from "../../store/slice/calendar/ModalSlice";
+  Event,
+  addEvent,
+  apiUpdateEvent,
+} from "../../../store/slice/calendar/CalendarSlice";
+import { closeModal } from "../../../store/slice/calendar/ModalSlice";
+import { RootState } from "../../../store/store";
 import styled, { keyframes } from "styled-components";
-import formatDateTime from "../../functions/BaseFunc";
+import { QueryObserverResult, RefetchOptions } from "react-query";
+import { setSelectDate } from "../../../store/slice/calendar/HandleSlice";
+import formatDateTime, {
+  setAuthorizationHeaderInter,
+} from "../../../functions/BaseFunc";
+import axiosInstance from "../../../functions/AxiosInstance";
 
-// 모달 타입
+// 타입
 interface ModalProps {
-  id: number | string | unknown;
+  refetchCal: <TPageData>(
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<TPageData, unknown>>;
 }
 
-const EventForm: React.FC<ModalProps> = ({ id }) => {
+// 백엔드
+const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
+
+const EventForm: React.FC<ModalProps> = () => {
   // 기본 세팅
   const dispatch = useDispatch();
-  const events = useSelector(selectEvents);
-  const event = events.find((event) => event.id === id);
-  const [title, setTitle] = useState(event?.title);
-  const [memo, setMemo] = useState(event?.memo);
-  const [colorId, setColorId] = useState(event?.colorId);
+  const [memberId] = useState(Number(localStorage.getItem("memberId")));
+  const events = useSelector((state: RootState) => state.calendar.events);
+  const selectedRange = useSelector(setSelectDate);
+  const [title, setTitle] = useState("");
+  const [memo, setMemo] = useState("");
+  const [colorId, setColorId] = useState(6);
   const [errorMsg, setErrorMsg] = useState("");
-  const startDate = event?.start.split("T")[0];
-  const endDate = event?.end.split("T")[0];
-  const [sDate, setSDate] = useState(startDate || "");
-  const [eDate, setEDate] = useState(endDate || "");
-  const starttime = event?.start.split("T")[1]?.substr(0, 5);
-  const endtime = event?.end.split("T")[1]?.substr(0, 5);
+  const starttime = selectedRange.rangeStart.split("T")[1]?.substr(0, 5);
+  const endtime = selectedRange.rangeEnd.split("T")[1]?.substr(0, 5);
   const [sTime, setSTime] = useState(starttime || "00:00");
   const [eTime, setETime] = useState(endtime || "00:00");
-  const [allDay, setAllDay] = useState(event?.allDay);
+  const [sDate, setSDate] = useState(selectedRange.rangeStart.split("T")[0]);
+  const [eDate, setEDate] = useState(selectedRange.rangeEnd.split("T")[0]);
+  const [allDay, setAllDay] = useState(false);
   const [showEDate, setShowEDate] = useState(eDate);
 
   // sDate와 eDate가 다르면 allDay를 체크하도록 설정
@@ -42,64 +52,86 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     }
   }, [sDate, showEDate]);
 
+  // 날짜 데이터 파싱
   useEffect(() => {
     // 하루종일이면 showEDate = eDate - 1
-    if (sDate !== showEDate && allDay && sTime == "00:00" && eTime == "00:00") {
+    if (allDay && sDate !== showEDate) {
       const newEDate = new Date(eDate);
       newEDate.setDate(newEDate.getDate() - 1);
       const lastEDate = formatDateTime(newEDate).split("T")[0];
       setShowEDate(lastEDate);
     }
-    if (!allDay && sDate === showEDate) {
-      setEDate(showEDate);
-    }
-  }, [sDate, eDate, allDay]);
+  }, [allDay]);
 
   // 인풋 필드에서 엔터 키 입력 시 제출
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault(); // 엔터 키의 기본 동작 방지
-      handleUpdateEvent();
+      handleAddEvent();
     }
   };
 
-  // 이벤트 수정
-  const handleUpdateEvent = async () => {
+  // 이벤트 생성
+  const handleAddEvent = async () => {
     // 조건 만족안할시 반환
-    if (!event) {
-      return;
-    }
     if (!title) {
-      setErrorMsg("일정 내용을 입력하세요");
+      setErrorMsg("일정 내용을 입력하세요 !");
       return;
     }
-    const updateItem = {
-      id: id,
+    const tmpId = events.length;
+    const newEvent: Event = {
+      id: events.length,
       title,
       start: sDate + "T" + sTime + ":00",
       end: eDate + "T" + eTime + ":00",
+      memo: memo,
       colorId: colorId,
       allDay: allDay,
-      memo: memo,
-      resource: { event: { id: id, memo: memo, colorId: colorId } },
     };
-    // 일정수정 (개발자용)
-    dispatch(updateEvent(updateItem));
+    // 일정생성 (개발자용)
+    dispatch(addEvent(newEvent));
     // 원복
-    dispatch(closeSideModal());
     setTitle("");
     setMemo("");
-  };
-
-  // 이벤트 삭제
-  const handleDeleteEvent = async () => {
-    // 삭제할거냐는 메세지 띄우기
-    // 일정삭제 (개발자용)
-    if (typeof id == "number") {
-      dispatch(deleteEvent(id));
-      dispatch(closeSideModal());
+    dispatch(closeModal());
+    // 캘린더 생성 API 요청
+    const reqNewEvent = {
+      memberId: memberId,
+      event: {
+        id: null,
+        summary: title,
+        description: memo,
+        colorId: colorId,
+        start: {
+          dateTime: !allDay ? sDate + "T" + sTime + ":00" : null,
+          timeZone: "Asia/Seoul",
+          date: allDay ? sDate : null,
+        },
+        end: {
+          dateTime: !allDay ? eDate + "T" + eTime + ":00" : null,
+          timeZone: "Asia/Seoul",
+          date: allDay ? eDate : null,
+        },
+      },
+    };
+    await setAuthorizationHeaderInter();
+    try {
+      const response = await axiosInstance.post(
+        `${local_back_url}/api/calendar/v2`,
+        reqNewEvent
+      );
+      // 캘린더 다시 불러오기
+      console.log("구글 캘린더 생성 완료", response);
+      const changeId = { ...newEvent };
+      changeId.id = response.data.data.id;
+      await dispatch(apiUpdateEvent({ before: tmpId, after: changeId }));
+    } catch (error) {
+      console.error("구글 캘린더 생성 에러:", error);
+      setErrorMsg("서버와 연결할 수 없습니다. 다시 시도해주세요");
+      return;
     }
   };
+
   // 색깔 정하기
   const colorMap: { [key: number]: string } = {
     1: "#fe4d00",
@@ -113,25 +145,27 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     9: "#7ea0c3",
     10: "#ba7fd1",
   };
+
+  // 일정 색상 지정 규칙
   const handleBoxClick = (key: string) => {
-    console.log(key);
     const numKey = Number(key);
     setColorId(numKey);
   };
+
   return (
     <Overlay
       onClick={(e) => {
         if (e.target === e.currentTarget) {
-          dispatch(closeSideModal());
+          dispatch(closeModal());
         }
       }}
     >
       <Container>
         <Header>
-          <Title>일정 수정하기</Title>
+          <Title>일정 추가하기</Title>
           <CloseBtn
             onClick={() => {
-              dispatch(closeSideModal());
+              dispatch(closeModal());
             }}
           >
             ✖
@@ -187,7 +221,10 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
               type="checkbox"
               id="allDay"
               checked={allDay}
-              onChange={(e) => setAllDay(e.target.checked)}
+              onChange={(e) => {
+                setAllDay(e.target.checked);
+                console.log(allDay);
+              }}
             />
             <label htmlFor="allDay">하루 종일</label>
           </CheckBox>
@@ -254,15 +291,15 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
         </MemoBox>
         <ErrorMsg>{errorMsg}</ErrorMsg>
         <ButtonDiv>
-          <EditButton onClick={handleDeleteEvent}>일정 삭제</EditButton>
-          <DeleteButton onClick={handleUpdateEvent}>일정 변경</DeleteButton>
+          <AddButton onClick={handleAddEvent}>일정 추가</AddButton>
         </ButtonDiv>
       </Container>
     </Overlay>
   );
 };
-
 export default EventForm;
+
+/** CSS */
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -282,6 +319,7 @@ const blink = keyframes`
 const Container = styled.div`
   animation: ${fadeIn} 0.2s ease-in;
   font-family: SUITE-Regular;
+  font-weight: 900;
   position: fixed;
   padding: 20px;
   top: 50%;
@@ -292,7 +330,6 @@ const Container = styled.div`
   gap: 18px;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   background-color: white;
   border-radius: 7px;
   box-shadow: 5px 5px 20px #525252, -5px -5px 20px #525252;
@@ -305,7 +342,6 @@ const Container = styled.div`
     font-weight: 600;
   }
   input {
-    /* border-color: #36513d !important; */
     padding: 5px;
     margin: 0;
     border: 1px solid #9f9a9a;
@@ -334,6 +370,7 @@ const Header = styled.div`
   justify-content: space-between;
   margin: 10px;
 `;
+
 const ColorBox = styled.div`
   height: 38px;
   display: flex;
@@ -353,6 +390,7 @@ const ColorDiv = styled.div`
     width: 38px;
     height: 38px;
   }
+  justify-content: center;
 `;
 const CloseBtn = styled.div`
   cursor: pointer;
@@ -403,7 +441,6 @@ const SelectTime = styled.div`
 const TitleBox = styled.div`
   display: flex;
   gap: 20px;
-  /* justify-content:center; */
   align-items: center;
   input {
     height: 20px;
@@ -441,14 +478,7 @@ const ButtonDiv = styled.div`
   display: flex;
   justify-content: center;
 `;
-const EditButton = styled.button`
-  background-color: #36513d;
-  color: #ffffff;
-  width: 80px;
-  padding: 5px;
-  justify-content: center;
-`;
-const DeleteButton = styled.button`
+const AddButton = styled.button`
   background-color: #36513d;
   color: #ffffff;
   width: 80px;

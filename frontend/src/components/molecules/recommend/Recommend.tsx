@@ -1,15 +1,12 @@
+// (추천 - 카테고리 - 기본) 슬라이더
 import React from "react";
 import { useMemo } from "react";
 import styled from "styled-components";
 import Slider, { Settings } from "react-slick";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const SlideWrapper = styled.section`
-  position: relative;
-`;
-
+// 타입
 interface sliderProps {
   /** 슬라이더 아이템 요소 */
   children: React.ReactNode;
@@ -69,24 +66,25 @@ function Recommend({
   );
 }
 
+/** CSS */
 const StyledSlider = styled(Slider)`
   .slick-prev {
     left: -30px;
   }
-
   .slick-next {
     right: -30px;
   }
-
   .slick-prev:hover,
   .slick-next:hover {
     opacity: 1;
   }
-
   .slick-dots {
     bottom: -40px;
-    /* margin-bottom: 20px; */
   }
+`;
+
+const SlideWrapper = styled.section`
+  position: relative;
 `;
 
 export default Recommend;

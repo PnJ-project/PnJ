@@ -1,10 +1,12 @@
+// 개발자용 페이지 매니저입니다
 import { Link } from "react-router-dom";
 import "./PageManager.css";
 
-function PageManager() {
+export default function PageManager() {
+  // 페이지 정보
   const PM: Record<string, string> = {
+    // 메인 서비스
     Demo: "/demo",
-    // 메인서비스
     Calendar: "/",
     // 기타
     Notfound: "/notexisturl",
@@ -15,6 +17,7 @@ function PageManager() {
     TestManager: "/TM",
   };
 
+  // 페이지 구분
   const sections = {
     Entrance: ["Demo"],
     Calendar: ["Calendar"],
@@ -24,7 +27,6 @@ function PageManager() {
   return (
     <>
       <div className="worksBackBtn">
-        {/* <BackBtn /> */}
         <div className="workTitle">{"PageManager"}</div>
       </div>
       {/* 각 기능 접근 */}
@@ -46,5 +48,3 @@ function PageManager() {
     </>
   );
 }
-
-export default PageManager;

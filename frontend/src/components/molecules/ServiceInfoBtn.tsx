@@ -1,8 +1,8 @@
+// 서비스 소개 hover 창 버튼입니다
 import { useState } from "react";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import About from "../../pages/service/About";
 
-// 서비스 소개 버튼
 export default function ServiceInfoBtn() {
   // 기본세팅
   const [showServiceIntro, setShowServiceIntro] = useState(false); // 서비스 소개
@@ -11,6 +11,7 @@ export default function ServiceInfoBtn() {
   const handleMouseEnter = () => {
     setShowServiceIntro(true);
   };
+
   // 마우스 나갈시
   const handleMouseLeave = () => {
     setShowServiceIntro(false);

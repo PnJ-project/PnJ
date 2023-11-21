@@ -3,30 +3,29 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
+import { useSpeechRecognition } from "react-speech-kit";
 import PnjLogo from "../atoms/PnjLogo";
 import GoogleLogin from "../atoms/GoogleLogin";
 import DemoTutorialBox from "../atoms/DemoTutorialBox";
-import TodoList from "../molecules/TodoList";
-import DemoMadal from "../molecules/FlaskMadal";
-import DemoTutorial from "../molecules/DemoTutorial";
-import SmallCal from "../../pages/dev/test/SmallCal";
-import BigCalendar from "../molecules/BigCalendar";
+import LoadingBtn from "../atoms/LoadingBtn";
+import TodoList from "../molecules/todo/DemoTodoList";
+import DemoMadal from "../molecules/calendar_demo/DemoFlaskMadal";
+import ServiceInfoBtn from "../molecules/ServiceInfoBtn";
+import DemoTutorial from "../molecules/calendar_demo/DemoTutorial";
+import BigCalendar from "../molecules/calendar_demo/DemoBigCalendar";
+import SmallCal from "../molecules/SmallCal";
+import { RootState } from "../../store/store";
+import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
+import { addTodoRedux } from "../../store/slice/calendar/TodoSlice";
+import { selectIsTutorial, setTutorialStart } from "../../store/slice/Tutorial";
+import styled from "styled-components";
 import { IoMicCircle } from "react-icons/io5";
 import Paste from "/image/paste.svg";
+import "./DemoCalendar.css";
 import {
   openDemoModal,
   selectIsDemoModalOpen,
 } from "../../store/slice/calendar/ModalSlice";
-import { RootState } from "../../store/store";
-import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
-import { addTodoRedux } from "../../store/slice/calendar/TodoSlice";
-import "./DemoCalendar.css";
-//stt
-import { useSpeechRecognition } from "react-speech-kit";
-import { selectIsTutorial, setTutorialStart } from "../../store/slice/Tutorial";
-import ServiceInfoBtn from "../molecules/ServiceInfoBtn";
-import styled from "styled-components";
-import LoadingBtn from "../atoms/LoadingBtn";
 
 // 타입 선언
 export interface FlaskResType {
@@ -48,23 +47,20 @@ export interface TodoItem {
 export default function DemoCalendar() {
   // 기본 세팅
   const dispatch = useDispatch();
-  const [isFlaskSend, setIsFlaskSend] = useState(false);
-  // const { textsave, listening, toggleListening } = SpeechToText();
+  const flask = import.meta.env.VITE_APP_FLASK_SERVER;
+  const isDemoOpen = useSelector(selectIsDemoModalOpen); // 데모 토글
+  const [isFlaskSend, setIsFlaskSend] = useState(false); // 간편입력 토글
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
   const [afterFlask, setAfterFlask] = useState<FlaskResType[]>([]); // 인풋박스 값
   const [freetime, setFreeTime] = useState(3); // 무료이용 가능횟수
-  const isDemoOpen = useSelector(selectIsDemoModalOpen);
   const useDemoVisible = useSelector(
     (state: RootState) => state.toggle.isUseDemo
-  );
-  // const events = useSelector((state: RootState) => state.calendar.events);
+  ); // 데모 시각화 여부
   const todoList = useSelector((state: RootState) => state.todo.todos); // 리스트 상태 가져오기
-  const flask = import.meta.env.VITE_APP_FLASK_SERVER;
   const isTutorial = useSelector(selectIsTutorial);
   const tutorialIndex = useSelector(
     (state: RootState) => state.tutorial.indexTutorial
   ); // 튜토리얼 인덱스
-  // 쿼리 세팅
   const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
 
   // 붙여넣기
@@ -146,7 +142,7 @@ export default function DemoCalendar() {
     }
   };
 
-  // stt
+  // STT
   const { listen, stop } = useSpeechRecognition({
     onResult: (result: string) => {
       // 이전 텍스트와 음성 인식으로 받은 텍스트를 합친다.
@@ -280,6 +276,7 @@ export default function DemoCalendar() {
   );
 }
 
+/** CSS */
 const Container = styled.div`
   width: 100%;
 `;

@@ -1,4 +1,4 @@
-import TodoList from "../../../components/molecules/TodoList";
+import TodoList from "../../../components/molecules/todo/DemoTodoList";
 export default function TodoSample() {
   return (
     <>

@@ -1,9 +1,11 @@
+// 로고 - 팀소개용
 import pnjLogo from "/image/pnjLogo.svg";
 import { useNavigate } from "react-router-dom";
 
 export default function PnjLogo() {
   // 기본세팅
   const navigate = useNavigate();
+
   return (
     <>
       <div

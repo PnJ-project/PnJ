@@ -1,12 +1,13 @@
+// 데모캘린더 - 변환 모달창
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { closeDemoModal } from "../../store/slice/calendar/ModalSlice";
+import { closeDemoModal } from "../../../store/slice/calendar/ModalSlice";
+import { FlaskResType } from "../../organisms/DemoCalendar";
 import styled, { keyframes } from "styled-components";
-import { FlaskResType } from "../organisms/DemoCalendar";
-import moment from "moment";
 import arrowTest from "/image/arrowTest.svg";
 
-// 모달 타입
+// 타입
 interface FlaskModalType {
   before: string;
   after: FlaskResType[];
@@ -130,7 +131,6 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
             </InnerTxtBox2>
           </After>
         </FlaskReturn>
-        {/* <CloseMent>{timeWatch}초 후 창이 닫힙니다.</CloseMent> */}
       </InputModalContainer>
     </Overlay>
   );
@@ -138,6 +138,7 @@ const FlaskMadal = ({ before, after }: FlaskModalType) => {
 
 export default FlaskMadal;
 
+/** CSS */
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -191,25 +192,19 @@ const After = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
   margin: 20px;
   width: 50%;
   font-size: 20px;
-  /* border: 1px solid black; */
   border-radius: 20px;
   background-color: white;
   min-height: 300px;
-  /* box-shadow: 5px 5px 20px #a86c6c, -5px -5px 20px #7575b9,
-    -5px 5px 20px #75b98a, 5px -5px 20px #b8b975; */
 `;
 const Before = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
   margin: 20px;
   width: 50%;
-  /* border: 1px solid black; */
   background-color: white;
   border-radius: 20px;
   min-height: 300px;
@@ -223,7 +218,6 @@ const InnerTxtBox = styled.div`
   justify-content: space-around;
   width: 60%;
   border-radius: 20px;
-  /* box-shadow: inset 2px 2px 5px #878585, inset -2px -2px 5px #878585; */
   font-size: 17px;
   text-align: center;
   margin: auto;
@@ -248,7 +242,6 @@ const InnerTxtBox2 = styled.div`
   justify-content: space-around;
   width: 60%;
   border-radius: 20px;
-  /* box-shadow: inset 2px 2px 5px #878585, inset -2px -2px 5px #878585; */
   font-size: 17px;
   text-align: center;
   margin: auto;
@@ -276,7 +269,6 @@ const SubTitle = styled.div`
 const SmallTxt = styled.div`
   font-weight: 100 !important;
   font-size: 15px;
-  /* color: #6c6c6c; */
 `;
 const Overlay = styled.div`
   font-family: SUITE-Regular;
@@ -305,9 +297,7 @@ const InputModalContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  /* background-color: white; */
   border-radius: 7px;
-  /* box-shadow: 5px 5px 20px #525252, -5px -5px 20px #525252; */
   overflow: hidden;
   transition: 0.3s ease-out;
   button {

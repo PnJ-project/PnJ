@@ -1,3 +1,4 @@
+// 캘린더 관련 함수 관리입니다
 export default function calculateDateDifference(
   dateString1: string,
   dateString2: string

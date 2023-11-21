@@ -1,6 +1,7 @@
+// 데모캘린더용 투두 리스트입니다
 import { useEffect, useState } from "react";
-import TodoForm from "./TodoForm";
-import Todo from "./Todo";
+import TodoForm from "./DemoTodoForm";
+import Todo from "./DemoTodo";
 import "./Todo.css";
 import { useDispatch } from "react-redux";
 import {
@@ -8,9 +9,10 @@ import {
   addTodoRedux,
   removeTodoRedux,
   updateTodoRedux,
-} from "../../store/slice/calendar/TodoSlice";
+} from "../../../store/slice/calendar/TodoSlice";
 import { useSelector } from "react-redux";
 
+// 타입
 interface TodoItem {
   id: number;
   summary: string;

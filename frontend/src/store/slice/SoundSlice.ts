@@ -1,16 +1,16 @@
-// 회원관리 관련입니다
+// 음성녹음 관련입니다
 import { createSlice } from "@reduxjs/toolkit";
 
-interface LogState {
+interface SoundState {
   access_token: string;
 }
 
-const initialState: LogState = {
+const initialState: SoundState = {
   access_token: "",
 };
 
 const vitoSlice = createSlice({
-  name: "vitoKeyFetch",
+  name: "sound",
   initialState,
   reducers: {
     fetchVitoKey: (state, actions) => {

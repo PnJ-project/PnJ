@@ -1,13 +1,11 @@
+// (추천 - 카테고리 - 운동) 슬라이더
 import { useMemo } from "react";
 import styled from "styled-components";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const SlideWrapper = styled.section`
-  position: relative;
-`;
-
+// 타입
 interface sliderProps {
   /** 슬라이더 아이템 요소 */
   children: React.ReactNode;
@@ -49,6 +47,7 @@ function SportRecommend({
   );
 }
 
+/** CSS */
 const Container = styled.div`
   width: 100%;
   align-items: center;
@@ -57,13 +56,15 @@ const Container = styled.div`
 const StyledSlider = styled(Slider)`
   .click-list {
   }
-
   .slick-dots {
     bottom: -40px;
   }
-
   .slick-track {
   }
+`;
+
+const SlideWrapper = styled.section`
+  position: relative;
 `;
 
 export default SportRecommend;

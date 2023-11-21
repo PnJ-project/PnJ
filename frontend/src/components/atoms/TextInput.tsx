@@ -1,4 +1,6 @@
+// 커스텀 인풋 박스
 import "./TextInput.css";
+
 export default function TextInput() {
   return (
     <>

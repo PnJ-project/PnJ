@@ -1,4 +1,4 @@
-// 맛집 아이템
+// 추천 갤러리 - 맛집 아이템
 import { EatItemType } from "../../../store/slice/RecommendSlice";
 import { useEffect, useState } from "react";
 import { ReqTodoCreate } from "../../molecules/todo/ApiTodoList";

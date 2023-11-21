@@ -1,24 +1,26 @@
+// 사이드 캘린더
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import moment from "moment";
-import { useState } from "react";
+import { change } from "../../store/slice/calendar/HandleSlice";
+import SmallToolbar from "./SmallToolbar";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { change } from "../../../store/slice/calendar/HandleSlice";
-import SmallToolbar from "../../../components/molecules/SmallToolbar";
 
 export default function SmallCal() {
+  // 기본 세팅
   const localizer = momentLocalizer(moment);
   const dispatch = useDispatch();
   const [, setHandleDate] = useState<Date>();
-
   const handleDateChange = (date: Date) => {
     console.log(date);
     setHandleDate(date);
     const formDate = date.toISOString();
     dispatch(change(formDate));
   };
+
   //클릭한 view의 정보를 받아옴
   const [, setCurrentView] = useState("");
   const handleViewChange = (newView: string) => {
@@ -46,6 +48,7 @@ export default function SmallCal() {
   );
 }
 
+/** CSS */
 const Container = styled.div`
   display: flex;
   overflow: hidden;
@@ -109,7 +112,6 @@ const Container = styled.div`
       background-color: white;
     }
     .rbc-date-cell {
-      /* height: 15%; */
       height: 25px;
     }
     // 일정 적힌 박스

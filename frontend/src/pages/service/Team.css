@@ -45,15 +45,10 @@
 .buttons {
   margin-top: 60px;
   position: fixed;
-  /* top: 17vmin; */
   left: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
   gap: 5vmin;
-}
-.buttons button {
-  /* color: black;
-  border: 1px solid black; */
 }

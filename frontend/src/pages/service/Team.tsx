@@ -1,5 +1,6 @@
-import { motion, AnimatePresence, useMotionValue } from "framer-motion";
+// 팀소개 페이지입니다
 import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue } from "framer-motion";
 import PnjLogo from "../../components/atoms/PnjLogoTeam";
 import daeyoung from "/image/daeyoung.svg";
 import haejin from "/image/haejin.svg";
@@ -11,12 +12,13 @@ import styled from "styled-components";
 import "./Team.css";
 
 export default function Team() {
+  // 기본세팅
   const [visibleIndex, setVisibleIndex] = useState(0);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const boxRef = useRef<HTMLDivElement>(null);
   const [xValue, setXValue] = useState(0);
   const x = useMotionValue(xValue);
-
+  // 슬라이더 내용
   const slides = [
     {
       id: 0,
@@ -61,16 +63,22 @@ export default function Team() {
       position: "FE",
     },
   ];
+
+  // 다음 슬라이드
   const showNextSlide = () => {
     setDirection("next");
     setVisibleIndex((prev) =>
       prev === slides.length - 1 ? slides.length - 1 : prev + 1
     );
   };
+
+  // 이전 슬라이드
   const showPrevSlide = () => {
     setDirection("prev");
     setVisibleIndex((prev) => (prev === 0 ? 0 : prev - 1));
   };
+
+  // 슬라이더 설정
   const slideVariants = {
     hidden: (direction: "next" | "prev") => ({
       x: direction === "next" ? 500 : -500,
@@ -93,6 +101,7 @@ export default function Team() {
   };
   const background = slides[visibleIndex].background;
 
+  // x 종속 이벤트
   useEffect(() => {
     x.onChange(() => {
       console.log(x.get());
@@ -183,6 +192,7 @@ export default function Team() {
   );
 }
 
+/** CSS */
 const Name = styled.p`
   font-size: 25px;
   margin-top: 5px;

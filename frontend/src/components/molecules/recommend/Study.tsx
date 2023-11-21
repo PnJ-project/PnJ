@@ -1,3 +1,4 @@
+// 추천페이지 - 카테고리보기 (공부)
 import { useSelector } from "react-redux";
 import {
   EatItemType,
@@ -69,6 +70,7 @@ export default function Study() {
   );
 }
 
+/** CSS */
 const FlexContainer = styled.div`
   display: flex;
   align-items: center;

@@ -1,3 +1,4 @@
+// 추천페이지 - 카테고리보기 (공연)
 import { useSelector } from "react-redux";
 import {
   EatItemType,
@@ -181,6 +182,7 @@ export default function Music() {
   );
 }
 
+/** CSS */
 const SliderItem = styled.div`
   img {
     width: 94%;

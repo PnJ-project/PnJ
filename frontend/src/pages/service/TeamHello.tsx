@@ -1,10 +1,13 @@
-import { motion } from "framer-motion";
+// 팀소개 인트로 입니다
 import { useState, useEffect } from "react";
-import "./TeamHello.css";
+import { motion } from "framer-motion";
+import Team from "./Team";
 import teamP from "/image/teamP.svg";
 import styled from "styled-components";
-import Team from "./Team";
+import "./TeamHello.css";
+
 export default function Teamhello() {
+  // 기본세팅
   const [showHello, setShowHello] = useState(true);
 
   // 3초 후에 'Hello.' 텍스트를 숨기고 'Our Team' 페이지를 보여줌
@@ -37,6 +40,7 @@ export default function Teamhello() {
   );
 }
 
+/** CSS */
 const ImgP = styled.img`
   width: 140px;
   height: 140px;

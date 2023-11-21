@@ -1,11 +1,11 @@
-// import React, { useCallback, useState } from "react";
+// 데모캘린더용 투두 아이템입니다
 import React, { useState } from "react";
-// import { useDrag } from 'react-dnd';
 import { RiCloseCircleLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch } from "react-redux";
-import { setDraggedTodo } from "../../store/slice/calendar/TodoSlice";
+import { setDraggedTodo } from "../../../store/slice/calendar/TodoSlice";
 
+// 타입
 interface TodoProps {
   todos: { id: number; summary: string }[];
   removeTodo: (id: number) => void;

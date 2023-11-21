@@ -19,7 +19,7 @@ const initialState: LogState = {
 };
 
 const authSlice = createSlice({
-  name: "log",
+  name: "auth",
   initialState,
   reducers: {
     loginsuccess: (state) => {

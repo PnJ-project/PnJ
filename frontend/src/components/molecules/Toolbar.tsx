@@ -1,3 +1,4 @@
+// react-big-calendar 전용 커스텀 툴바입니다.
 import React from "react";
 import { ToolbarProps } from "react-big-calendar";
 import styled from "styled-components";
@@ -54,15 +55,13 @@ const MyToolbar: React.FC<ToolbarProps> = ({
           일
         </button>
       </div>
-
-      {/* <span>{label}</span> */}
       {children}
     </Container>
   );
 };
-
 export default MyToolbar;
 
+/** CSS */
 const Container = styled.div`
   display: flex;
   //margin 위 오른쪽 아래 왼쪽

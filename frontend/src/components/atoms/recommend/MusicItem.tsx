@@ -1,4 +1,4 @@
-// 공연 아이템
+// 추천 갤러리 - 공연 아이템
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
@@ -28,6 +28,7 @@ export default function MusicItem({ item }: { item: TripItemType }) {
     .toISOString(); // 5개월 후
   const [timeMax] = useState(startOfFiveMonthsAgo);
   const [timeMin] = useState(endOfFiveMonthsAhead);
+
   // 쿼리세팅
   const { refetch: refetchCal } = useQuery(
     "calendarData",

@@ -1,14 +1,18 @@
+// 최상단 이동 버튼
 import { useEffect, useState } from "react";
 import Styles from "./UpBtn.module.css";
 
+// 타입
 interface TextBtnProps {
   howscroll: number;
 }
+
 const UpBtn: React.FC<TextBtnProps> = ({ howscroll }) => {
+  // 기본 세팅
   const [isButtonVisible, setIsButtonVisible] = useState(false);
 
+  // 최초 스크롤 이벤트 세팅
   useEffect(() => {
-    // Function to handle scrolling and show/hide the button
     const handleScroll = () => {
       if (window.scrollY > howscroll) {
         setIsButtonVisible(true);
@@ -16,17 +20,13 @@ const UpBtn: React.FC<TextBtnProps> = ({ howscroll }) => {
         setIsButtonVisible(false);
       }
     };
-
-    // Add event listener for scroll
     window.addEventListener("scroll", handleScroll);
-
-    // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  // Function to handle button click
+  // 버튼 눌렀을시 이벤트
   const handleButtonClick = () => {
     window.scrollTo({
       top: 0,

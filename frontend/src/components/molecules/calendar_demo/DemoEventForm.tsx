@@ -1,12 +1,12 @@
-// EventForm.tsx 생성
+// 데모캘린더 - 데모용 일정 생성 창
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
-import { closeModal } from "../../store/slice/calendar/ModalSlice";
-import { RootState } from "../../store/store";
+import formatDateTime from "../../../functions/BaseFunc";
+import { Event, addEvent } from "../../../store/slice/calendar/CalendarSlice";
+import { closeModal } from "../../../store/slice/calendar/ModalSlice";
+import { RootState } from "../../../store/store";
+import { setSelectDate } from "../../../store/slice/calendar/HandleSlice";
 import styled, { keyframes } from "styled-components";
-import { setSelectDate } from "../../store/slice/calendar/HandleSlice";
-import formatDateTime from "../../functions/BaseFunc";
 
 const EventForm: React.FC = () => {
   // 기본 세팅
@@ -26,7 +26,19 @@ const EventForm: React.FC = () => {
   const [allDay, setAllDay] = useState(false);
   const [showEDate, setShowEDate] = useState(eDate);
 
-  // 모달창이 열리면 인풋창에 바로 커서가 뜨게 설정
+  // 색 팔레트
+  const colorMap: { [key: number]: string } = {
+    1: "#fe4d00",
+    2: "#fa92a3",
+    3: "#fe9e14",
+    4: "#fed136",
+    5: "#d6d755",
+    6: "#a1c7a5",
+    7: "#01b391",
+    8: "#41a8f5",
+    9: "#7ea0c3",
+    10: "#ba7fd1",
+  };
 
   // sDate와 eDate가 다르면 allDay를 체크하도록 설정
   useEffect(() => {
@@ -35,6 +47,7 @@ const EventForm: React.FC = () => {
     }
   }, [sDate, showEDate]);
 
+  // 날짜 데이터 파싱
   useEffect(() => {
     // 하루종일이면 showEDate = eDate - 1
     if (allDay && sDate !== showEDate) {
@@ -60,7 +73,6 @@ const EventForm: React.FC = () => {
       setErrorMsg("일정 내용을 입력하세요 !");
       return;
     }
-
     if (selectedRange) {
       const newEvent: Event = {
         id: events.length,
@@ -71,29 +83,15 @@ const EventForm: React.FC = () => {
         colorId: colorId,
         allDay: allDay,
       };
-
       // 일정생성 (개발자용)
       dispatch(addEvent(newEvent));
     }
-
     // 원복
     dispatch(closeModal());
     setTitle("");
     setMemo("");
   };
-  // 색깔 정하기
-  const colorMap: { [key: number]: string } = {
-    1: "#fe4d00",
-    2: "#fa92a3",
-    3: "#fe9e14",
-    4: "#fed136",
-    5: "#d6d755",
-    6: "#a1c7a5",
-    7: "#01b391",
-    8: "#41a8f5",
-    9: "#7ea0c3",
-    10: "#ba7fd1",
-  };
+
   const handleBoxClick = (key: string) => {
     console.log(key);
     const numKey = Number(key);
@@ -280,7 +278,6 @@ const Container = styled.div`
   gap: 18px;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   background-color: white;
   border-radius: 7px;
   box-shadow: 5px 5px 20px #525252, -5px -5px 20px #525252;
@@ -391,7 +388,6 @@ const SelectTime = styled.div`
 const TitleBox = styled.div`
   display: flex;
   gap: 20px;
-  /* justify-content:center; */
   align-items: center;
   input {
     height: 20px;

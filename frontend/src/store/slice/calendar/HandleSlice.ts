@@ -1,14 +1,15 @@
-//HandleSlice.ts
+// 캘린더 - 변경관련 입니다
+
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
-interface ModalState {
+interface HandleState {
   handledate: string;
   handleRangeDate: { rangeStart: string; rangeEnd: string };
 }
 
 const date = new Date().toISOString();
-const initialState: ModalState = {
+const initialState: HandleState = {
   handleRangeDate: { rangeStart: date, rangeEnd: date },
   handledate: date,
 };

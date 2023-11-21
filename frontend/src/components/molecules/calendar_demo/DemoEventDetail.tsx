@@ -1,33 +1,25 @@
-// ApiEventDetail.tsx api수정 모달 창
-
+// 데모캘린더 - 데모용 일정 수정 창
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import formatDateTime from "../../../functions/BaseFunc";
 import {
   updateEvent,
   deleteEvent,
-} from "../../store/slice/calendar/CalendarSlice";
-import { closeSideModal } from "../../store/slice/calendar/ModalSlice";
-import { RootState } from "../../store/store";
+  selectEvents,
+} from "../../../store/slice/calendar/CalendarSlice";
+import { closeSideModal } from "../../../store/slice/calendar/ModalSlice";
 import styled, { keyframes } from "styled-components";
-import formatDateTime, {
-  setAuthorizationHeaderInter,
-} from "../../functions/BaseFunc";
-import axiosInstance from "../../functions/AxiosInstance";
 
 // 모달 타입
 interface ModalProps {
   id: number | string | unknown;
 }
-// 백엔드
-// const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
-const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 const EventForm: React.FC<ModalProps> = ({ id }) => {
   // 기본 세팅
   const dispatch = useDispatch();
-  const [memberId] = useState(Number(localStorage.getItem("memberId")));
-  const events = useSelector((state: RootState) => state.calendar.events);
-  const event = events.find((event) => event.id === id);
+  const events = useSelector(selectEvents); // 전체 일정 데이터
+  const event = events.find((event) => event.id === id); // 특정 일정 데이터
   const [title, setTitle] = useState(event?.title);
   const [memo, setMemo] = useState(event?.memo);
   const [colorId, setColorId] = useState(event?.colorId);
@@ -43,6 +35,20 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
   const [allDay, setAllDay] = useState(event?.allDay);
   const [showEDate, setShowEDate] = useState(eDate);
 
+  // 색 팔레트
+  const colorMap: { [key: number]: string } = {
+    1: "#fe4d00",
+    2: "#fa92a3",
+    3: "#fe9e14",
+    4: "#fed136",
+    5: "#d6d755",
+    6: "#a1c7a5",
+    7: "#01b391",
+    8: "#41a8f5",
+    9: "#7ea0c3",
+    10: "#ba7fd1",
+  };
+
   // sDate와 eDate가 다르면 allDay를 체크하도록 설정
   useEffect(() => {
     if (sDate !== showEDate && sTime == "00:00" && eTime == "00:00") {
@@ -50,6 +56,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     }
   }, [sDate, showEDate]);
 
+  // 날짜 데이터 파싱
   useEffect(() => {
     // 하루종일이면 showEDate = eDate - 1
     if (sDate !== showEDate && allDay && sTime == "00:00" && eTime == "00:00") {
@@ -97,72 +104,15 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     dispatch(closeSideModal());
     setTitle("");
     setMemo("");
-    // 캘린더 업데이트 API 요청
-    const reqNewEvent = {
-      memberId: memberId,
-      event: {
-        id: id,
-        summary: title,
-        description: memo,
-        colorId: colorId,
-        start: {
-          dateTime: !allDay ? sDate + "T" + sTime + ":00" : null,
-          timeZone: "Asia/Seoul",
-          date: allDay ? sDate : null,
-        },
-        end: {
-          dateTime: !allDay ? eDate + "T" + eTime + ":00" : null,
-          timeZone: "Asia/Seoul",
-          date: allDay ? eDate : null,
-        },
-      },
-    };
-    await setAuthorizationHeaderInter();
-    try {
-      await axiosInstance.put(`${local_back_url}/api/calendar/v2`, reqNewEvent);
-      // 캘린더 다시 불러오기
-      console.log("구글 캘린더 수정 api 완료");
-    } catch (error) {
-      console.error("구글 캘린더 수정 에러:", error);
-      setErrorMsg("서버와 연결할 수 없습니다. 다시 시도해주세요");
-      return;
-    }
   };
 
   // 이벤트 삭제
   const handleDeleteEvent = async () => {
-    // 삭제할거냐는 메세지 띄우기
     // 일정삭제 (개발자용)
-    if (typeof id == "number" || typeof id == "string") {
+    if (typeof id == "number") {
       dispatch(deleteEvent(id));
+      dispatch(closeSideModal());
     }
-    // 원복
-    dispatch(closeSideModal());
-    // 캘린더 삭제 API 요청
-    await setAuthorizationHeaderInter();
-    try {
-      const res = await axiosInstance.delete(
-        `${local_back_url}/api/calendar/v2/${memberId}/${id}`
-      );
-      // 이벤트 다시 불러오기
-      console.log("캘린더 api 삭제 완료", res);
-    } catch (error) {
-      setErrorMsg("일정 삭제에 실패했습니다. 다시 시도해주세요");
-      console.error("캘린더 삭제 에러:", error);
-    }
-  };
-  // 색깔 정하기
-  const colorMap: { [key: number]: string } = {
-    1: "#fe4d00",
-    2: "#fa92a3",
-    3: "#fe9e14",
-    4: "#fed136",
-    5: "#d6d755",
-    6: "#a1c7a5",
-    7: "#01b391",
-    8: "#41a8f5",
-    9: "#7ea0c3",
-    10: "#ba7fd1",
   };
   const handleBoxClick = (key: string) => {
     console.log(key);
@@ -239,10 +189,7 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
               type="checkbox"
               id="allDay"
               checked={allDay}
-              onChange={(e) => {
-                setAllDay(e.target.checked);
-              }}
-              // disabled={sDate !== eDate}
+              onChange={(e) => setAllDay(e.target.checked)}
             />
             <label htmlFor="allDay">하루 종일</label>
           </CheckBox>
@@ -316,8 +263,9 @@ const EventForm: React.FC<ModalProps> = ({ id }) => {
     </Overlay>
   );
 };
-
 export default EventForm;
+
+/** CSS */
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -326,6 +274,7 @@ const fadeIn = keyframes`
     opacity: 1;
   }
 `;
+
 const blink = keyframes`
   0%, 50%, 100% {
     opacity: 1;
@@ -334,10 +283,10 @@ const blink = keyframes`
     opacity: 0;
   }
 `;
+
 const Container = styled.div`
   animation: ${fadeIn} 0.2s ease-in;
   font-family: SUITE-Regular;
-  font-weight: 900;
   position: fixed;
   padding: 20px;
   top: 50%;
@@ -348,7 +297,6 @@ const Container = styled.div`
   gap: 18px;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   background-color: white;
   border-radius: 7px;
   box-shadow: 5px 5px 20px #525252, -5px -5px 20px #525252;
@@ -361,7 +309,6 @@ const Container = styled.div`
     font-weight: 600;
   }
   input {
-    /* border-color: #36513d !important; */
     padding: 5px;
     margin: 0;
     border: 1px solid #9f9a9a;
@@ -459,7 +406,6 @@ const SelectTime = styled.div`
 const TitleBox = styled.div`
   display: flex;
   gap: 20px;
-  /* justify-content:center; */
   align-items: center;
   input {
     height: 20px;

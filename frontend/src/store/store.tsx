@@ -12,7 +12,6 @@ import toggleReducer from "./slice/ToggleSlice";
 import recommendReducer from "./slice/RecommendSlice";
 
 const rootReducer = combineReducers({
-  //실제 사용하는 slice
   string: stringReducer,
   auth: authReducer,
   vito: vitoReducer,

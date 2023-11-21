@@ -1,4 +1,4 @@
-// calendarSlice.ts
+// 캘린더 데이터 관련입니다.
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Event {

@@ -1,3 +1,6 @@
+// 추천페이지 - 카테고리보기 (맛집)
+import { useQuery } from "react-query";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   EatItemType,
@@ -7,15 +10,13 @@ import {
   TripItemType,
   selectRecommends,
 } from "../../../store/slice/RecommendSlice";
-import { useState, useEffect } from "react";
 import EatRecommend from "./EatRecommend";
-import styled from "styled-components";
-import Eatimg from "/image/Eatimg.svg";
-import { useQuery } from "react-query";
-import { readTodo } from "../../../api/TodoApi";
 import axiosInstance from "../../../functions/AxiosInstance";
 import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
+import { readTodo } from "../../../api/TodoApi";
 import { ReqTodoCreate } from "../todo/ApiTodoList";
+import styled from "styled-components";
+import Eatimg from "/image/Eatimg.svg";
 
 export default function Eat() {
   // 기본 세팅
@@ -136,6 +137,7 @@ export default function Eat() {
   );
 }
 
+/** CSS */
 const SliderItem = styled.div`
   img {
     width: 94%;

@@ -1,3 +1,4 @@
+// 기본함수 관리 파일입니다.
 import axios from "axios";
 import axiosInstance from "./AxiosInstance";
 

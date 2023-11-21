@@ -14,7 +14,7 @@ const initialState: ToggleState = {
 };
 
 const toggleSlice = createSlice({
-  name: "log",
+  name: "toggle",
   initialState,
   reducers: {
     setDemoTrue: (state) => {

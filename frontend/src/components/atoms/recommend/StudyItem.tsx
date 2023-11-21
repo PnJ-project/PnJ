@@ -1,4 +1,4 @@
-// 명언 아이템
+// 추천 갤러리 - 명언 아이템
 import { useState } from "react";
 import { TripItemType } from "../../../store/slice/RecommendSlice";
 import recommendNotFound from "/image/recommendNotFound.svg";
@@ -11,6 +11,7 @@ export default function StudyItem({ item }: { item: TripItemType }) {
   const handleImageLoad = () => {
     setLoading(false);
   };
+
   return (
     <>
       {loading && (
