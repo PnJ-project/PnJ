@@ -1,4 +1,4 @@
-// 여행 아이템
+// 추천 갤러리 - 여행 아이템
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { readTodo } from "../../../api/TodoApi";
@@ -13,6 +13,8 @@ export default function TripItem({ item }: { item: TripItemType }) {
   const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
   const [isClick, setIsClick] = useState(false);
   const [memberId] = useState(Number(localStorage.getItem("memberId")));
+
+  // 쿼리세팅
   const { refetch: refetchTodo } = useQuery("todoData", readTodo, {
     enabled: false,
     retry: false,

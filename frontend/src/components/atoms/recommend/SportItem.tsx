@@ -1,4 +1,4 @@
-// 스포츠 아이템
+// 추천 갤러리 - 스포츠 아이템
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
@@ -25,6 +25,7 @@ export default function SportItem({ item }: { item: TripItemType }) {
     .toISOString(); // 5개월 후
   const [timeMax] = useState(startOfFiveMonthsAgo);
   const [timeMin] = useState(endOfFiveMonthsAhead);
+
   // 쿼리세팅
   const { refetch: refetchCal } = useQuery(
     "calendarData",

@@ -1,12 +1,11 @@
-import "./Recommend.css";
+// 추천 컴포넌트입니다
+import moment from "moment";
+import { useEffect, useState } from "react";
 import UpBtn from "../atoms/UpBtn";
 import { useQuery } from "react-query";
 import { readRecommend } from "../../api/RecommendApi";
-import moment from "moment";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectEvents } from "../../store/slice/calendar/CalendarSlice";
-import { useDispatch } from "react-redux";
 import { setRecommend } from "../../store/slice/RecommendSlice";
 import Music from "../molecules/recommend/Music";
 import Sports from "../molecules/recommend/Sports";
@@ -18,6 +17,7 @@ import RecommendJ from "/image/RecommendJ.svg";
 import styled from "styled-components";
 import { HiMenu } from "react-icons/hi";
 import { CgMenuGridO } from "react-icons/cg";
+import "./Recommend.css";
 
 export default function Recommend() {
   // 기본 세팅
@@ -146,6 +146,7 @@ export default function Recommend() {
   );
 }
 
+/** CSS */
 const Img = styled.img`
   width: 50px;
   height: 50px;
@@ -160,7 +161,6 @@ const Box = styled.div`
 `;
 
 const Container = styled.div`
-  /* background: linear-gradient(to bottom, #36513d, #ffffff); */
   width: 100%;
 `;
 const Icon = styled(HiMenu)`

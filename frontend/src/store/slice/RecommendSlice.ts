@@ -31,7 +31,7 @@ const initialState: RecommendsState = {
 };
 
 const recommendSlice = createSlice({
-  name: "recommendSlice",
+  name: "recommend",
   initialState,
   reducers: {
     setRecommend: (state, actions) => {

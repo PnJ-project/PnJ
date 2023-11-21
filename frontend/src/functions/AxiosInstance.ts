@@ -1,5 +1,4 @@
 // 인터셉터를 통해 리프레시 토큰 검증하는 파일입니다.
-
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 
 const axiosInstance: AxiosInstance = axios.create({

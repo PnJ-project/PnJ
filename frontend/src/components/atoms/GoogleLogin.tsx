@@ -1,20 +1,22 @@
+// 구글 로그인 버튼
 import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import { loginsuccess, logout, setUserData } from "../../store/slice/AuthSlice";
-import "./Google.css";
 import { setTodosRedux } from "../../store/slice/calendar/TodoSlice";
 import { setEvents } from "../../store/slice/calendar/CalendarSlice";
+import "./Google.css";
+
+// 백엔드
+const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 export default function GoogleLogin() {
   // 기본 세팅
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [memberId, setMemberId] = useState(localStorage.getItem("memberId"));
-
-  const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
   // 로그인버튼 클릭시
   const googleSocialLogin = useGoogleLogin({

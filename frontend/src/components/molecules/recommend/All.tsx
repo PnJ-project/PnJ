@@ -1,3 +1,4 @@
+// 추천페이지 - 갤러리 보기
 import { useSelector } from "react-redux";
 import {
   EatItemType,
@@ -34,12 +35,8 @@ export default function Eat() {
     }
   }, [recommends]);
 
-  // 추천 클릭시
-  const handleClickRecommend = () => {};
-
   // 반응형 설계
   const handleResize = () => {
-    // 창의 너비에 따라 innerCount를 동적으로 조정
     if (window.innerWidth < 768) {
       setInnerCount(1);
     } else if (window.innerWidth < 1024) {
@@ -51,11 +48,8 @@ export default function Eat() {
 
   // 리사이즈 이벤트 부여
   useEffect(() => {
-    // 초기 로딩 시 한 번 실행
     handleResize();
-    // resize 이벤트에 핸들러 등록
     window.addEventListener("resize", handleResize);
-    // 컴포넌트 언마운트 시 이벤트 핸들러 제거
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -77,11 +71,7 @@ export default function Eat() {
             {items.map(
               (item, index) =>
                 index % innerCount === innerIndex && (
-                  <div
-                    key={index}
-                    className="RecommendAllItem"
-                    onClick={handleClickRecommend}
-                  >
+                  <div key={index} className="RecommendAllItem">
                     {item.category == "여행" && <TripItem item={item} />}
                     {item.category == "맛집" && <EatItem item={item} />}
                     {item.category.includes("공연") && (

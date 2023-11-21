@@ -1,0 +1,66 @@
+.PMContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.PMBtn {
+  font-family: SUITE-Regular;
+  border: 1px solid black;
+  margin: 5px;
+}
+.PMBtn:hover {
+  font-weight: bold;
+  border: 2px solid black;
+}
+
+.PMSection {
+  width: 26%;
+  border: 1px solid rgb(147, 147, 147);
+  margin: 10px;
+  padding: 10px;
+}
+
+.workTitle {
+  font-size: 50px;
+  text-align: center;
+}
+
+.workContainer {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+}
+
+.workPage {
+  margin: 10px;
+  border: 3px solid rgb(238, 102, 102);
+  width: 50%;
+  padding: 10px;
+}
+.workOther {
+  margin: 10px;
+  border: 3px solid rgb(238, 102, 102);
+  width: 50%;
+  padding: 10px;
+}
+.workButtons {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 767px) {
+  .workContainer {
+    display: block;
+  }
+  .workPage {
+    width: 80%;
+    margin: auto;
+  }
+  .workOther {
+    width: 80%;
+    margin: auto;
+  }
+}

@@ -1,6 +1,5 @@
 .RecommendContainer {
   width: 100vw;
-  /* min-width: 1000px; */
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -56,7 +55,6 @@
   width: 75vw;
   animation: fadeIn 0.4s ease-in; /* 등장 애니메이션 적용 */
   min-height: 1000px;
-  /* border: 2px solid red; */
 }
 .RecommendAllBox {
   width: 75vw;
@@ -124,7 +122,6 @@
 .RecommendAllItem {
   display: flex;
   box-shadow: 1px 1px 2px rgb(207, 207, 207), -1px -1px 2px rgb(202, 202, 202);
-  /* border: 1px solid rgb(190, 190, 190); */
   text-wrap: pretty;
   flex-wrap: wrap;
   word-break: break-all;
@@ -159,7 +156,6 @@
   width: 90%; /* 부모 너비와 동일하게 설정 */
   height: 90%; /* 부모 높이와 동일하게 설정 */
   color: white;
-  /* display: flex; */
   flex-direction: column;
   opacity: 0;
 }
@@ -249,7 +245,6 @@
   width: 70%; /* 부모 너비와 동일하게 설정 */
   height: 90%; /* 부모 높이와 동일하게 설정 */
   color: white;
-  /* display: flex; */
   flex-direction: column;
   opacity: 0;
 }
@@ -257,7 +252,6 @@
   display: flex;
   opacity: 1;
   z-index: 1;
-  /* display: ; */
 }
 .StudyTxt {
   margin-bottom: 10px;
@@ -265,10 +259,6 @@
 }
 .StudyAutor {
   font-size: 10px;
-}
-.StudyImg {
-  /* position: relative; */
-  /* width: 10px !important; */
 }
 
 /* Trip */

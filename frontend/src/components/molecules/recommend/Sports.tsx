@@ -1,3 +1,4 @@
+// 추천페이지 - 카테고리보기 (스포츠)
 import { useSelector } from "react-redux";
 import {
   EatItemType,
@@ -176,6 +177,7 @@ export default function Sports() {
   );
 }
 
+/** CSS */
 const SliderItem = styled.div`
   background-color: rgb(243, 250, 255);
   border-radius: 10px;

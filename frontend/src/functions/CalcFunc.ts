@@ -1,4 +1,8 @@
-export default function calculateDateDifference(dateString1:string, dateString2:string) {
+// 캘린더 관련 함수 관리입니다
+export default function calculateDateDifference(
+  dateString1: string,
+  dateString2: string
+) {
   const date1 = new Date(dateString1);
   const date2 = new Date(dateString2);
 

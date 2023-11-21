@@ -1,3 +1,4 @@
+// API캘린더용 투두 리스트입니다
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useSelector } from "react-redux";
@@ -15,6 +16,7 @@ import {
 import { setAuthorizationHeaderInter } from "../../../functions/BaseFunc";
 import axiosInstance from "../../../functions/AxiosInstance";
 
+// 타입
 interface TodoItem {
   id: number;
   summary: string;
@@ -23,7 +25,8 @@ export interface ReqTodoCreate {
   memberId: number | null;
   summary: string;
 }
-// const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER;
+
+// 백엔드
 const local_back_url = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
 
 export default function TodoList() {

@@ -1,4 +1,4 @@
-// import React from 'react';
+// 로고 - 일반
 import pnjLogo from "/image/pnjLogoWhite.svg";
 import { setDemoFalse } from "../../store/slice/ToggleSlice";
 import { useDispatch } from "react-redux";
@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 export default function PnjLogo() {
   // 기본세팅
   const dispatch = useDispatch();
+
   return (
     <>
       <div

@@ -1,25 +1,26 @@
-// 데모 페이지
-import plogo from "../assets/main.svg";
+// 데모 페이지 - 소개페이지 + 튜토리얼 + 데모 캘린더
+import { scroller } from "react-scroll";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import UseDemo from "../components/atoms/UseDemo";
 import DownArrow from "../components/atoms/DownArrow";
 import GoogleLogin from "../components/atoms/GoogleLogin";
 import DemoCalendar from "../components/organisms/DemoCalendar";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
 import { setDemoTrue } from "../store/slice/ToggleSlice";
 import { RootState } from "../store/store";
-import { useEffect, useState } from "react";
-import { scroller } from "react-scroll";
-import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import plogo from "/image/main.svg";
 
 export default function Demo() {
   // 기본세팅
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [isScrolling, setIsScrolling] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false); // 스크롤 진행 여부
   const useDemoVisible = useSelector(
     (state: RootState) => state.toggle.isUseDemo
-  );
+  ); // 데모 토글
+
   // 로그인시 리다이렉트
   useEffect(() => {
     if (localStorage.getItem("memberId")) {
@@ -72,15 +73,13 @@ export default function Demo() {
     }
   };
 
-  // 최상단 이동
+  // 페이지가 로드될 때 스크롤 위치를 맨 위로 이동
   useEffect(() => {
-    // 페이지가 로드될 때 스크롤 위치를 맨 위로 이동
     window.scrollTo(0, 0);
   }, []);
 
   // 스크롤 이벤트 부여
   useEffect(() => {
-    // 마우스 휠 이벤트 추가
     window.removeEventListener("wheel", handleWheel);
     window.addEventListener("wheel", handleWheel, { passive: false });
     return () => {
@@ -90,7 +89,9 @@ export default function Demo() {
 
   return (
     <>
-      <BackGround></BackGround>
+      {/* CSS 설정 */}
+      <BackGround />
+
       {/* 메인 페이지 부 */}
       <div id="top">
         <Container>
@@ -149,11 +150,13 @@ const BackGround = styled.div`
   );
   z-index: -1;
 `;
+
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
   height: 100vh;
 `;
+
 const TextDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -162,9 +165,9 @@ const TextDiv = styled.div`
   margin: auto;
   padding-left: 60px;
   min-width: 450px;
-  /* text-shadow: 1px 1px 1px white; */
   color: white;
 `;
+
 const Title = styled.div`
   font-family: TheJamsil5;
   font-size: 40px;
@@ -175,18 +178,21 @@ const Title = styled.div`
     margin-bottom: 10px;
   }
 `;
+
 const EngBox = styled.div`
   display: flex;
 `;
+
 const EngDeco = styled.div`
   border-left: 5px solid #b5ff3f;
   margin-right: 8px;
 `;
+
 const Span = styled.span`
   font-size: 60px;
   color: #b5ff3f;
-  /* text-shadow: 2px 2px 2px #000000, -1px -1px 1px #ffffff; */
 `;
+
 const Content = styled.div`
   color: #fbfbfb;
   font-family: TheJamsil5;
@@ -195,6 +201,7 @@ const Content = styled.div`
   font-weight: 700;
   line-height: normal;
 `;
+
 const Btns = styled.div`
   display: flex;
   flex-direction: column;
@@ -205,6 +212,7 @@ const Btns = styled.div`
     font-family: TheJamsil5;
   }
 `;
+
 const DownBtn = styled.div`
   position: absolute;
   bottom: 30px;
@@ -215,6 +223,7 @@ const DownBtn = styled.div`
   align-items: center;
   flex-direction: column;
 `;
+
 const LogoImg = styled.img`
   padding-right: 40px;
   height: 80%;

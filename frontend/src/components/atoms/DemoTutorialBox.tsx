@@ -1,3 +1,4 @@
+// 튜토리얼 내용 박스
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useDispatch } from "react-redux";
@@ -16,6 +17,7 @@ export default function DemoTutorialBox() {
   const tutorialIndex = useSelector(
     (state: RootState) => state.tutorial.indexTutorial
   ); // 튜토리얼 인덱스
+
   return (
     <>
       <div
@@ -141,6 +143,7 @@ export default function DemoTutorialBox() {
   );
 }
 
+/** CSS */
 const Container = styled.div`
   display: flex;
   flex-direction: column;

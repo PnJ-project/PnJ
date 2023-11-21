@@ -1,4 +1,4 @@
-// modalSlice.ts
+// 캘린더 - 모달 관련입니다
 
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";

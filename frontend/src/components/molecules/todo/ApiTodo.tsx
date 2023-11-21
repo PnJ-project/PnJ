@@ -1,9 +1,11 @@
+// API캘린더용 투두 아이템입니다
 import React, { useState } from "react";
 import { RiCloseCircleLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch } from "react-redux";
 import { setDraggedTodo } from "../../../store/slice/calendar/TodoSlice";
 
+// 타입
 interface TodoProps {
   todos: { id: number; summary: string }[];
   removeTodo: (id: number) => void;
@@ -50,7 +52,9 @@ const Todo: React.FC<TodoProps> = ({ todos, removeTodo, updateTodo }) => {
             onDragStart={() => handleDragStart(todo.id, todo.summary)}
           >
             {!edit.id || edit.id != todo.id ? (
-              <div className="shTodo" key={todo.id}>{todo.summary}</div>
+              <div className="shTodo" key={todo.id}>
+                {todo.summary}
+              </div>
             ) : (
               <input
                 className="todoItemInput"

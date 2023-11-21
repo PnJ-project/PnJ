@@ -1,28 +1,27 @@
 // 메인 기능 캘린더 컴포넌트
 import moment from "moment";
-import axiosInstance from "../../functions/AxiosInstance";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useDispatch } from "react-redux";
+import TextareaAutosize from "react-textarea-autosize";
+import { useSpeechRecognition } from "react-speech-kit";
+import axiosInstance from "../../functions/AxiosInstance";
+import { setAuthorizationHeaderInter } from "../../functions/BaseFunc";
 import { readCalendar } from "../../api/CalendarApi";
 import { readTodo } from "../../api/TodoApi";
-import TextareaAutosize from "react-textarea-autosize";
-import PnjLogo from "../atoms/PnjLogo";
 // import TeamBtn from "../atoms/TeamBtn";
+import PnjLogo from "../atoms/PnjLogo";
+import LoadingBtn from "../atoms/LoadingBtn";
 import GoogleLogin from "../atoms/GoogleLogin";
 import TodoList from "../molecules/todo/ApiTodoList";
-import SmallCal from "../../pages/test/SmallCal";
 import ServiceInfoBtn from "../molecules/ServiceInfoBtn";
-import BigCalendar from "../molecules/ApiBigCalendar";
+import BigCalendar from "../molecules/calendar_api/ApiBigCalendar";
+import SmallCal from "../molecules/SmallCal";
 import { setRecommendTrue } from "../../store/slice/ToggleSlice";
 // import { openDemoModal } from "../../store/slice/calendar/ModalSlice";
 import Paste from "/image/paste.svg";
 import { IoMicCircle } from "react-icons/io5";
 import "./DemoCalendar.css";
-//stt
-import { useSpeechRecognition } from "react-speech-kit";
-import { setAuthorizationHeaderInter } from "../../functions/BaseFunc";
-import LoadingBtn from "../atoms/LoadingBtn";
 
 // 타입 선언
 export interface FlaskResType {
@@ -44,8 +43,10 @@ export interface TodoItem {
 export default function DemoCalendar() {
   // 기본 세팅
   const dispatch = useDispatch();
+  const memberId = localStorage.getItem("memberId");
+  const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
   const [textSave, setTextSave] = useState(""); // 인풋박스 값
-  const [isFlaskSend, setIsFlaskSend] = useState(false);
+  const [isFlaskSend, setIsFlaskSend] = useState(false); // 간편입력 토글
   const [isListening, setIsListening] = useState<boolean>(false); // 음성 활성화 상태 여부를 추적
   const startOfFiveMonthsAgo = moment()
     .subtract(6, "months")
@@ -58,9 +59,10 @@ export default function DemoCalendar() {
     .endOf("week")
     .toDate()
     .toISOString(); // 5개월 후
-  const [timeMax] = useState(startOfFiveMonthsAgo);
-  const [timeMin] = useState(endOfFiveMonthsAhead);
+  const [timeMax] = useState(startOfFiveMonthsAgo); // 시작날짜
+  const [timeMin] = useState(endOfFiveMonthsAhead); // 종료날짜
 
+  // 쿼리세팅
   const { refetch: refetchCal } = useQuery(
     "calendarData",
     () => readCalendar(timeMax, timeMin),
@@ -90,12 +92,8 @@ export default function DemoCalendar() {
       console.log("빈값 반환");
       return;
     }
-    // 모달창 오픈
-    setIsFlaskSend(true);
-    // dispatch(openDemoModal());
     // 플라스크 api 연결
-    const backend = import.meta.env.VITE_APP_BACKEND_SERVER_LIVE;
-    const memberId = localStorage.getItem("memberId");
+    setIsFlaskSend(true);
     const formData = { input: textSave, memberId: memberId };
     await setAuthorizationHeaderInter();
     try {
@@ -103,7 +101,6 @@ export default function DemoCalendar() {
         `${backend}/api/calendar/input`,
         formData
       );
-      // 전달 데이터
       console.log("일정 변환 반환", response);
       // 데이터 리패치
       await refetchTodo();
@@ -125,7 +122,7 @@ export default function DemoCalendar() {
     }
   };
 
-  // stt
+  // STT
   const { listen, stop } = useSpeechRecognition({
     onResult: (result: string) => {
       // 이전 텍스트와 음성 인식으로 받은 텍스트를 합친다.

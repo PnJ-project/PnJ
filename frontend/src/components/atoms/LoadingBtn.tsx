@@ -1,5 +1,6 @@
 // 로딩 버튼
 import "./LoadingBtn.css";
+
 export default function LoadingBtn() {
   return (
     <>
