@@ -1,6 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import axios, { AxiosResponse } from "axios";
-
 interface Data {
   userId: number;
   id: number;

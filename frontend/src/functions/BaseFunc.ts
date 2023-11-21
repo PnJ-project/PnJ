@@ -20,7 +20,7 @@ export const setAuthorizationHeader = () => {
   const accessToken = localStorage.getItem("access_token");
   axios.defaults.headers.common["Authorization"] = `${accessToken as string}`;
 };
-
+// instance - Header에 토큰 싣기
 export const setAuthorizationHeaderInter = () => {
   const accessToken = localStorage.getItem("access_token");
   axiosInstance.defaults.headers.common["Authorization"] = `${

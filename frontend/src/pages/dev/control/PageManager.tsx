@@ -1,25 +1,14 @@
-// import React from "react";
 import { Link } from "react-router-dom";
 import "./PageManager.css";
-// import BackBtn from "../commponents/Base/BackBtn";
 
 function PageManager() {
   const PM: Record<string, string> = {
-    // Add more components and their URLs as needed...
     Demo: "/demo",
     // 메인서비스
     Calendar: "/",
-    Community: "/community",
-    Solution: "/solution",
-    SolutionList: "/solutionlist",
-    // 회원관리
-    SignUp: "/signup",
-    Login: "/login",
-    MyPage: "/mypage",
     // 기타
     Notfound: "/notexisturl",
     About: "/about",
-    Contact: "/contact",
     Team: "/team",
     // 개발자용
     PageManager: "/PM",
@@ -28,10 +17,8 @@ function PageManager() {
 
   const sections = {
     Entrance: ["Demo"],
-    Auth: ["SignUp", "Login", "MyPage"],
-    Calendar: ["Calendar", "Community"],
-    Solution: ["Solution", "SolutionList"],
-    Other: ["Contact", "About", "Team", "Notfound"],
+    Calendar: ["Calendar"],
+    Other: ["About", "Team", "Notfound"],
     Develop: ["PageManager", "TestManager"],
   };
   return (

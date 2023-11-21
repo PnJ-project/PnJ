@@ -1,4 +1,3 @@
-
 import Recommend from "./Recommend";
 import styled from "styled-components";
 
@@ -116,7 +115,6 @@ export default function Music() {
         <div className="RecommendInner">
           <Container className="RecommendMuscic">
             <div className="RecommendSubTitle">이런 공연/전시 어때요?</div>
-
             <Recommend>
               {dummyData.map((item, index) => (
                 <SliderItem key={index}>

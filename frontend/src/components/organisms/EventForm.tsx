@@ -27,7 +27,6 @@ const EventForm: React.FC = () => {
   const [showEDate, setShowEDate] = useState(eDate);
 
   // 모달창이 열리면 인풋창에 바로 커서가 뜨게 설정
-  
 
   // sDate와 eDate가 다르면 allDay를 체크하도록 설정
   useEffect(() => {
@@ -112,20 +111,26 @@ const EventForm: React.FC = () => {
       <Container>
         <Header>
           <Title>일정 추가하기</Title>
-          <CloseBtn onClick={() => {dispatch(closeModal())}}>✖</CloseBtn>
+          <CloseBtn
+            onClick={() => {
+              dispatch(closeModal());
+            }}
+          >
+            ✖
+          </CloseBtn>
         </Header>
         <ColorBox>
-        {Object.entries(colorMap).map(([key, color]) => (
-          <ColorDiv 
-            key={key}
-            color = {color}
-            style={{
-              width: colorId === Number(key) ? '38px' :'30px',
-              height: colorId === Number(key) ? '38px' :'30px',
-            }}
-            onClick={() => handleBoxClick(key)}
-          />
-        ))}
+          {Object.entries(colorMap).map(([key, color]) => (
+            <ColorDiv
+              key={key}
+              color={color}
+              style={{
+                width: colorId === Number(key) ? "38px" : "30px",
+                height: colorId === Number(key) ? "38px" : "30px",
+              }}
+              onClick={() => handleBoxClick(key)}
+            />
+          ))}
         </ColorBox>
         <DateBox>
           <div>날짜</div>
@@ -315,14 +320,14 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 10px;
-  `
+`;
 const ColorBox = styled.div`
   height: 38px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 10px;
-`
+`;
 const ColorDiv = styled.div`
   cursor: pointer;
   width: 30px;

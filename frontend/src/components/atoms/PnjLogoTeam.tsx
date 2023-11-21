@@ -1,4 +1,3 @@
-// import React from 'react';
 import pnjLogo from "/image/pnjLogo.svg";
 import { useNavigate } from "react-router-dom";
 

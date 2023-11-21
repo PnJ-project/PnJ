@@ -5,10 +5,9 @@ import Demo from "./pages/Demo";
 import Calendar from "./pages/Main";
 import Notfound from "./pages/service/404";
 import About from "./pages/service/About";
-import Contact from "./pages/service/Contact";
 import TeamHello from "./pages/service/TeamHello";
-import PageManager from "./pages/dev/control/PageManager";
-import TestManager from "./pages/dev/test/TestManager";
+// import PageManager from "./pages/dev/control/PageManager";
+// import TestManager from "./pages/dev/test/TestManager";
 
 export default function App() {
   // 로그인 여부
@@ -22,11 +21,10 @@ export default function App() {
         {/* 기타 */}
         <Route path="*" element={<Notfound />} />
         <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
         <Route path="/team" element={<TeamHello />} />
         {/* 개발자용 */}
-        <Route path="/pm" element={<PageManager />} />
-        <Route path="/tm" element={<TestManager />} />
+        {/* <Route path="/pm" element={<PageManager />} />
+        <Route path="/tm" element={<TestManager />} /> */}
       </Routes>
     </>
   );

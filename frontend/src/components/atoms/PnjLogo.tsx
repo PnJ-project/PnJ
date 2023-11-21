@@ -1,4 +1,3 @@
-// import React from 'react';
 import pnjLogo from "/image/pnjLogoWhite.svg";
 import { setDemoFalse } from "../../store/slice/ToggleSlice";
 import { useDispatch } from "react-redux";

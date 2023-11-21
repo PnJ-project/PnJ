@@ -1,48 +1,56 @@
 // EventForm.tsx
 
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Event, addEvent } from '../../store/slice/calendar/CalendarSlice';
-import { closeModal } from '../../store/slice/calendar/ModalSlice';
-import { RootState } from '../../store/store';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Event, addEvent } from "../../store/slice/calendar/CalendarSlice";
+import { closeModal } from "../../store/slice/calendar/ModalSlice";
+import { RootState } from "../../store/store";
+import styled from "styled-components";
 
 interface ModalProps {
-  selectedRange: { start: Date, end: Date };
+  selectedRange: { start: Date; end: Date };
 }
 
 const EventForm: React.FC<ModalProps> = ({ selectedRange }) => {
   const dispatch = useDispatch();
   const events = useSelector((state: RootState) => state.calendar.events);
-  const [title, setTitle] = useState('');
-  const [memo, setMemo] = useState('');
-
+  const [title, setTitle] = useState("");
+  const [memo, setMemo] = useState("");
 
   const handleAddEvent = () => {
     const newEvent: Event = {
       id: events.length,
       title,
-      start: selectedRange.start.toISOString(), 
+      start: selectedRange.start.toISOString(),
       end: selectedRange.end.toISOString(),
       memo,
     };
 
     dispatch(addEvent(newEvent));
-    setTitle('');
-    dispatch(closeModal())
+    setTitle("");
+    dispatch(closeModal());
   };
 
   return (
     <InputModalContainer>
-      <input type="text" placeholder="Event Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-      <input type="text" placeholder="Event Memo" value={memo} onChange={(e) => setMemo(e.target.value)} />
+      <input
+        type="text"
+        placeholder="Event Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Event Memo"
+        value={memo}
+        onChange={(e) => setMemo(e.target.value)}
+      />
       <button onClick={handleAddEvent}>Add Event</button>
     </InputModalContainer>
   );
 };
 
 export default EventForm;
-
 
 const InputModalContainer = styled.div`
   position: fixed;

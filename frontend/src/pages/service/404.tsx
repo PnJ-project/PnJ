@@ -1,7 +1,7 @@
 import errorP from "/image/errorP.svg";
 import styled from "styled-components";
 
-export default function notfound() {
+export default function Notfound() {
   return (
     <>
       <Container>

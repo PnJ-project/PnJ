@@ -18,6 +18,7 @@ export default function Main() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isRecommend = useSelector(selectIsRecommend);
+
   // 로그아웃시 리다이렉트
   useEffect(() => {
     if (!localStorage.getItem("memberId")) {

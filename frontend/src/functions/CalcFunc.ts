@@ -1,4 +1,7 @@
-export default function calculateDateDifference(dateString1:string, dateString2:string) {
+export default function calculateDateDifference(
+  dateString1: string,
+  dateString2: string
+) {
   const date1 = new Date(dateString1);
   const date2 = new Date(dateString2);
 

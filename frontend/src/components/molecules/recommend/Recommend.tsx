@@ -30,39 +30,34 @@ function Recommend({
   speed = 300,
   loop = true,
 }: sliderProps) {
+  const settings = useMemo<Settings>(() => {
+    const totalSlides = React.Children.count(children);
+    const visibleSlides = Math.min(totalSlides, 6); // 최대 6개까지 보여주도록
+    const slidesToScroll = Math.min(visibleSlides, 6); // 스크롤할 때 몇 개씩 넘길지
 
-
-  const settings = useMemo<Settings>(
-    () => {
-      const totalSlides = React.Children.count(children);
-      const visibleSlides = Math.min(totalSlides, 6); // 최대 6개까지 보여주도록
-      const slidesToScroll = Math.min(visibleSlides, 6); // 스크롤할 때 몇 개씩 넘길지
-
-      return {
-        dots: true,
-        infinite: loop,
-        speed: speed,
-        slidesToShow: visibleSlides,
-        slidesToScroll: slidesToScroll,
-        autoplay: Boolean(autoplay),
-        autoplaySpeed: typeof autoplay === 'boolean' ? 3000 : autoplay,
-        responsive: [
-          {
-            breakpoint: 1024,
-            settings: {
-              slidesToShow: Math.min(visibleSlides, 4),
-              slidesToScroll: Math.min(visibleSlides, 4),
-
-            },  
+    return {
+      dots: true,
+      infinite: loop,
+      speed: speed,
+      slidesToShow: visibleSlides,
+      slidesToScroll: slidesToScroll,
+      autoplay: Boolean(autoplay),
+      autoplaySpeed: typeof autoplay === "boolean" ? 3000 : autoplay,
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: Math.min(visibleSlides, 4),
+            slidesToScroll: Math.min(visibleSlides, 4),
+          },
         },
         {
           breakpoint: 768,
           settings: {
             slidesToShow: Math.min(visibleSlides, 1),
             slidesToScroll: Math.min(visibleSlides, 1),
-            },
           },
-        
+        },
       ],
     };
   }, [autoplay, loop, speed, children]);

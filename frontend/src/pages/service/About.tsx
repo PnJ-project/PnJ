@@ -1,12 +1,11 @@
 // 서비스 소개 페이지
-// import React from 'react';
 import styled from "styled-components";
 import pnjLogo from "/image/pnjLogo.svg";
 import { PiNumberCircleOneBold } from "react-icons/pi";
 import { PiNumberCircleTwoBold } from "react-icons/pi";
 import { PiNumberCircleThreeBold } from "react-icons/pi";
 
-export default function about() {
+export default function About() {
   return (
     <Container>
       <Box>

@@ -169,17 +169,17 @@ const EventForm: React.FC<ModalProps> = () => {
           </CloseBtn>
         </Header>
         <ColorBox>
-        {Object.entries(colorMap).map(([key, color]) => (
-          <ColorDiv
-            key={key}
-            color = {color}
-            style={{
-              width: colorId === Number(key) ? '38px' :'30px',
-              height: colorId === Number(key) ? '38px' :'30px',
-            }}
-            onClick={() => handleBoxClick(key)}
-          />
-        ))}
+          {Object.entries(colorMap).map(([key, color]) => (
+            <ColorDiv
+              key={key}
+              color={color}
+              style={{
+                width: colorId === Number(key) ? "38px" : "30px",
+                height: colorId === Number(key) ? "38px" : "30px",
+              }}
+              onClick={() => handleBoxClick(key)}
+            />
+          ))}
         </ColorBox>
         <DateBox>
           <div>날짜</div>
@@ -371,13 +371,13 @@ const Header = styled.div`
   margin: 10px;
 `;
 
-  const ColorBox = styled.div`
+const ColorBox = styled.div`
   height: 38px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 10px;
-`
+`;
 const ColorDiv = styled.div`
   cursor: pointer;
   width: 30px;

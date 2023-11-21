@@ -1,4 +1,3 @@
-// import React from "react";
 import Recommend from "./Recommend";
 import styled from "styled-components";
 
@@ -116,7 +115,6 @@ export default function Sports() {
       awayTeamEmblemUrl: "맨체스터 유나이티드 로고 URL",
       homeTeamEmblemUrl: "리버풀 FC 로고 URL",
     },
-    // ... (다른 더미 데이터 항목들)
   ];
 
   return (

@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store/store";
 import { fetchVitoKey } from "../../../store/slice/SoundSlice";
 
-// import React from 'react';
 export default function Sound() {
   // 기본 세팅
   const vito_access = useSelector(

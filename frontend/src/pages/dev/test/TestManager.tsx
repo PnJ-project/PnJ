@@ -24,7 +24,6 @@ const TestManager: React.FC = () => {
     TodoSample: TodoSample,
     Navbar: Navbar,
     ReactQuery: ReactQuery,
-    // 다른 컴포넌트들을 원하는 만큼 추가할 수 있습니다.
   };
 
   const [currentComponent, setCurrentComponent] = useState<JSX.Element | null>(

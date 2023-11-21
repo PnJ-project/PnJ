@@ -1,4 +1,3 @@
-// import React from 'react';
 import TodoList from "../../../components/molecules/TodoList";
 export default function TodoSample() {
   return (

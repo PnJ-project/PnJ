@@ -7,9 +7,7 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { change } from "../../../store/slice/calendar/HandleSlice";
 import SmallToolbar from "../../../components/molecules/SmallToolbar";
-// import Toolbar from "../../components/molecules/Toolbar";
 
-// import React from 'react';
 export default function SmallCal() {
   const localizer = momentLocalizer(moment);
   const dispatch = useDispatch();
@@ -33,7 +31,6 @@ export default function SmallCal() {
         <Calendar
           localizer={localizer}
           style={{ width: "100%", height: "100%" }}
-          //   components={{ toolbar: ToolbarMini }}
           view="month"
           defaultView="month"
           //클릭한 date날짜를 가져옴

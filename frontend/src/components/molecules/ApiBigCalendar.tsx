@@ -481,17 +481,17 @@ const BigCalendarInfo = () => {
 };
 export default BigCalendarInfo;
 
-const colorMap:{[key: number]: string} = {
-  1: '#fe4d00',
-  2: '#fa92a3',
-  3: '#fe9e14',
-  4: '#fed136',
-  5: '#d6d755',
-  6: '#a1c7a5',
-  7: '#01b391',
-  8: '#41a8f5',
-  9: '#7ea0c3',
-  10: '#ba7fd1',
+const colorMap: { [key: number]: string } = {
+  1: "#fe4d00",
+  2: "#fa92a3",
+  3: "#fe9e14",
+  4: "#fed136",
+  5: "#d6d755",
+  6: "#a1c7a5",
+  7: "#01b391",
+  8: "#41a8f5",
+  9: "#7ea0c3",
+  10: "#ba7fd1",
 };
 /** CSS */
 const Container = styled.div`
@@ -499,7 +499,7 @@ const Container = styled.div`
   overflow: hidden;
   height: 100%;
   //+more라고 보이는 부분
-  .rbc-row-segment{
+  .rbc-row-segment {
     display: flex;
     text-align: center;
   }
@@ -540,8 +540,8 @@ const Container = styled.div`
       height: 7%;
       display: flex;
       align-items: center;
-      font-family:SUITE-Regular;
-      font-size:20px;
+      font-family: SUITE-Regular;
+      font-size: 20px;
       font-weight: 900;
       .rbc-header {
         border-bottom: none;

@@ -1,4 +1,3 @@
-// import React from 'react';
 import "./DemoTutorial.css";
 
 export default function DemoTutorial() {
