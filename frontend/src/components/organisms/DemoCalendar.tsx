@@ -9,7 +9,7 @@ import DemoTutorialBox from "../atoms/DemoTutorialBox";
 import TodoList from "../molecules/TodoList";
 import DemoMadal from "../molecules/FlaskMadal";
 import DemoTutorial from "../molecules/DemoTutorial";
-import SmallCal from "../../pages/test/SmallCal";
+import SmallCal from "../../pages/dev/test/SmallCal";
 import BigCalendar from "../molecules/BigCalendar";
 import { IoMicCircle } from "react-icons/io5";
 import Paste from "/image/paste.svg";

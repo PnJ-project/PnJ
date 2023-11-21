@@ -5,8 +5,8 @@ import moment from "moment";
 import { useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { change } from "../../store/slice/calendar/HandleSlice";
-import SmallToolbar from "../../components/molecules/SmallToolbar";
+import { change } from "../../../store/slice/calendar/HandleSlice";
+import SmallToolbar from "../../../components/molecules/SmallToolbar";
 // import Toolbar from "../../components/molecules/Toolbar";
 
 // import React from 'react';

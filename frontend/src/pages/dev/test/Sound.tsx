@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store/store";
-import { fetchVitoKey } from "../../store/slice/SoundSlice";
+import { RootState } from "../../../store/store";
+import { fetchVitoKey } from "../../../store/slice/SoundSlice";
 
 // import React from 'react';
 export default function Sound() {

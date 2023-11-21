@@ -11,7 +11,7 @@ import PnjLogo from "../atoms/PnjLogo";
 // import TeamBtn from "../atoms/TeamBtn";
 import GoogleLogin from "../atoms/GoogleLogin";
 import TodoList from "../molecules/todo/ApiTodoList";
-import SmallCal from "../../pages/test/SmallCal";
+import SmallCal from "../../pages/dev/test/SmallCal";
 import ServiceInfoBtn from "../molecules/ServiceInfoBtn";
 import BigCalendar from "../molecules/ApiBigCalendar";
 import { setRecommendTrue } from "../../store/slice/ToggleSlice";

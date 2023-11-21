@@ -1,5 +1,5 @@
 // 데모 페이지
-import plogo from "../assets/main.svg";
+import plogo from "/image/main.svg";
 import UseDemo from "../components/atoms/UseDemo";
 import DownArrow from "../components/atoms/DownArrow";
 import GoogleLogin from "../components/atoms/GoogleLogin";

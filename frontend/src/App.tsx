@@ -7,12 +7,8 @@ import Notfound from "./pages/service/404";
 import About from "./pages/service/About";
 import Contact from "./pages/service/Contact";
 import TeamHello from "./pages/service/TeamHello";
-import PageManager from "./pages/PageManager";
-import TestManager from "./pages/test/TestManager";
-
-
-
-
+import PageManager from "./pages/dev/control/PageManager";
+import TestManager from "./pages/dev/test/TestManager";
 
 export default function App() {
   // 로그인 여부
