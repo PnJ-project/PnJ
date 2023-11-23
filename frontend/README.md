@@ -1,6 +1,6 @@
 # PnJ Frontend
 
-<hr>
+<br>
 
 ## Table of Contents
 
@@ -9,7 +9,7 @@
 - [Setting Up Development Environment](#setting-up-development-environment)
 - [Router Structure](#router-structure)
 
----
+<br>
 
 ## Introduction
 
@@ -30,7 +30,7 @@ Welcome to the frontend repository of PnJ, a smart calendar for automated schedu
 
 [Frontend Documentation](https://glitter-snow-ee2.notion.site/1b99d2e1a22b4e768013c73f86c3f351)
 
----
+<br>
 
 ## Technology Stack and Libraries
 
@@ -45,7 +45,7 @@ Welcome to the frontend repository of PnJ, a smart calendar for automated schedu
 | react-redux        | 8.1.3   | State Management Library   |
 | react-big-calendar | 4.4.0   | Calendar Component Library |
 
----
+<br>
 
 ## Setting Up Development Environment
 
@@ -95,7 +95,7 @@ Using pnpm
 pnpm build
 ```
 
----
+<br>
 
 ## Router Structure
 
@@ -107,9 +107,11 @@ pnpm build
 
 `/tm` : (For developers) Test pages.
 
----
+<br>
 
 ---
+
+<br>
 
 # React + TypeScript + Vite
 
