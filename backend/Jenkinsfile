@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    stages {
+        stage('Check Changes') {
+            steps{
+                script {
+                    def changes = checkout scm
+                    def changedFiles = changes?.changedFiles?.collect { it.path }
+                    def backendChanges = changedFiles?.findAll { it.startsWith('backend/') }
+                    
+                    if (backendChanges?.isEmpty()) {
+                        currentBuild.result = 'NOT_BUILT'
+                        echo 'No changes in backend/ directory. Skipping build.'
+                        currentBuild.displayName = '#${BUILD_NUMBER} (Skipped)'
+                        return
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('backend') {
+                    script {
+                        sh "docker build -t backend:latest ."
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    sh "sh deploy_backend.sh"
+                }
+            }
+        }
+
+        stage('Finish') {
+            steps {
+                sh 'docker images -qf dangling=true | xargs -I{} docker rmi {}'
+            }
+        }
+    }
+}

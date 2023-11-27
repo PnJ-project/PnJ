@@ -1,0 +1,52 @@
+#root {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4vmin;
+  background: rgb(80, 63, 39);
+}
+
+.wrap button {
+  padding: 2vmin 4vmin;
+  border: 2px solid #fff;
+  background: none;
+  color: #fff;
+  font-size: 3vmin;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.wrap .buttons {
+  display: flex;
+  gap: 2vmin;
+  position: fixed;
+  top: 5vmin;
+  font-weight: bold;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60vmin;
+  height: 50vmin;
+  font-size: 4vmin;
+  color: #fff;
+  border-radius: 50%;
+  font-weight: bold;
+}

@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  backend_green1:
+    image: backend
+    container_name : backend_green1
+    ports:
+      - ${BACKEND_PORT_GREEN1}:8080
+    networks:
+      - mariadb_network
+    restart: unless-stopped
+
+  backend_green2:
+    image: backend
+    container_name : backend_green2
+    ports:
+      - ${BACKEND_PORT_GREEN2}:8080
+    networks:
+      - mariadb_network
+    restart: unless-stopped
+
+networks:
+  mariadb_network:
+    external: true

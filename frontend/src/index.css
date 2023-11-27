@@ -1,0 +1,79 @@
+body {
+  font-family: SUITE-Regular, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  overflow-y: scroll; /* 항상 수직 스크롤바 표시 */
+}
+
+/* 색상 저장 */
+:root {
+  --primary-color: #a1c7a5;
+  --blue-color: #41a8f5;
+  --blue2-color: #7ea0c3;
+  --purple-color: #ba7fd1;
+  --orange-color: #fe4d00;
+  --turquoise-color: #01b391;
+  --green-color: #67c9ba;
+  --pink-color: #fa92a3;
+  --red-color: #f6323e;
+  --lime-color: #72d348;
+  --yellow-color: #d6d755;
+  --gold-color: #fed136;
+  --amber-color: #fe9e14;
+}
+
+/* 버튼 기본 */
+button {
+  position: relative;
+  height: 35px;
+  background: var(--turquoise-color);
+  border: 0px solid #d5d5d5;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: SUITE-Regular;
+  margin: 1px;
+}
+
+button:hover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.07);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar {
+  background-color: #fff;
+  border-radius: 10px;
+  width: 16px; /* 스크롤 바의 너비 */
+}
+::-webkit-scrollbar-track {
+  background-color: #fff;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track:hover {
+  background-color: #f4f4f4;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #babac0;
+  border-radius: 16px;
+  border: 5px solid #fff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a0a0a5;
+  border: 4px solid #f4f4f4;
+}

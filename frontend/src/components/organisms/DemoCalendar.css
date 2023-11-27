@@ -1,0 +1,254 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.MainContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-width: 900px;
+  animation: fadeIn 0.5s ease-in;
+  height: 100vh;
+}
+.MainContainer::after {
+  content: "";
+  position: absolute;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-color: #36513d;
+  z-index: -1;
+}
+.DemoNavbar {
+  width: 92%;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 900px;
+  margin: 10px;
+}
+.NavGoogleBtn {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 300px;
+}
+
+.FreeTxt {
+  font-size: 12px;
+  font-family: SUITE-Regular;
+  margin-left: 15px;
+  display: flex;
+}
+
+.NotFree {
+  color: red;
+}
+
+.SoundIcon {
+  vertical-align: middle;
+  font-size: 35px;
+  cursor: pointer;
+  color: white;
+  margin: 5px;
+}
+.PnjInput {
+  width: 45% !important;
+  font-family: SUITE-Regular;
+  resize: none;
+  display: flex;
+}
+.PnjInputInner {
+  width: 100%;
+  border-radius: 5px;
+  padding: 10px 10px 10px 10px;
+  font-family: SUITE-Regular;
+  max-height: 50px;
+  resize: none;
+  margin: auto;
+}
+
+.PnjInput::-webkit-scrollbar {
+  background-color: #fff;
+  border-radius: 10px;
+  width: 16px;
+}
+.PnjInput::-webkit-scrollbar-track {
+  background-color: #fff;
+  border-radius: 10px;
+}
+.PnjInput::-webkit-scrollbar-track:hover {
+  background-color: #f4f4f4;
+}
+.PnjInput::-webkit-scrollbar-thumb {
+  background-color: #babac0;
+  border-radius: 16px;
+  border: 5px solid #fff;
+}
+.PnjInput::-webkit-scrollbar-thumb:hover {
+  background-color: #a0a0a5;
+  border: 4px solid #f4f4f4;
+}
+
+.InputContaier {
+  width: 80%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin: 20px;
+  margin-right: auto;
+}
+
+.CalendarContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(98vh - 120px);
+  min-height: 500px;
+  width: 100%;
+}
+
+/* 좌측 */
+.LeftSideContainer {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px 4px 4px 4px !important;
+}
+.SmallCalendar {
+  border-radius: 4px 4px 4px 4px !important;
+  height: 35%;
+  margin-bottom: 10%;
+  border: 4px solid rgba(161, 199, 165, 0.5);
+  background-color: white;
+}
+.Todo-Container {
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 4px 4px 4px 4px !important;
+  border: 4px solid rgba(161, 199, 165, 0.5);
+}
+/* 우측 */
+.RightSideContainer {
+  margin-left: 2%;
+  width: 68%;
+  height: 100%;
+  display: flex;
+  border-radius: 4px 4px 4px 4px !important;
+}
+.Calendar {
+  width: 100%;
+  border-radius: 4px 4px 4px 4px !important;
+  flex: 1;
+  background-color: rgba(255, 255, 255, 1);
+  border: 4px solid rgba(161, 199, 165, 0.5);
+}
+
+.mikeImg,
+.pasteImg {
+  width: 24px;
+  cursor: pointer;
+}
+.pasteImgBox {
+  display: flex;
+  height: 35px;
+}
+
+.submitBtn {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+  padding: 6px;
+  margin: 0px 0px 0px 2px;
+  font-family: SUITE-Regular;
+  border-radius: 4px 4px 4px 4px;
+  background-color: white;
+  border: 1px solid white;
+  color: rgb(56, 56, 56);
+  text-align: center;
+  width: 26px !important;
+  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.icon-listening {
+  animation: pulse 1s alternate infinite;
+}
+.LimitTxt {
+  color: white;
+}
+
+@keyframes pulse {
+  0% {
+    color: #b5ff3f;
+  }
+  100% {
+    color: #59cdff;
+  }
+}
+
+textarea {
+  margin-right: 10px;
+}
+.ServiceIntro {
+  height: 30px;
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+  transition: color 0.3s;
+  color: #fff;
+}
+
+.ServiceIntro:hover {
+  color: #59cdff; /* 원하는 호버 색상으로 변경 */
+}
+
+.ServiceIntroTooltip {
+  position: absolute;
+  left: -130px;
+  transform: translateX(-50%);
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: none;
+  width: 350px;
+  height: 615px;
+  overflow: auto;
+  opacity: 0.9;
+  animation: fadeout 0.5s ease; /* 추가된 부분 */
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.ServiceIntro:hover .ServiceIntroTooltip {
+  display: block;
+  opacity: 1;
+  z-index: 100;
+}
+
+.ServiceIntroContent {
+  font-size: 20px;
+}

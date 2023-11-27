@@ -1,0 +1,296 @@
+.RecommendContainer {
+  width: 100vw;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.RecommendSortBtnBox {
+  display: flex;
+  justify-content: right;
+  width: 90%;
+  margin: auto;
+  margin-bottom: 20px;
+}
+.RecommendSortBtnBox button {
+  padding: 0px;
+  margin: 5px;
+  background-color: unset;
+}
+.RecommendTitle {
+  font-size: 4vw !important;
+  margin: 20px;
+  margin-top: 150px;
+  margin-bottom: 50px;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.NoneRecommend {
+  margin: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  font-size: 20px;
+  height: 300px;
+}
+.NoneRecommend button {
+  margin-top: 20px;
+}
+@media (min-width: 1000px) {
+  .RecommendTitle {
+    font-size: 40px !important;
+  }
+}
+.RecommendTitle img {
+  display: flex;
+  width: 8vw;
+  height: 8vw;
+  margin-left: 10px;
+}
+.RecommendBox {
+  width: 75vw;
+  animation: fadeIn 0.4s ease-in; /* 등장 애니메이션 적용 */
+  min-height: 1000px;
+}
+.RecommendAllBox {
+  width: 75vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 1000px;
+  animation: fadeIn 0.4s ease-in; /* 등장 애니메이션 적용 */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.RecommendNotImg {
+  width: 50px !important;
+}
+.RecommendSubTitle {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+.RecommendInner {
+  margin: 20px;
+  margin-bottom: 60px;
+  font-weight: 900;
+}
+.RecommendMuscic {
+  padding: 20px;
+}
+.RecommendSports {
+  padding: 20px;
+}
+.RecommendStudy {
+  padding: 20px;
+}
+.RecommendTrip {
+  padding: 20px;
+}
+
+.RecommendEat {
+  padding: 20px;
+}
+
+.RecommendSlider {
+  height: 30vh;
+  background-color: rgb(180, 174, 174);
+}
+.RecommendAllOuter {
+  display: flex;
+  justify-content: center;
+  width: 100% !important;
+}
+.RecommendAllInner {
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  margin: 7px;
+}
+.RecommendAllItem {
+  display: flex;
+  box-shadow: 1px 1px 2px rgb(207, 207, 207), -1px -1px 2px rgb(202, 202, 202);
+  text-wrap: pretty;
+  flex-wrap: wrap;
+  word-break: break-all;
+  border-radius: 0px;
+  margin-top: 14px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.RecommendAllItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 2px 2px 4px rgb(89, 89, 89), -2px -2px 4px rgb(93, 93, 93);
+  background-color: black;
+}
+
+.RecommendAllItem img {
+  width: 100% !important;
+  min-height: 200px;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  object-fit: cover;
+}
+
+.RecommendItemShow {
+  transition: opacity 0.5s ease, display 0.3s ease;
+  display: flex;
+  z-index: -1;
+}
+.RecommendAllItem .RecommendItemShow {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  width: 90%; /* 부모 너비와 동일하게 설정 */
+  height: 90%; /* 부모 높이와 동일하게 설정 */
+  color: white;
+  flex-direction: column;
+  opacity: 0;
+}
+
+.RecommendAllItem:hover .RecommendItemShow {
+  display: flex;
+  opacity: 1;
+  z-index: 1;
+}
+.RecommendAllItem:hover img {
+  filter: brightness(20%); /* 이미지 어둡게 만들기 */
+}
+.RecommendBtnBox {
+  margin-top: auto;
+}
+/* 버튼 */
+.RecommendItemShow button {
+  background-color: white;
+}
+.RecommendAddBtn {
+  transition: width 0.3s ease !important;
+}
+
+/* Eat */
+.EatInfo {
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+.EatAddress {
+  font-size: 10px;
+}
+.EatTitle {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: 900;
+}
+
+/* Music */
+.MusicTitle {
+  font-size: 20px;
+  margin-bottom: 5px;
+  font-weight: 900;
+}
+.MusicSub {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Sport */
+.SportImgBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  font-weight: 900;
+}
+.SportImgBox img {
+  width: 60% !important;
+  min-height: unset;
+}
+.SportTitle {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: 900;
+}
+.SportSubTitle {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.SportTime {
+  font-size: 12px;
+}
+
+/* Study */
+.RecommendItemShowStudy {
+  transition: opacity 0.5s ease, display 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+}
+.RecommendAllItem .RecommendItemShowStudy {
+  position: absolute;
+  top: 5%;
+  left: 15%;
+  width: 70%; /* 부모 너비와 동일하게 설정 */
+  height: 90%; /* 부모 높이와 동일하게 설정 */
+  color: white;
+  flex-direction: column;
+  opacity: 0;
+}
+.RecommendAllItem:hover .RecommendItemShowStudy {
+  display: flex;
+  opacity: 1;
+  z-index: 1;
+}
+.StudyTxt {
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.StudyAutor {
+  font-size: 10px;
+}
+
+/* Trip */
+.TripTitle {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: 900;
+}
+.TripSub {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+/* Footer */
+.RecommendFooter {
+  height: 100px;
+}
+
+/* Slider */
+.CategoryAdd {
+  position: absolute;
+  transition: z-index 0.3s ease, opacity 0.3 ease;
+  top: 0%;
+  z-index: -1;
+  background-color: rgb(250, 250, 250);
+  color: rgb(77, 77, 77);
+  padding: 10px 12px;
+  border-radius: 4px;
+  box-shadow: 1px 1px 4px rgb(130, 130, 130);
+  font-size: 12px;
+}
+.CategoryAddActive {
+  z-index: 1 !important;
+  opacity: 1 !important;
+}

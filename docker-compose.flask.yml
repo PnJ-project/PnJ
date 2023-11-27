@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  flask1:
+    image: flask
+    container_name : flask1
+    ports:
+      - ${FLASK_PORT1}:5000
+    restart: unless-stopped
+  flask2:
+    image: flask
+    container_name : flask2
+    ports:
+      - ${FLASK_PORT2}:5000
+    restart: unless-stopped

@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+    stages {
+        stage('Check Changes') {
+            steps{
+                script {
+                    def changes = checkout scm
+                    def changedFiles = changes?.changedFiles?.collect { it.path }
+                    def dataChanges = changedFiles?.findAll { it.startsWith('data/') }
+                    
+                    if (dataChanges?.isEmpty()) {
+                        currentBuild.result = 'NOT_BUILT'
+                        echo 'No changes in data/ directory. Skipping build.'
+                        currentBuild.displayName = '#${BUILD_NUMBER} (Skipped)'
+                        return
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('data') {
+                    script {
+                        sh "docker build -t flask:latest ."
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker compose -f docker-compose.flask.yml down flask1'
+                sh 'docker compose -f docker-compose.flask.yml up flask1 -d'
+                sh 'docker compose -f docker-compose.flask.yml down flask2'
+                sh 'docker compose -f docker-compose.flask.yml up flask2 -d'
+            }
+        }
+
+        stage('Finish') {
+            steps {
+                sh 'docker images -qf dangling=true | xargs -I{} docker rmi {}'
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+.demoBtn {
+  width: 295px;
+  height: 56px;
+  padding: 16px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  background: #abfe25;
+  color: rgb(44, 44, 44);
+  font-size: 20px;
+  font-weight: 600;
+  font-family: TheJamsil5;
+}
