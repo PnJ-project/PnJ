@@ -31,9 +31,8 @@ public class TodoController {
 
     private final TodoService todoService;
 
-    @GetMapping("/{memberId}")
+    @GetMapping("")
     public ResponseEntity<ResponseDto<List<TodoResponseDto>>> readTodo(
-        @PathVariable(value = "memberId") Long memberd, //TODO 삭제
         @AuthenticationPrincipal Long memberId) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ResponseDto.create(
@@ -66,9 +65,8 @@ public class TodoController {
         );
     }
 
-    @DeleteMapping("/{memberId}/{todoId}")
+    @DeleteMapping("{todoId}")
     public ResponseEntity<ResponseDto<?>> deleteTodo(
-        @PathVariable(value = "memberId") Long memberd,// TODO 삭제
         @PathVariable(value = "todoId") Long todoId) {
         todoService.deleteTodo(todoId);
 
